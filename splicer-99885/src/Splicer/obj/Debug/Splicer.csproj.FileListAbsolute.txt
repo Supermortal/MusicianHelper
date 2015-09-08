@@ -17,3 +17,4 @@ C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer\obj\
 C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer\obj\Debug\Splicer.csproj.GenerateResource.Cache
 C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer\obj\Debug\Splicer.dll
 C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer\obj\Debug\Splicer.pdb
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer\obj\Debug\Splicer.csprojResolveAssemblyReference.cache

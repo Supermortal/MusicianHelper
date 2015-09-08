@@ -6,3 +6,4 @@ C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Common\bin\Debu
 C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Common\bin\Debug\log4net.xml
 C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Common\bin\Debug\Ninject.dll
 C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Common\bin\Debug\Ninject.xml
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Common\obj\Debug\MusicianHelper.Common.csprojResolveAssemblyReference.cache
