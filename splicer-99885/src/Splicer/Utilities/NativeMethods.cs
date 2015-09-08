@@ -1,8 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
-using FILETIME=System.Runtime.InteropServices.ComTypes.FILETIME;
-using STATSTG=System.Runtime.InteropServices.ComTypes.STATSTG;
+using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
+using STATSTG = System.Runtime.InteropServices.ComTypes.STATSTG;
 
 namespace Splicer.Utilities
 {

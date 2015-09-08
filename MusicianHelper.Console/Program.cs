@@ -4,6 +4,7 @@ using System.IO;
 using MusicianHelper.Common;
 using MusicianHelper.Common.Concrete;
 using MusicianHelper.Common.Helpers;
+using MusicianHelper.Infrastructure.Models;
 using MusicianHelper.Infrastructure.Models.Enums;
 using MusicianHelper.Infrastructure.Services.Abstract;
 using MusicianHelper.Infrastructure.Services.Concrete;
@@ -33,10 +34,20 @@ namespace MusicianHelper.Console
 
         public static void Start()
         {
-            var vs = IoCHelper.Instance.GetService<IVideoProcessingService>();
+            //var vs = IoCHelper.Instance.GetService<IVideoProcessingService>();
+
+            //System.Console.WriteLine("Rendering started...");
+            //vs.CreateVideoFromImages(new List<string>() { GetPath("SeedData\\paper-stained-3-texture.jpg") }, GetPath("SeedData\\sorry_dave.wav"), "TestFile.wmv", VideoQuality.HD2_NTSC,
+            //    (sender, args) =>
+            //    {
+            //        System.Console.WriteLine("Rendering completed!");
+            //    });
+
+            var vms = IoCHelper.Instance.GetService<IVideoManagementService>();
+            vms.Configure(new VideoManagmentSettings() { RenderedVideoDirectory = "RenderedVideos" });
 
             System.Console.WriteLine("Rendering started...");
-            vs.CreateVideoFromImages(new List<string>() { GetPath("SeedData\\paper-stained-3-texture.jpg") }, GetPath("SeedData\\sorry_dave.wav"), "TestFile.wmv", VideoQuality.HD2_NTSC,
+            vms.CreateVideoFromImages(new List<string>() { GetPath("SeedData\\paper-stained-3-texture.jpg") }, GetPath("SeedData\\sorry_dave.wav"), "TestFile",
                 (sender, args) =>
                 {
                     System.Console.WriteLine("Rendering completed!");
@@ -62,6 +73,7 @@ namespace MusicianHelper.Console
         private static void AddBindings()
         {
             IoCHelper.Instance.BindService<IVideoProcessingService, SplicerWMVVideoProcessingService>();
+            IoCHelper.Instance.BindService<IVideoManagementService, DefaultVideoManagementService>();
         }
     }
 }

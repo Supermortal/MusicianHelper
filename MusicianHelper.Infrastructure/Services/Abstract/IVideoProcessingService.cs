@@ -6,6 +6,7 @@ namespace MusicianHelper.Infrastructure.Services.Abstract
 {
     public interface IVideoProcessingService
     {
-        void CreateVideoFromImages(List<string> imagePaths, string audioPath, string outputPath, VideoQuality vq, EventHandler renderCompleted = null);
+        void CreateVideoFromImages(List<string> imagePaths, string audioPath, string outputPath, VideoQuality vq, List<EventHandler> renderCompleted = null);
+        string GetCorrectFilename(string outputPath);
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using MusicianHelper.Common.Models.Enums;
+﻿using MusicianHelper.Common.Models.Enums;
 
 namespace MusicianHelper.Common.Abstract
 {
