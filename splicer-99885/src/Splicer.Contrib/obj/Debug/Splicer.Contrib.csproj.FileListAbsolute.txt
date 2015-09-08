@@ -1,0 +1,20 @@
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer.Contrib\bin\Debug\ASL - Apache Software Foundation License.txt
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer.Contrib\bin\Debug\Splicer.Contrib.dll
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer.Contrib\bin\Debug\Splicer.Contrib.pdb
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer.Contrib\bin\Debug\Splicer.dll
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer.Contrib\bin\Debug\DirectShowLib-2005.dll
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer.Contrib\bin\Debug\Splicer.pdb
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer.Contrib\bin\Debug\DirectShowLib-2005.pdb
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer.Contrib\obj\Debug\Splicer.Contrib.csprojResolveAssemblyReference.cache
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer.Contrib\obj\Debug\Splicer.Contrib.dll
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer.Contrib\obj\Debug\Splicer.Contrib.pdb
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer.Contrib\bin\Debug\ASL - Apache Software Foundation License.txt
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer.Contrib\bin\Debug\Splicer.Contrib.dll
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer.Contrib\bin\Debug\Splicer.Contrib.pdb
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer.Contrib\bin\Debug\Splicer.dll
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer.Contrib\bin\Debug\DirectShowLib-2005.dll
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer.Contrib\bin\Debug\Splicer.pdb
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer.Contrib\bin\Debug\DirectShowLib-2005.pdb
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer.Contrib\obj\Debug\Splicer.Contrib.csprojResolveAssemblyReference.cache
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer.Contrib\obj\Debug\Splicer.Contrib.dll
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer.Contrib\obj\Debug\Splicer.Contrib.pdb

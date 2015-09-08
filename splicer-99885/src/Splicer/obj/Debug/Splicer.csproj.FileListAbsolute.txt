@@ -1,0 +1,19 @@
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer\bin\Debug\ASL - Apache Software Foundation License.txt
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer\bin\Debug\Splicer.dll
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer\bin\Debug\Splicer.pdb
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer\bin\Debug\DirectShowLib-2005.dll
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer\bin\Debug\DirectShowLib-2005.pdb
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer\obj\Debug\Splicer.Properties.Resources.resources
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer\obj\Debug\Splicer.csproj.GenerateResource.Cache
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer\obj\Debug\Splicer.dll
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer\obj\Debug\Splicer.pdb
+C:\Users\user\Dropbox\Cloud\Visual Studio 2013\Projects\VideoProcessor\splicer-99885\src\Splicer\obj\Debug\Splicer.csprojResolveAssemblyReference.cache
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer\bin\Debug\ASL - Apache Software Foundation License.txt
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer\bin\Debug\Splicer.dll
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer\bin\Debug\Splicer.pdb
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer\bin\Debug\DirectShowLib-2005.dll
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer\bin\Debug\DirectShowLib-2005.pdb
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer\obj\Debug\Splicer.Properties.Resources.resources
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer\obj\Debug\Splicer.csproj.GenerateResource.Cache
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer\obj\Debug\Splicer.dll
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\splicer-99885\src\Splicer\obj\Debug\Splicer.pdb

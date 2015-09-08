@@ -1,0 +1,19 @@
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\obj\Debug\MusicianHelper.Console.csprojResolveAssemblyReference.cache
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\ASL - Apache Software Foundation License.txt
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\MusicianHelper.exe.config
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\MusicianHelper.exe
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\MusicianHelper.pdb
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\log4net.dll
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\MusicianHelper.Common.dll
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\MusicianHelper.Infrastructure.dll
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\Ninject.dll
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\Splicer.dll
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\DirectShowLib-2005.dll
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\MusicianHelper.Common.pdb
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\MusicianHelper.Infrastructure.pdb
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\log4net.xml
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\Ninject.xml
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\Splicer.pdb
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\bin\Debug\DirectShowLib-2005.pdb
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\obj\Debug\MusicianHelper.exe
+C:\Users\user\Dropbox\Cloud\GitHub\MusicianHelper\MusicianHelper.Console\obj\Debug\MusicianHelper.pdb

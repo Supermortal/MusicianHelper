@@ -1,0 +1,3 @@
+REM example of rendering a slideshow at 1 FPS and then converting it to a 3GP using ffmpeg
+REM ---------------------------------------------------------------------------------------
+bin\debug\Splicer.SlideShowConsole.exe /SourceImage:..\TestArtifacts\001.jpg /SourceImage:..\TestArtifacts\002.jpg /SourceImage:..\TestArtifacts\003.jpg /SoundtrackFile:..\TestArtifacts\ff404.wav /FPS:1 /OutputVideo:out.3gp /Renderer:AVI /FfmpegPath:c:\dev\tools\ffmpeg\ffmpeg.exe /EncodeTo3gpWithFfmpeg+
