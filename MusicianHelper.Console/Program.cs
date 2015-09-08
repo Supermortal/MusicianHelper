@@ -4,6 +4,7 @@ using System.IO;
 using MusicianHelper.Common;
 using MusicianHelper.Common.Concrete;
 using MusicianHelper.Common.Helpers;
+using MusicianHelper.Common.Models.Enums;
 using MusicianHelper.Infrastructure.Models;
 using MusicianHelper.Infrastructure.Models.Enums;
 using MusicianHelper.Infrastructure.Services.Abstract;
@@ -74,6 +75,7 @@ namespace MusicianHelper.Console
         {
             IoCHelper.Instance.BindService<IVideoProcessingService, SplicerWMVVideoProcessingService>();
             IoCHelper.Instance.BindService<IVideoManagementService, DefaultVideoManagementService>();
+            IoCHelper.Instance.BindService<IVideoNetworkService, YouTubeVideoNetworkService>(IoCBindingType.Normal, "YouTubeNetwork");
         }
     }
 }
