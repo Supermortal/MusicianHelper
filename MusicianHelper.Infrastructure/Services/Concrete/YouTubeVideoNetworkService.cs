@@ -23,9 +23,10 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
 
         private OauthTokenModel _otm = null;
 
-        public YouTubeVideoNetworkService() : this(IoCHelper.Instance.GetService<IStorageService>())
+        public YouTubeVideoNetworkService()
+            : this(IoCHelper.Instance.GetService<IStorageService>())
         {
-            
+
         }
 
         public YouTubeVideoNetworkService(IStorageService ss)
@@ -108,6 +109,26 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                 sm.RefreshToken = otm.RefreshToken;
 
                 _ss.Save(sm);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        public void Get(OauthTokenModel otm)
+        {
+            try
+            {
+                using (var wb = new WebClient())
+                {
+                    var response = wb.DownloadData("https://www.googleapis.com/youtube/v3/channels?part=id&mine=true&access_token=" + otm.AccessToken);
+                    var responseStr = Encoding.ASCII.GetString(response);
+                    var t = "t";
+                    //var oauthResponse = JsonConvert.DeserializeObject<youtube_oauth_response>(responseStr);
+
+                    //return oauthResponse.ToOauthTokenModel();
+                }
             }
             catch (Exception ex)
             {

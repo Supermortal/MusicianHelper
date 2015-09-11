@@ -36,6 +36,7 @@ namespace MusicianHelper.WinForms
             var authToken = _vns.ExtractAuthToken(WebBrowser.DocumentTitle);
             var oauthResponse = _vns.GetRequestTokens(authToken);
             _vns.SaveOauthResponse(oauthResponse);
+            _vns.Get(oauthResponse);
         }
 
     }

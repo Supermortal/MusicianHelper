@@ -43,6 +43,7 @@ namespace MusicianHelper.WinForms
             IoCHelper.Instance.BindService<IVideoProcessingService, SplicerWMVVideoProcessingService>();
             IoCHelper.Instance.BindService<IVideoManagementService, DefaultVideoManagementService>();
             IoCHelper.Instance.BindService<IVideoNetworkService, YouTubeVideoNetworkService>(IoCBindingType.Normal, "YouTubeNetwork");
+            IoCHelper.Instance.BindService<IStorageService, JsonNetStorageService>();
         }
     }
 }

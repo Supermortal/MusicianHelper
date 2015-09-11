@@ -9,5 +9,6 @@ namespace MusicianHelper.Infrastructure.Services.Abstract
         Uri CreateRequestUri();
         OauthTokenModel GetRequestTokens(string authToken);
         void SaveOauthResponse(OauthTokenModel otm);
+        void Get(OauthTokenModel otm);
     }
 }
