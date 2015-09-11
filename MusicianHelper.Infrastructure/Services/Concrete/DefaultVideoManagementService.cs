@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using log4net;
 using MusicianHelper.Common.Helpers.Log;
 using MusicianHelper.Infrastructure.Models;
@@ -18,6 +19,9 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
         private readonly IVideoProcessingService _vps = null;
 
         private string _renderDirectory = null;
+
+        private string AudioDirectory { get; set; }
+        private string ImagesDirectory { get; set; }
 
         public DefaultVideoManagementService(IVideoProcessingService vps)
         {
@@ -50,25 +54,65 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
 
         public void SetAudioDirectory(string path)
         {
-            throw new NotImplementedException();
+            AudioDirectory = path;
         }
 
         public void SetImagesDirectory(string path)
         {
-            throw new NotImplementedException();
+            ImagesDirectory = path;
         }
 
         public string GetAudioDirectory()
         {
-            throw new NotImplementedException();
+            return AudioDirectory;
         }
 
         public string GetImagesDirectory()
         {
+            return ImagesDirectory;
+        }
+
+        public void CreateVideo(string imagesDirectoryPath, string audioPath, string renderDirectory, EventHandler renderCompleted = null)
+        {
             throw new NotImplementedException();
         }
 
-        public void CreateVideoFromImages(List<string> imagePaths, string audioPath, string outputFilename, EventHandler renderCompleted = null)
+        public void CreateAllVideos(string imagesDirectory, string audioDirectory, string renderDirectory)
+        {
+            try
+            {
+                var audios = Directory.GetFiles(audioDirectory);
+                var imagePaths = Directory.GetFiles(imagesDirectory).ToList();
+
+                foreach (var audioPath in audios)
+                {
+                    CreateVideoFromImages(imagePaths, audioPath, CreateRenderedVideoName(audioPath), renderDirectory);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        public string CreateRenderedVideoName(string audioPath)
+        {
+            try
+            {
+                var parts = audioPath.Split('\\');
+                var fileName = parts[parts.Length - 1];
+                parts = fileName.Split('.');
+
+                return parts[0];
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+                return null;
+            }
+        }
+
+        public void CreateVideoFromImages(List<string> imagePaths, string audioPath, string outputFilename, string renderedDirectory, EventHandler renderCompleted = null)
         {
             try
             {
@@ -79,7 +123,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
 
                 ehList.Add(RenderCompleted);
 
-                _vps.CreateVideoFromImages(imagePaths, audioPath, Path.Combine(GetRenderDirectory(), _vps.GetCorrectFilename(outputFilename)), VideoQuality.HD2_NTSC, ehList);
+                _vps.CreateVideoFromImages(imagePaths, audioPath, Path.Combine(renderedDirectory, _vps.GetCorrectFilename(outputFilename)), VideoQuality.HD2_NTSC, ehList);
             }
             catch (Exception ex)
             {

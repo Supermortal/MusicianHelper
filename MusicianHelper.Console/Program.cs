@@ -47,7 +47,7 @@ namespace MusicianHelper.Console
             vms.Configure(new VideoManagmentSettings() { RenderedVideoDirectory = "RenderedVideos" });
 
             System.Console.WriteLine("Rendering started...");
-            vms.CreateVideoFromImages(new List<string>() { GetPath("SeedData\\paper-stained-3-texture.jpg") }, GetPath("SeedData\\sorry_dave.wav"), "TestFile",
+            vms.CreateVideoFromImages(new List<string>() { GetPath("SeedData\\paper-stained-3-texture.jpg") }, GetPath("SeedData\\sorry_dave.wav"), "TestFile", string.Empty,
                 (sender, args) =>
                 {
                     System.Console.WriteLine("Rendering completed!");
