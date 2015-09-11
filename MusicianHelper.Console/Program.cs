@@ -6,7 +6,6 @@ using MusicianHelper.Common.Concrete;
 using MusicianHelper.Common.Helpers;
 using MusicianHelper.Common.Models.Enums;
 using MusicianHelper.Infrastructure.Models;
-using MusicianHelper.Infrastructure.Models.Enums;
 using MusicianHelper.Infrastructure.Services.Abstract;
 using MusicianHelper.Infrastructure.Services.Concrete;
 

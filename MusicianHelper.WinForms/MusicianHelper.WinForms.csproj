@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>c0c8af34-eff8-444d-b575-9425a91285f3</ProjectGuid>
+    <ProjectGuid>{3729F5AB-F6E1-4DE1-8959-1248561A69E8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MusicianHelper.WinForms</RootNamespace>
@@ -52,6 +52,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -73,6 +76,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MusicianHelper.Common\MusicianHelper.Common.csproj">
+      <Project>{8b1f9093-89d4-4d97-be31-0afb2eda2031}</Project>
+      <Name>MusicianHelper.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MusicianHelper.Infrastructure\MusicianHelper.Infrastructure.csproj">
+      <Project>{c7a43af2-fe5b-4f71-8a73-56933e68f4bf}</Project>
+      <Name>MusicianHelper.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

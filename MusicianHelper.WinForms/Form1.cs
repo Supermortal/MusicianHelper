@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MusicianHelper.WinForms
@@ -15,6 +8,33 @@ namespace MusicianHelper.WinForms
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void SetAudioDirectoryButton_Click(object sender, EventArgs e)
+        {
+            var result = FolderBrowserDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                AudioDirectory.Text = FolderBrowserDialog.SelectedPath;
+            }
+        }
+
+        private void SetVideoDirectoryButton_Click(object sender, EventArgs e)
+        {
+            var result = FolderBrowserDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                VideoDirectory.Text = FolderBrowserDialog.SelectedPath;
+            }
+        }
+
+        private void SetImagesDirectoryButton_Click(object sender, EventArgs e)
+        {
+            var result = FolderBrowserDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                ImagesDirectory.Text = FolderBrowserDialog.SelectedPath;
+            }
         }
     }
 }

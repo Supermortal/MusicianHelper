@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using log4net;
 using MusicianHelper.Common.Helpers.Log;
 using MusicianHelper.Infrastructure.Models;
@@ -19,6 +17,8 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
         private VideoManagmentSettings _vms = null;
         private readonly IVideoProcessingService _vps = null;
 
+        private string _renderDirectory = null;
+
         public DefaultVideoManagementService(IVideoProcessingService vps)
         {
             _vps = vps;
@@ -34,11 +34,38 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
 
         public string GetRenderDirectory()
         {
+            if (_renderDirectory != null) return _renderDirectory;
+
             var path = Path.Combine(BaseDir, _vms.RenderedVideoDirectory);
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
-            return path;
+            return (_renderDirectory = path);
+        }
+
+        public void SetRenderDirectory(string path)
+        {
+            _renderDirectory = path;
+        }
+
+        public void SetAudioDirectory(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetImagesDirectory(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetAudioDirectory()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetImagesDirectory()
+        {
+            throw new NotImplementedException();
         }
 
         public void CreateVideoFromImages(List<string> imagePaths, string audioPath, string outputFilename, EventHandler renderCompleted = null)
