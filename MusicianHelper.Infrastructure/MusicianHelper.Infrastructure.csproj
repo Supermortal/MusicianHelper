@@ -37,6 +37,10 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -49,12 +53,15 @@
   <ItemGroup>
     <Compile Include="Models\Enums\VideoQuality.cs" />
     <Compile Include="Models\SplicerWMVProfile.cs" />
+    <Compile Include="Models\StorageModel.cs" />
     <Compile Include="Models\VideoManagmentSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Abstract\IStorageService.cs" />
     <Compile Include="Services\Abstract\IVideoManagementService.cs" />
     <Compile Include="Services\Abstract\IVideoNetworkService.cs" />
     <Compile Include="Services\Abstract\IVideoProcessingService.cs" />
     <Compile Include="Services\Concrete\DefaultVideoManagementService.cs" />
+    <Compile Include="Services\Concrete\JsonNetStorageService.cs" />
     <Compile Include="Services\Concrete\SplicerWMVVideoProcessingService.cs" />
     <Compile Include="Services\Concrete\YouTubeVideoNetworkService.cs" />
   </ItemGroup>
