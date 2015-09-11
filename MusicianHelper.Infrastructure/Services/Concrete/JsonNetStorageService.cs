@@ -36,7 +36,11 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
         {
             try
             {
-                var jsonStr = File.ReadAllText(GetSettingsFilePath());
+                var path = GetSettingsFilePath();
+                if (!File.Exists(path))
+                    return new StorageModel();
+
+                var jsonStr = File.ReadAllText(path);
                 return JsonConvert.DeserializeObject<StorageModel>(jsonStr);
             }
             catch (Exception ex)

@@ -1,4 +1,5 @@
 ﻿using System;
+using MusicianHelper.Infrastructure.Models;
 
 namespace MusicianHelper.Infrastructure.Services.Abstract
 {
@@ -6,6 +7,7 @@ namespace MusicianHelper.Infrastructure.Services.Abstract
     {
         string ExtractAuthToken(string returnString);
         Uri CreateRequestUri();
-        void GetRequestTokens();
+        OauthTokenModel GetRequestTokens(string authToken);
+        void SaveOauthResponse(OauthTokenModel otm);
     }
 }

@@ -33,7 +33,9 @@ namespace MusicianHelper.WinForms
         {
             if (!WebBrowser.DocumentTitle.Contains("Success code")) return;
 
-            _vns.ExtractAuthToken(WebBrowser.DocumentTitle);
+            var authToken = _vns.ExtractAuthToken(WebBrowser.DocumentTitle);
+            var oauthResponse = _vns.GetRequestTokens(authToken);
+            _vns.SaveOauthResponse(oauthResponse);
         }
 
     }
