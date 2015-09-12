@@ -9,15 +9,19 @@ namespace MusicianHelper.WinForms
     {
 
         private readonly IVideoManagementService _vms;
+        private readonly IVideoNetworkService _vns;
+        private readonly IStorageService _ss;
 
-        public MainWindow() : this(IoCHelper.Instance.GetService<IVideoManagementService>())
+        public MainWindow() : this(IoCHelper.Instance.GetService<IVideoManagementService>(), IoCHelper.Instance.GetService<IVideoNetworkService>(), IoCHelper.Instance.GetService<IStorageService>())
         {
             InitializeComponent();
         }
 
-        public MainWindow(IVideoManagementService vms)
+        public MainWindow(IVideoManagementService vms, IVideoNetworkService vns, IStorageService ss)
         {
             _vms = vms;
+            _vns = vns;
+            _ss = ss;
         }
 
         private void SetAudioDirectoryButton_Click(object sender, EventArgs e)
@@ -49,11 +53,13 @@ namespace MusicianHelper.WinForms
 
         private void RunButton_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(ImagesDirectory.Text) || string.IsNullOrEmpty(VideoDirectory.Text) ||
-                string.IsNullOrEmpty(AudioDirectory.Text))
-                return;
+            //if (string.IsNullOrEmpty(ImagesDirectory.Text) || string.IsNullOrEmpty(VideoDirectory.Text) ||
+            //    string.IsNullOrEmpty(AudioDirectory.Text))
+            //    return;
 
-            _vms.CreateAllVideos(ImagesDirectory.Text, AudioDirectory.Text, VideoDirectory.Text);
+            //_vms.CreateAllVideos(ImagesDirectory.Text, AudioDirectory.Text, VideoDirectory.Text);
+
+            _vns.UploadVideo("C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Rendered\\sorry_dave.wmv", _ss.Load().ToOauthTokenModel());
         }
 
         private void YouTubeCredentialsButton_Click(object sender, EventArgs e)

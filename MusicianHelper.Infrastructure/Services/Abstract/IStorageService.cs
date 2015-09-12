@@ -6,5 +6,6 @@ namespace MusicianHelper.Infrastructure.Services.Abstract
     {
         void Save(StorageModel obj);
         StorageModel Load();
+        string GetBaseDirectory();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using log4net;
 using MusicianHelper.Common.Helpers.Log;
 using MusicianHelper.Infrastructure.Models;
@@ -14,6 +15,8 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
         private static readonly ILog Log = LogHelper.GetLogger(typeof (JsonNetStorageService));
 
         private const string SETTINGS_FILE = "settings.json";
+
+        private string _basePath = null;
 
         public void Save(StorageModel obj)
         {
@@ -53,7 +56,40 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
 
         private string GetSettingsFilePath()
         {
-            return Path.Combine(GetCurrentDirectory(), SETTINGS_FILE);
+            return Path.Combine(GetBaseDirectory(), SETTINGS_FILE);
+        }
+
+        public string GetBaseDirectory()
+        {
+            try
+            {
+                if (_basePath == null)
+                {
+                    var currentDir = Environment.CurrentDirectory;
+                    var parts = currentDir.Split('\\');
+                    var sb = new StringBuilder();
+                    for (int i = 0; i < parts.Length; i++)
+                    {
+                        var part = parts[i];
+
+                        sb.Append(part);
+                        sb.Append('\\');
+                        if (part == "MusicianHelper")
+                        {
+                            break;
+                        }
+                    }
+
+                    _basePath = sb.ToString().TrimEnd('\\');
+                }
+
+                return _basePath;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+                return null;
+            }
         }
 
     }

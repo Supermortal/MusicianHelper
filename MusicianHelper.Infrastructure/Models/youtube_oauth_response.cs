@@ -12,9 +12,9 @@
             sm.RefreshToken = access_token;
         }
 
-        public OauthTokenModel ToOauthTokenModel()
+        public YouTubeOauthTokenModel ToOauthTokenModel()
         {
-            return new OauthTokenModel() { AccessToken = access_token, RefreshToken = refresh_token };
+            return new YouTubeOauthTokenModel() { AccessToken = access_token, RefreshToken = refresh_token };
         }
     }
 }

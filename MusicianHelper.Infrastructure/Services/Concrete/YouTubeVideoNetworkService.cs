@@ -20,22 +20,24 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
 
         private static readonly ILog Log = LogHelper.GetLogger(typeof(YouTubeVideoNetworkService));
 
-        private const string YOUTUBE_URL = "https://accounts.google.com/o/oauth2/auth?client_id=392497808537-83iin347g6ncno4ff0a3ufv0c353vtv5.apps.googleusercontent.com&redirect_uri=urn:ietf:wg:oauth:2.0:oob&response_type=code&scope=https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube";
+        private const string YOUTUBE_URL = "https://accounts.google.com/o/oauth2/auth?client_id={0}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&response_type=code&scope=https://www.googleapis.com/auth/youtube.upload";
         private const string OAUTH_URL = "https://accounts.google.com/o/oauth2/token";
 
         private readonly IStorageService _ss;
+        private readonly IAPIKeyService _aks;
 
-        private OauthTokenModel _otm = null;
+        private YouTubeOauthTokenModel _otm = null;
 
         public YouTubeVideoNetworkService()
-            : this(IoCHelper.Instance.GetService<IStorageService>())
+            : this(IoCHelper.Instance.GetService<IStorageService>(), IoCHelper.Instance.GetService<IAPIKeyService>())
         {
 
         }
 
-        public YouTubeVideoNetworkService(IStorageService ss)
+        public YouTubeVideoNetworkService(IStorageService ss, IAPIKeyService aks)
         {
             _ss = ss;
+            _aks = aks;
         }
 
         public string ExtractAuthToken(string returnString)
@@ -57,7 +59,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             try
             {
                 Uri uri;
-                Uri.TryCreate(YOUTUBE_URL, UriKind.Absolute, out uri);
+                Uri.TryCreate(string.Format(YOUTUBE_URL, _aks.GetAPIKeys().YouTubeClientId), UriKind.Absolute, out uri);
                 return uri;
             }
             catch (Exception ex)
@@ -67,7 +69,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             }
         }
 
-        public OauthTokenModel GetRequestTokens(string authToken)
+        public YouTubeOauthTokenModel GetRequestTokens(string authToken)
         {
             try
             {
@@ -84,8 +86,8 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                 {
                     var data = new NameValueCollection();
                     data["code"] = authToken;
-                    data["client_id"] = "392497808537-83iin347g6ncno4ff0a3ufv0c353vtv5.apps.googleusercontent.com";
-                    data["client_secret"] = "KeSVYrRyJE7y-WXM_gsUVrY7";
+                    data["client_id"] = _aks.GetAPIKeys().YouTubeClientId;
+                    data["client_secret"] = _aks.GetAPIKeys().YouTubeClientSecret;
                     data["redirect_uri"] = "urn:ietf:wg:oauth:2.0:oob";
                     data["grant_type"] = "authorization_code";
 
@@ -103,7 +105,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             }
         }
 
-        public void SaveOauthResponse(OauthTokenModel otm)
+        public void SaveOauthResponse(YouTubeOauthTokenModel otm)
         {
             try
             {
@@ -120,11 +122,10 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             }
         }
 
-        public async void UploadVideo(string videoPath, OauthTokenModel otm)
+        public async void UploadVideo(string videoPath, YouTubeOauthTokenModel otm)
         {
             try
             {
-            //https://www.googleapis.com//upload/youtube/v3/videos?uploadType=resumable&part=snippet,status,contentDetails
                 var bytes = File.ReadAllBytes(videoPath);
 
                 Video returnedVideo = null;
@@ -137,7 +138,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                         {
                             Title = "Default Video Title",
                             Description = "Default Video Description",
-                            Tags = new string[] {"tag1", "tag2"},
+                            Tags = new string[] { "tag1", "tag2" },
                             //TODO get category list info
                             CategoryId = "22"
                         },
@@ -180,7 +181,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             }
         }
 
-        public OauthTokenModel GetOauthTokenModel()
+        public YouTubeOauthTokenModel GetOauthTokenModel()
         {
             try
             {

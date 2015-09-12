@@ -7,8 +7,8 @@ namespace MusicianHelper.Infrastructure.Services.Abstract
     {
         string ExtractAuthToken(string returnString);
         Uri CreateRequestUri();
-        OauthTokenModel GetRequestTokens(string authToken);
-        void SaveOauthResponse(OauthTokenModel otm);
-        void UploadVideo(string videoPath, OauthTokenModel otm);
+        YouTubeOauthTokenModel GetRequestTokens(string authToken);
+        void SaveOauthResponse(YouTubeOauthTokenModel otm);
+        void UploadVideo(string videoPath, YouTubeOauthTokenModel otm);
     }
 }
