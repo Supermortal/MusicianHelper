@@ -36,7 +36,8 @@ namespace MusicianHelper.WinForms
             var authToken = _vns.ExtractAuthToken(WebBrowser.DocumentTitle);
             var oauthResponse = _vns.GetRequestTokens(authToken);
             _vns.SaveOauthResponse(oauthResponse);
-            _vns.Get(oauthResponse);
+            _vns.UploadVideo("C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Rendered\\sorry_dave.wmv",
+                oauthResponse);
         }
 
     }

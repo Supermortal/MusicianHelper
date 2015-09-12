@@ -9,9 +9,7 @@ using MusicianHelper.Infrastructure.Models;
 using MusicianHelper.Infrastructure.Services.Abstract;
 using MusicianHelper.Infrastructure.Services.Concrete;
 
-namespace MusicianHelper.Console
-{
-    class Program
+ram
     {
         private static string BaseDir
         {
