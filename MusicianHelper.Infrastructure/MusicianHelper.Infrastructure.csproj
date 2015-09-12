@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\APIKeysModel.cs" />
+    <Compile Include="Models\AudioUoW.cs" />
     <Compile Include="Models\Enums\VideoQuality.cs" />
     <Compile Include="Models\YouTubeOauthTokenModel.cs" />
     <Compile Include="Models\SplicerWMVProfile.cs" />

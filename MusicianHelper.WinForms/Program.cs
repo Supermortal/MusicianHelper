@@ -45,6 +45,7 @@ namespace MusicianHelper.WinForms
             IoCHelper.Instance.BindService<IVideoNetworkService, YouTubeVideoNetworkService>(IoCBindingType.Normal, "YouTubeNetwork");
             IoCHelper.Instance.BindService<IStorageService, JsonNetStorageService>(IoCBindingType.Singleton);
             IoCHelper.Instance.BindService<IAPIKeyService, DefaultAPIKeyService>(IoCBindingType.Singleton);
+            IoCHelper.Instance.BindService<IMasterService, DefaultMasterService>();
         }
     }
 }

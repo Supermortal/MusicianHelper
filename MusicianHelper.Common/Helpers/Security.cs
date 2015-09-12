@@ -103,5 +103,11 @@ namespace MusicianHelper.Common.Helpers
             return fromEncrypt;
         }
 
+        public static void Configure(byte[] iv, byte[] key)
+        {
+            IV = iv;
+            Key = key;
+        }
+
     }
 }

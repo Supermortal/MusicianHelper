@@ -17,7 +17,8 @@ namespace MusicianHelper.Infrastructure.Services.Abstract
         string GetAudioDirectory();
         string GetImagesDirectory();
         void CreateVideo(string imagesDirectoryPath, string audioPath, string renderDirectory, EventHandler renderCompleted = null);
-        void CreateAllVideos(string imagesDirectory, string audioDirectory, string renderDirectory);
+        void CreateAllVideos(List<string> imagePaths, List<string> audioPaths, string renderDirectory);
         string CreateRenderedVideoName(string audioPath);
+        List<string> GetImagePaths(string imageDirectory);
     }
 }

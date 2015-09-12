@@ -6,6 +6,9 @@
         public string RefreshToken { get; set; }
         public string YouTubeClientId { get; set; }
         public string YouTubeClientSecret { get; set; }
+        public string LastAudioDirectory { get; set; }
+        public string LastVideoDirectory { get; set; }
+        public string LastImagesDirectory { get; set; }
 
         public YouTubeOauthTokenModel ToOauthTokenModel()
         {

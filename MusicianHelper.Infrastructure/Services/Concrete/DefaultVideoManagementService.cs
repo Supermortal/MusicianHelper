@@ -77,14 +77,11 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             throw new NotImplementedException();
         }
 
-        public void CreateAllVideos(string imagesDirectory, string audioDirectory, string renderDirectory)
+        public void CreateAllVideos(List<string> imagePaths, List<string> audioPaths, string renderDirectory)
         {
             try
             {
-                var audios = Directory.GetFiles(audioDirectory);
-                var imagePaths = Directory.GetFiles(imagesDirectory).ToList();
-
-                foreach (var audioPath in audios)
+                foreach (var audioPath in audioPaths)
                 {
                     CreateVideoFromImages(imagePaths, audioPath, CreateRenderedVideoName(audioPath), renderDirectory);
                 }
@@ -104,6 +101,19 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                 parts = fileName.Split('.');
 
                 return parts[0];
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+                return null;
+            }
+        }
+
+        public List<string> GetImagePaths(string imageDirectory)
+        {
+            try
+            {
+                return Directory.GetFiles(imageDirectory).ToList();
             }
             catch (Exception ex)
             {

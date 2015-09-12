@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using log4net;
+using MusicianHelper.Common.Helpers;
 using MusicianHelper.Common.Helpers.Log;
 using MusicianHelper.Infrastructure.Models;
 using MusicianHelper.Infrastructure.Services.Abstract;
@@ -74,7 +75,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
 
                         sb.Append(part);
                         sb.Append('\\');
-                        if (part == "MusicianHelper")
+                        if (part == Names.TopLevelDirectory)
                         {
                             break;
                         }

@@ -63,6 +63,7 @@
     <Compile Include="Helpers\IoCHelper.cs" />
     <Compile Include="Helpers\Log\Log.cs" />
     <Compile Include="Helpers\Log\LogHelper.cs" />
+    <Compile Include="Helpers\Names.cs" />
     <Compile Include="Helpers\Security.cs" />
     <Compile Include="Helpers\WebHelper.cs" />
     <Compile Include="Models\Enums\IoCBindingType.cs" />
