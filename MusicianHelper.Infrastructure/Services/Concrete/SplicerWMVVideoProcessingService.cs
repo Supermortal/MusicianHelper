@@ -20,7 +20,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
         {
             try
             {
-                CreateVideoFromImages(imagePaths, new AudioUoW() {Path = audioPath}, outputPath, vq, renderCompleted);
+                CreateVideoFromImages(imagePaths, new AudioUoW() {AudioPath = audioPath}, outputPath, vq, renderCompleted);
             }
             catch (Exception ex)
             {
@@ -67,7 +67,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                     var videoTrack = group.AddTrack();
                     var audioTrack = timeline.AddAudioGroup().AddTrack();
 
-                    var a = audioTrack.AddAudio(audio.Path);
+                    var a = audioTrack.AddAudio(audio.AudioPath);
 
                     var imageDuration = a.Duration/imagePaths.Count;
 

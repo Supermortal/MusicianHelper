@@ -6,6 +6,7 @@ namespace MusicianHelper.Infrastructure.Services.Abstract
 {
 
     public delegate void AllVideosRenderedEventHandler(object sender, EventArgs e);
+    public delegate void AllVideosUploadedEventHandler(object sender, EventArgs e);
 
     public interface IVideoManagementService
     {
@@ -24,5 +25,9 @@ namespace MusicianHelper.Infrastructure.Services.Abstract
         List<string> GetImagePaths(string imageDirectory);
         void CreateAllVideos(List<AudioUoW> audios, string imageDirectory, string renderDirectory, AllVideosRenderedEventHandler allVideosRendered = null, VideoRenderedEventHandler renderCompleted = null, Action<string> feedbackMethod = null);
         string MakeValidFileName(string name);
+        List<string> GetAllVideoPaths(string renderedDirectory);
+        void DeleteAllRenderedVideos(string renderedDirectory);
+        void UploadVideo(AudioUoW audio, OauthTokenModel otm, VideoUploadedEventArgs videoUploaded = null);
+        void UploadAllVideos(List<AudioUoW> audios, OauthTokenModel otm, AllVideosUploadedEventHandler allVideosUploaded = null, VideoUploadedEventHandler videoUploaded = null, Action<string> feedbackMethod = null);
     }
 }

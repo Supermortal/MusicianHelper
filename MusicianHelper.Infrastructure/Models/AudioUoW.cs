@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MusicianHelper.Infrastructure.Models
 {
@@ -11,7 +7,8 @@ namespace MusicianHelper.Infrastructure.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public List<string> Tags { get; set; }
-        public string Path { get; set; }
+        public string AudioPath { get; set; }
+        public string VideoPath { get; set; }
         public string SessionId { get; set; }
 
         public AudioUoW()

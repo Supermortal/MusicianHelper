@@ -119,23 +119,21 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             }
         }
 
-        public async void UploadVideo(string videoPath, OauthTokenModel otm)
+        public async void UploadVideo(AudioUoW audio, OauthTokenModel otm, List<VideoUploadedEventHandler> videoUploaded = null)
         {
             try
             {
-                var bytes = File.ReadAllBytes(videoPath);
-
                 Video returnedVideo = null;
-                using (var stream = File.OpenRead(videoPath))
+                using (var stream = File.OpenRead(audio.VideoPath))
                 {
 
                     var video = new Video
                     {
                         Snippet = new VideoSnippet
                         {
-                            Title = "Default Video Title",
-                            Description = "Default Video Description",
-                            Tags = new string[] { "tag1", "tag2" },
+                            Title = audio.Title,
+                            Description = audio.Description,
+                            Tags = audio.Tags,
                             //TODO get category list info
                             CategoryId = "22"
                         },
@@ -149,8 +147,8 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
 
                     var headers = new Dictionary<string, string>();
 
-                    headers["Authorization"] = "Bearer " + otm.AccessToken;
-                    headers["X-Upload-Content-Length"] = bytes.Length.ToString();
+                    headers["Authorization"] = otm.TokenType + " " + otm.AccessToken;
+                    headers["X-Upload-Content-Length"] = stream.Length.ToString();
                     headers["x-upload-content-type"] = "application/octet-stream";
 
                     IJsonSerializer js = new NewtonsoftJsonSerializer();
@@ -169,8 +167,12 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                         stream, headers);
                 }
 
-                var t = "t";
+                if (videoUploaded == null) return;
 
+                foreach (var vu in videoUploaded)
+                {
+                    vu(this, new VideoUploadedEventArgs() {Audio = audio});
+                }
             }
             catch (Exception ex)
             {

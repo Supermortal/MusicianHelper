@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using log4net;
 using MusicianHelper.Common.Helpers.Log;
 using MusicianHelper.Infrastructure.Models;
@@ -21,7 +20,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             try
             {
                 var files = Directory.GetFiles(audioDirectory);
-                var list = files.Select(audioPath => new AudioUoW() {Path = audioPath, Title = GetAudioUnitOfWorkName(audioPath)}).ToList();
+                var list = files.Select(audioPath => new AudioUoW() {AudioPath = audioPath, Title = GetAudioUnitOfWorkName(audioPath)}).ToList();
                 return list;
             }
             catch (Exception ex)

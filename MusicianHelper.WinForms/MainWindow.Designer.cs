@@ -39,6 +39,7 @@
             this.YouTubeCredentialsButton = new System.Windows.Forms.Button();
             this.ConsoleTextBox = new System.Windows.Forms.TextBox();
             this.RenderVideosButton = new System.Windows.Forms.Button();
+            this.UploadVideosButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // SetAudioDirectoryButton
@@ -136,11 +137,23 @@
             this.RenderVideosButton.UseVisualStyleBackColor = true;
             this.RenderVideosButton.Click += new System.EventHandler(this.RenderVideosButton_Click);
             // 
+            // UploadVideosButton
+            // 
+            this.UploadVideosButton.Enabled = false;
+            this.UploadVideosButton.Location = new System.Drawing.Point(652, 671);
+            this.UploadVideosButton.Name = "UploadVideosButton";
+            this.UploadVideosButton.Size = new System.Drawing.Size(147, 23);
+            this.UploadVideosButton.TabIndex = 10;
+            this.UploadVideosButton.Text = "Upload Videos";
+            this.UploadVideosButton.UseVisualStyleBackColor = true;
+            this.UploadVideosButton.Click += new System.EventHandler(this.UploadVideosButton_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1042, 784);
+            this.Controls.Add(this.UploadVideosButton);
             this.Controls.Add(this.RenderVideosButton);
             this.Controls.Add(this.ConsoleTextBox);
             this.Controls.Add(this.YouTubeCredentialsButton);
@@ -171,6 +184,7 @@
         private System.Windows.Forms.Button YouTubeCredentialsButton;
         private System.Windows.Forms.TextBox ConsoleTextBox;
         private System.Windows.Forms.Button RenderVideosButton;
+        private System.Windows.Forms.Button UploadVideosButton;
     }
 }
 

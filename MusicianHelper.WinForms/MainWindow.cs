@@ -23,6 +23,8 @@ namespace MusicianHelper.WinForms
         private List<AudioUoW> _audios;
         private bool _videoCredentialsSet = false;
         private bool _audioMetadataSet = false;
+        private bool _videosRendered = false;
+        private bool _videosUploaded = false;
 
         public MainWindow() : this(
             IoCHelper.Instance.GetService<IVideoManagementService>(), 
@@ -67,7 +69,9 @@ namespace MusicianHelper.WinForms
             try
             {
                 AppendToLog("Starting audio configuration...");
-                _audios = _ms.CreateAudioUnitsOfWork(AudioDirectory.Text);
+
+                if (_audios == null)
+                    _audios = _ms.CreateAudioUnitsOfWork(AudioDirectory.Text);
                 
                 var aew = new AudioEditWindow(_audios);
                 aew.Closed += AudioEditWindow_Closed;
@@ -83,8 +87,23 @@ namespace MusicianHelper.WinForms
         {
             try
             {
-                AppendToLog("Beginning video rendering (this will probably take a while)...");
+                AppendToLog("Cleaning rendering directory...");
+                _vms.DeleteAllRenderedVideos(VideoDirectory.Text);
+                AppendToLog("Beginning video rendering (this will probably take a while)...");             
                 _vms.CreateAllVideos(audios, ImagesDirectory.Text, VideoDirectory.Text, AllVideosRendered, VideoRendered, AppendToLog);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void StartVideoUpload()
+        {
+            try
+            {
+                var otm = _ss.Load().ToYouTubeOauthTokenModel();
+                _vms.UploadAllVideos(_audios, otm, AllVideosUploaded, VideoUploaded, AppendToLog);
             }
             catch (Exception ex)
             {
@@ -227,6 +246,8 @@ namespace MusicianHelper.WinForms
         {
             try
             {
+                RenderVideosButton.Enabled = false;
+                ConfigureAudioButton.Enabled = false;
                 StartVideoRendering(_audios);
             }
             catch (Exception ex)
@@ -251,7 +272,47 @@ namespace MusicianHelper.WinForms
         {
             try
             {
+                _videosRendered = true;
+                UploadVideosButton.Invoke(new Action(() => UploadVideosButton.Enabled = true));
                 AppendToLog("Video rendering complete!");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void UploadVideosButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UploadVideosButton.Enabled = false;
+                StartVideoUpload();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void VideoUploaded(object sender, VideoUploadedEventArgs e)
+        {
+            try
+            {
+                AppendToLog("Upload complete! " + e.Audio.Title);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void AllVideosUploaded(object sender, EventArgs e)
+        {
+            try
+            {
+                _videosUploaded = true;
+                AppendToLog("Video uploads complete!");
             }
             catch (Exception ex)
             {

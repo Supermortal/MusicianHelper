@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Threading.Tasks;
 using log4net;
 using MusicianHelper.Common.Helpers.Log;
 using MusicianHelper.Infrastructure.Models;
@@ -19,16 +17,18 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
 
         private VideoManagmentSettings _vms = null;
         private readonly IVideoProcessingService _vps = null;
-        private readonly Dictionary<string, VideoRenderingSession> _sessions = new Dictionary<string, VideoRenderingSession>(); 
+        private readonly Dictionary<string, VideoRenderingSession> _sessions = new Dictionary<string, VideoRenderingSession>();
+        private readonly IVideoNetworkService _vns;
 
         private string _renderDirectory = null;
 
         private string AudioDirectory { get; set; }
         private string ImagesDirectory { get; set; }
 
-        public DefaultVideoManagementService(IVideoProcessingService vps)
+        public DefaultVideoManagementService(IVideoProcessingService vps, IVideoNetworkService vns)
         {
             _vps = vps;
+            _vns = vns;
         }
 
         private static string BaseDir
@@ -139,17 +139,18 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
 
                     var filename = MakeValidFileName(audio.Title);
                     var correctedFilename = _vps.GetCorrectFilename(filename);
-                    var finalPath = Path.Combine(renderDirectory, correctedFilename);
+                    audio.VideoPath = Path.Combine(renderDirectory, correctedFilename);
 
-                    var list = new List<VideoRenderedEventHandler>() {RenderCompleted};
+                    var list = new List<VideoRenderedEventHandler>();
                     if (renderCompleted != null)
                         list.Add(renderCompleted);
+                    list.Add(RenderCompleted);
 
                     if (feedbackMethod != null)
                         feedbackMethod("Rendering started... " + audio.Title);
 
                     _sessions[sessionId].Count++;
-                    _vps.CreateVideoFromImages(imagePaths, audio, finalPath, VideoQuality.FULLHD2_NTSC, list);
+                    _vps.CreateVideoFromImages(imagePaths, audio, audio.VideoPath, VideoQuality.FULLHD2_NTSC, list);
                 }
             }
             catch (Exception ex)
@@ -182,8 +183,10 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                 var session = _sessions[e.Audio.SessionId];
                 session.Count--;
 
-                if (session.Count == 0)
-                    session.AllVideosRendered(this, EventArgs.Empty);
+                if (session.Count > 0) return;
+
+                session.AllVideosRendered(this, EventArgs.Empty);
+                //_sessions.Remove(e.Audio.SessionId);
             }
             catch (Exception ex)
             {
@@ -203,6 +206,94 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             var invalidRegStr = string.Format(@"([{0}]*\.+$)|([{0}]+)", invalidChars);
 
             return System.Text.RegularExpressions.Regex.Replace(name, invalidRegStr, "_");
+        }
+
+        public List<string> GetAllVideoPaths(string renderedDirectory)
+        {
+            try
+            {
+                return Directory.GetFiles(renderedDirectory).ToList();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+                return null;
+            }
+        }
+
+        public void DeleteAllRenderedVideos(string renderedDirectory)
+        {
+            try
+            {
+                var di = new DirectoryInfo(renderedDirectory);
+                foreach (var file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        public void UploadVideo(AudioUoW audio, OauthTokenModel otm, VideoUploadedEventArgs videoUploaded = null)
+        {
+            try
+            {
+                _vns.UploadVideo(audio, otm, new List<VideoUploadedEventHandler>());
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        public void UploadAllVideos(List<AudioUoW> audios, OauthTokenModel otm, AllVideosUploadedEventHandler allVideosUploaded = null,
+            VideoUploadedEventHandler videoUploaded = null, Action<string> feedbackMethod = null)
+        {
+            try
+            {
+                var sessionId = audios.First().SessionId;
+                var session = _sessions[sessionId];
+                session.AllVideosUploaded = allVideosUploaded;
+                session.Count = 0;
+                foreach (var audio in audios)
+                {
+                    var list = new List<VideoUploadedEventHandler>();
+                    if (videoUploaded != null)
+                        list.Add(videoUploaded);
+                    list.Add(VideoUploaded);
+
+                    if (feedbackMethod != null)
+                        feedbackMethod("Upload started... " + audio.Title);
+
+                    _sessions[sessionId].Count++;
+                    _vns.UploadVideo(audio, otm, list);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void VideoUploaded(object sender, VideoUploadedEventArgs e)
+        {
+            try
+            {
+                var session = _sessions[e.Audio.SessionId];
+                session.Count--;
+
+                if (session.Count > 0) return;
+
+                session.AllVideosUploaded(this, EventArgs.Empty);
+                //_sessions.Remove(e.Audio.SessionId);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
         }
 
     }
