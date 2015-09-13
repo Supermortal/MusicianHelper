@@ -1,29 +1,27 @@
-﻿namespace MusicianHelper.Infrastructure.Models
+﻿using System;
+
+namespace MusicianHelper.Infrastructure.Models
 {
     public class StorageModel
     {
-        public string AccessToken { get; set; }
-        public string RefreshToken { get; set; }
+        public string YouTubeAccessToken { get; set; }
+        public string YouTubeRefreshToken { get; set; }
+        public string YouTubeTokenType { get; set; }
+        public DateTime? YouTubeAccessTokenExpiry { get; set; }
         public string YouTubeClientId { get; set; }
         public string YouTubeClientSecret { get; set; }
         public string LastAudioDirectory { get; set; }
         public string LastVideoDirectory { get; set; }
         public string LastImagesDirectory { get; set; }
 
-        public YouTubeOauthTokenModel ToOauthTokenModel()
+        public OauthTokenModel ToYouTubeOauthTokenModel()
         {
-            return new YouTubeOauthTokenModel() { AccessToken = AccessToken, RefreshToken = RefreshToken };
+            return new OauthTokenModel() { AccessToken = YouTubeAccessToken, RefreshToken = YouTubeRefreshToken, AccessTokenExpiry = YouTubeAccessTokenExpiry, TokenType = YouTubeTokenType };
         }
 
         public APIKeysModel ToAPIKeysModel()
         {
             return new APIKeysModel() { YouTubeClientId = YouTubeClientId, YouTubeClientSecret = YouTubeClientSecret };
-        }
-
-        public void UpdateAPIKeys(APIKeysModel akm)
-        {
-            YouTubeClientId = akm.YouTubeClientId;
-            YouTubeClientSecret = akm.YouTubeClientSecret;
         }
     }
 }

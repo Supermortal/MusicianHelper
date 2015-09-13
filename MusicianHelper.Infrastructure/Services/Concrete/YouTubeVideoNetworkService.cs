@@ -26,7 +26,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
         private readonly IStorageService _ss;
         private readonly IAPIKeyService _aks;
 
-        private YouTubeOauthTokenModel _otm = null;
+        private OauthTokenModel _otm = null;
 
         public YouTubeVideoNetworkService()
             : this(IoCHelper.Instance.GetService<IStorageService>(), IoCHelper.Instance.GetService<IAPIKeyService>())
@@ -69,7 +69,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             }
         }
 
-        public YouTubeOauthTokenModel GetRequestTokens(string authToken)
+        public OauthTokenModel GetRequestTokens(string authToken)
         {
             try
             {
@@ -105,15 +105,12 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             }
         }
 
-        public void SaveOauthResponse(YouTubeOauthTokenModel otm)
+        public void SaveOauthResponse(OauthTokenModel otm)
         {
             try
             {
                 var sm = _ss.Load();
-
-                sm.AccessToken = otm.AccessToken;
-                sm.RefreshToken = otm.RefreshToken;
-
+                otm.UpdateStorageModel(sm);
                 _ss.Save(sm);
             }
             catch (Exception ex)
@@ -122,7 +119,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             }
         }
 
-        public async void UploadVideo(string videoPath, YouTubeOauthTokenModel otm)
+        public async void UploadVideo(string videoPath, OauthTokenModel otm)
         {
             try
             {
@@ -181,11 +178,52 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             }
         }
 
-        public YouTubeOauthTokenModel GetOauthTokenModel()
+        public bool? HasCredentials()
         {
             try
             {
-                return _otm ?? (_otm = _ss.Load().ToOauthTokenModel());
+                var sm = _ss.Load();
+                return (sm.YouTubeAccessToken != null);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+                return null;
+            }
+        }
+
+        public OauthTokenModel RefreshRequestTokens(OauthTokenModel ytm)
+        {
+            try
+            {
+                using (var wb = new WebClient())
+                {
+                    var data = new NameValueCollection();
+                    data["client_id"] = _aks.GetAPIKeys().YouTubeClientId;
+                    data["client_secret"] = _aks.GetAPIKeys().YouTubeClientSecret;
+                    data["refresh_token"] = ytm.RefreshToken;
+                    data["grant_type"] = "refresh_token";
+
+                    var response = wb.UploadValues(OAUTH_URL, "POST", data);
+                    var responseStr = Encoding.ASCII.GetString(response);
+                    var oauthResponse = JsonConvert.DeserializeObject<youtube_oauth_response>(responseStr);
+                    oauthResponse.refresh_token = ytm.RefreshToken;
+
+                    return oauthResponse.ToOauthTokenModel();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+                return null;
+            }
+        }
+
+        public OauthTokenModel GetOauthTokenModel()
+        {
+            try
+            {
+                return _otm ?? (_otm = _ss.Load().ToYouTubeOauthTokenModel());
             }
             catch (Exception ex)
             {

@@ -12,6 +12,7 @@ namespace MusicianHelper.Infrastructure.Models
         public string Description { get; set; }
         public List<string> Tags { get; set; }
         public string Path { get; set; }
+        public string SessionId { get; set; }
 
         public AudioUoW()
         {

@@ -95,10 +95,12 @@
     <Compile Include="Models\APIKeysModel.cs" />
     <Compile Include="Models\AudioUoW.cs" />
     <Compile Include="Models\Enums\VideoQuality.cs" />
-    <Compile Include="Models\YouTubeOauthTokenModel.cs" />
+    <Compile Include="Models\OauthTokenModel.cs" />
     <Compile Include="Models\SplicerWMVProfile.cs" />
     <Compile Include="Models\StorageModel.cs" />
     <Compile Include="Models\VideoManagmentSettings.cs" />
+    <Compile Include="Models\VideoRenderedEventArgs.cs" />
+    <Compile Include="Models\VideoRenderingSession.cs" />
     <Compile Include="Models\youtube_oauth_response.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Abstract\IAPIKeyService.cs" />

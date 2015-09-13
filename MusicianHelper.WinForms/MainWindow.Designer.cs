@@ -35,8 +35,10 @@
             this.SetVideoDirectoryButton = new System.Windows.Forms.Button();
             this.ImagesDirectory = new System.Windows.Forms.TextBox();
             this.SetImagesDirectoryButton = new System.Windows.Forms.Button();
-            this.RunButton = new System.Windows.Forms.Button();
+            this.ConfigureAudioButton = new System.Windows.Forms.Button();
             this.YouTubeCredentialsButton = new System.Windows.Forms.Button();
+            this.ConsoleTextBox = new System.Windows.Forms.TextBox();
+            this.RenderVideosButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // SetAudioDirectoryButton
@@ -93,19 +95,20 @@
             this.SetImagesDirectoryButton.UseVisualStyleBackColor = true;
             this.SetImagesDirectoryButton.Click += new System.EventHandler(this.SetImagesDirectoryButton_Click);
             // 
-            // RunButton
+            // ConfigureAudioButton
             // 
-            this.RunButton.Location = new System.Drawing.Point(447, 671);
-            this.RunButton.Name = "RunButton";
-            this.RunButton.Size = new System.Drawing.Size(147, 23);
-            this.RunButton.TabIndex = 6;
-            this.RunButton.Text = "Run";
-            this.RunButton.UseVisualStyleBackColor = true;
-            this.RunButton.Click += new System.EventHandler(this.RunButton_Click);
+            this.ConfigureAudioButton.Enabled = false;
+            this.ConfigureAudioButton.Location = new System.Drawing.Point(252, 671);
+            this.ConfigureAudioButton.Name = "ConfigureAudioButton";
+            this.ConfigureAudioButton.Size = new System.Drawing.Size(147, 23);
+            this.ConfigureAudioButton.TabIndex = 6;
+            this.ConfigureAudioButton.Text = "Configure Audio";
+            this.ConfigureAudioButton.UseVisualStyleBackColor = true;
+            this.ConfigureAudioButton.Click += new System.EventHandler(this.ConfigureAudioButton_Click);
             // 
             // YouTubeCredentialsButton
             // 
-            this.YouTubeCredentialsButton.Location = new System.Drawing.Point(447, 608);
+            this.YouTubeCredentialsButton.Location = new System.Drawing.Point(55, 671);
             this.YouTubeCredentialsButton.Name = "YouTubeCredentialsButton";
             this.YouTubeCredentialsButton.Size = new System.Drawing.Size(147, 23);
             this.YouTubeCredentialsButton.TabIndex = 7;
@@ -113,13 +116,35 @@
             this.YouTubeCredentialsButton.UseVisualStyleBackColor = true;
             this.YouTubeCredentialsButton.Click += new System.EventHandler(this.YouTubeCredentialsButton_Click);
             // 
+            // ConsoleTextBox
+            // 
+            this.ConsoleTextBox.Enabled = false;
+            this.ConsoleTextBox.Location = new System.Drawing.Point(94, 384);
+            this.ConsoleTextBox.Multiline = true;
+            this.ConsoleTextBox.Name = "ConsoleTextBox";
+            this.ConsoleTextBox.Size = new System.Drawing.Size(869, 250);
+            this.ConsoleTextBox.TabIndex = 8;
+            // 
+            // RenderVideosButton
+            // 
+            this.RenderVideosButton.Enabled = false;
+            this.RenderVideosButton.Location = new System.Drawing.Point(447, 671);
+            this.RenderVideosButton.Name = "RenderVideosButton";
+            this.RenderVideosButton.Size = new System.Drawing.Size(147, 23);
+            this.RenderVideosButton.TabIndex = 9;
+            this.RenderVideosButton.Text = "Render Videos";
+            this.RenderVideosButton.UseVisualStyleBackColor = true;
+            this.RenderVideosButton.Click += new System.EventHandler(this.RenderVideosButton_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1042, 784);
+            this.Controls.Add(this.RenderVideosButton);
+            this.Controls.Add(this.ConsoleTextBox);
             this.Controls.Add(this.YouTubeCredentialsButton);
-            this.Controls.Add(this.RunButton);
+            this.Controls.Add(this.ConfigureAudioButton);
             this.Controls.Add(this.SetImagesDirectoryButton);
             this.Controls.Add(this.ImagesDirectory);
             this.Controls.Add(this.SetVideoDirectoryButton);
@@ -142,8 +167,10 @@
         private System.Windows.Forms.Button SetVideoDirectoryButton;
         private System.Windows.Forms.TextBox ImagesDirectory;
         private System.Windows.Forms.Button SetImagesDirectoryButton;
-        private System.Windows.Forms.Button RunButton;
+        private System.Windows.Forms.Button ConfigureAudioButton;
         private System.Windows.Forms.Button YouTubeCredentialsButton;
+        private System.Windows.Forms.TextBox ConsoleTextBox;
+        private System.Windows.Forms.Button RenderVideosButton;
     }
 }
 

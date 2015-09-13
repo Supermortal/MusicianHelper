@@ -1,20 +1,25 @@
-﻿namespace MusicianHelper.Infrastructure.Models
+﻿using System;
+
+namespace MusicianHelper.Infrastructure.Models
 {
     public class youtube_oauth_response
     {
         public string access_token { get; set; }
         public string token_type { get; set; }
         public string refresh_token { get; set; }
+        public string expires_in { get; set; }
 
-        public void UpdateStorageModel(StorageModel sm)
+        public OauthTokenModel ToOauthTokenModel()
         {
-            sm.AccessToken = access_token;
-            sm.RefreshToken = access_token;
-        }
+            var ytm = new OauthTokenModel
+            {
+                AccessToken = access_token,
+                TokenType = token_type,
+                RefreshToken = refresh_token,
+                AccessTokenExpiry = DateTime.UtcNow.AddSeconds(int.Parse(expires_in))
+            };
 
-        public YouTubeOauthTokenModel ToOauthTokenModel()
-        {
-            return new YouTubeOauthTokenModel() { AccessToken = access_token, RefreshToken = refresh_token };
+            return ytm;
         }
     }
 }

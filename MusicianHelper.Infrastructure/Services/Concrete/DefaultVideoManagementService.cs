@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using System.Threading.Tasks;
 using log4net;
 using MusicianHelper.Common.Helpers.Log;
 using MusicianHelper.Infrastructure.Models;
@@ -17,6 +19,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
 
         private VideoManagmentSettings _vms = null;
         private readonly IVideoProcessingService _vps = null;
+        private readonly Dictionary<string, VideoRenderingSession> _sessions = new Dictionary<string, VideoRenderingSession>(); 
 
         private string _renderDirectory = null;
 
@@ -72,7 +75,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             return ImagesDirectory;
         }
 
-        public void CreateVideo(string imagesDirectoryPath, string audioPath, string renderDirectory, EventHandler renderCompleted = null)
+        public void CreateVideo(string imagesDirectoryPath, string audioPath, string renderDirectory, VideoRenderedEventHandler renderCompleted = null)
         {
             throw new NotImplementedException();
         }
@@ -122,18 +125,48 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             }
         }
 
-        public void CreateVideoFromImages(List<string> imagePaths, string audioPath, string outputFilename, string renderedDirectory, EventHandler renderCompleted = null)
+        public void CreateAllVideos(List<AudioUoW> audios, string imageDirectory, string renderDirectory, AllVideosRenderedEventHandler allVideosRendered = null, VideoRenderedEventHandler renderCompleted = null, Action<string> feedbackMethod = null)
         {
             try
             {
-                var ehList = new List<EventHandler>();
+                var imagePaths = Directory.GetFiles(imageDirectory).ToList();
 
+                var sessionId = Guid.NewGuid().ToString();
+                _sessions.Add(sessionId, new VideoRenderingSession() {Count = 0, AllVideosRendered = allVideosRendered});
+                foreach (var audio in audios)
+                {
+                    audio.SessionId = sessionId;
+
+                    var filename = MakeValidFileName(audio.Title);
+                    var correctedFilename = _vps.GetCorrectFilename(filename);
+                    var finalPath = Path.Combine(renderDirectory, correctedFilename);
+
+                    var list = new List<VideoRenderedEventHandler>() {RenderCompleted};
+                    if (renderCompleted != null)
+                        list.Add(renderCompleted);
+
+                    if (feedbackMethod != null)
+                        feedbackMethod("Rendering started... " + audio.Title);
+
+                    _sessions[sessionId].Count++;
+                    _vps.CreateVideoFromImages(imagePaths, audio, finalPath, VideoQuality.FULLHD2_NTSC, list);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        public void CreateVideoFromImages(List<string> imagePaths, string audioPath, string outputFilename, string renderedDirectory, VideoRenderedEventHandler renderCompleted = null)
+        {
+            try
+            {
+                var list = new List<VideoRenderedEventHandler>() { RenderCompleted };
                 if (renderCompleted != null)
-                    ehList.Add(renderCompleted);
-
-                ehList.Add(RenderCompleted);
-
-                _vps.CreateVideoFromImages(imagePaths, audioPath, Path.Combine(renderedDirectory, _vps.GetCorrectFilename(outputFilename)), VideoQuality.HD2_NTSC, ehList);
+                    list.Add(renderCompleted);
+       
+                 _vps.CreateVideoFromImages(imagePaths, audioPath, Path.Combine(renderedDirectory, _vps.GetCorrectFilename(outputFilename)), VideoQuality.HD2_NTSC, list);            
             }
             catch (Exception ex)
             {
@@ -142,11 +175,15 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             }
         }
 
-        private void RenderCompleted(object sender, EventArgs e)
+        private void RenderCompleted(object sender, VideoRenderedEventArgs e)
         {
             try
             {
-                var t = "t";
+                var session = _sessions[e.Audio.SessionId];
+                session.Count--;
+
+                if (session.Count == 0)
+                    session.AllVideosRendered(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {
@@ -158,6 +195,14 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
         public void Configure(VideoManagmentSettings settings)
         {
             _vms = settings;
+        }
+
+        public string MakeValidFileName(string name)
+        {
+            var invalidChars = System.Text.RegularExpressions.Regex.Escape(new string(System.IO.Path.GetInvalidFileNameChars()));
+            var invalidRegStr = string.Format(@"([{0}]*\.+$)|([{0}]+)", invalidChars);
+
+            return System.Text.RegularExpressions.Regex.Replace(name, invalidRegStr, "_");
         }
 
     }

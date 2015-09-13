@@ -63,7 +63,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                 akm.YouTubeClientId = Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.YouTubeClientId));
 
                 var sm = _ss.Load();
-                sm.UpdateAPIKeys(akm);
+                akm.UpdateStorageModel(sm);
                 _ss.Save(sm);
             }
             catch (Exception ex)
