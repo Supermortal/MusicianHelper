@@ -103,6 +103,7 @@ namespace MusicianHelper.WinForms
             try
             {
                 var otm = _ss.Load().ToYouTubeOauthTokenModel();
+                AppendToLog("Beginning video uploads (this will probably take a while)...");  
                 _vms.UploadAllVideos(_audios, otm, AllVideosUploaded, VideoUploaded, AppendToLog);
             }
             catch (Exception ex)
