@@ -88,7 +88,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                 return _basePath;
 #endif
 
-                return Environment.CurrentDirectory;
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Musician Helper");
             }
             catch (Exception ex)
             {

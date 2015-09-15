@@ -27,9 +27,10 @@ namespace MusicianHelper.WinForms
 
         private static void BootstrapCommon()
         {
-            string appDomain = AppDomain.CurrentDomain.BaseDirectory;
+            string appDomain = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Musician Helper");
             string configPath = Path.Combine(appDomain, "log4net.Release.config");
 #if DEBUG
+            appDomain = AppDomain.CurrentDomain.BaseDirectory;
             configPath = Path.Combine(appDomain, "log4net.Debug.config");
 #endif
 

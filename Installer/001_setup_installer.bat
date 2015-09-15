@@ -22,6 +22,6 @@ xcopy *.exe %INSTALLERDATADIR% /Q /Y
 
 cd %INSTALLERDATADIR%
 del *.pdb
-start MusicianHelper.APIKeyBootstrapper
+rem start MusicianHelper.APIKeyBootstrapper
 
 cd %INSTALLERDIR%

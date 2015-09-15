@@ -3,9 +3,9 @@
 <?define ProductUpgradeCode = "1ca2a39e-8dc5-4692-b97e-cea5d0212fd0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
    <Product Id="*" UpgradeCode="$(var.ProductUpgradeCode)" 
-            Name="Musician Social Media Suite" Version="$(var.ProductVersion)" Manufacturer="Supermortal Software" Language="1033">
+            Name="Musician Helper" Version="$(var.ProductVersion)" Manufacturer="Supermortal Software" Language="1033">
       <Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package"/>
-      <Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
+      <Media Id="1" Cabinet="MusicianHelper.cab" EmbedCab="yes"/>
       <Icon Id="ProductIcon" SourceFile="logo.ico"/>
       <Property Id="ARPPRODUCTICON" Value="ProductIcon"/>
       <Property Id="ARPHELPLINK" Value="http://www.supermortal.com"/>
@@ -20,34 +20,119 @@
       <Condition Message="A newer version of this software is already installed.">NOT NEWERVERSIONDETECTED</Condition>
  
       <Directory Id="TARGETDIR" Name="SourceDir">
+	  <Directory Id="AppDataFolder">
+		  <Directory Id="MyAppFolder" Name="Musician Helper">
+			<Component Id='Settings' Guid='7e44cdf8-0e63-4ff4-8775-849c717c3507'>
+				<RegistryValue Root="HKCU" Key="Software\Supermortal\MusicianHelper" Type="string" Value="" KeyPath="yes" />
+				<File Id='SettingsFile' Name='settings.json' DiskId='1' Source='InstallerData/settings.json' />
+				<RemoveFolder Id="MyAppFolder" On="uninstall" />  
+			</Component>
+			<Component Id='log4netConfigure' Guid='a611c387-7e5f-4ab3-bf81-d8573dfa50d6'>
+				<RegistryValue Root="HKCU" Key="Software\Supermortal\MusicianHelper" Type="string" Value="" KeyPath="yes" />
+				<File Id='log4netConfigureFile' Name='log4net.Release.config' DiskId='1' Source='InstallerData/log4net.Release.config' />
+			</Component>
+		  </Directory>
+	  </Directory>
          <Directory Id="ProgramFilesFolder">
-            <Directory Id="INSTALLDIR" Name="Supermortal">
-               <Component Id="ApplicationFiles" Guid="55307b32-110a-4148-9b9d-e562ad5e6cda">
-                  <File Id="ApplicationFile1" Source="MusicianHelper.exe"/>
-               </Component>
+            <Directory Id="SupermortalDir" Name="Supermortal Software">
+				<Directory Id="INSTALLDIR" Name="Musician Helper">
+				   <Component Id='DirectShowLibrary' Guid='20574a38-d333-4432-816c-b6ddd8568cca'>
+						<File Id='DirectShow' Name='DirectShowLib-2005.dll' DiskId='1' Source='InstallerData/DirectShowLib-2005.dll' KeyPath='yes' />
+					</Component>
+					<Component Id='GoogleApisCoreLibrary' Guid='820cf7cc-208b-4471-9a5a-8a946be2bcda'>
+						<File Id='GoogleApisCore' Name='Google.Apis.Core.dll' DiskId='1' Source='InstallerData/Google.Apis.Core.dll' KeyPath='yes' />
+						<File Id='GoogleApisCoreXml' Name='Google.Apis.Core.xml' DiskId='1' Source='InstallerData/Google.Apis.Core.xml' />
+					</Component>
+					<Component Id='GoogleApisLibrary' Guid='249ad368-e5a1-41f8-980b-687b0216d308'>
+						<File Id='GoogleApis' Name='Google.Apis.dll' DiskId='1' Source='InstallerData/Google.Apis.dll' KeyPath='yes' />
+						<File Id='GoogleApisXml' Name='Google.Apis.xml' DiskId='1' Source='InstallerData/Google.Apis.xml' />
+					</Component>
+					<Component Id='GoogleApisYoutubeLibrary' Guid='78a25d67-45b3-4282-8bcf-095001f8f310'>
+						<File Id='GoogleApisYoutube' Name='Google.Apis.YouTube.v3.dll' DiskId='1' Source='InstallerData/Google.Apis.YouTube.v3.dll' KeyPath='yes' />
+						<File Id='GoogleApisYoutubeXml' Name='Google.Apis.YouTube.v3.xml' DiskId='1' Source='InstallerData/Google.Apis.YouTube.v3.xml' />
+					</Component>
+					<Component Id='log4netLibrary' Guid='a5d7a01a-f42d-4a0f-abb9-82c20c9b61f8'>
+						<File Id='log4net' Name='log4net.dll' DiskId='1' Source='InstallerData/log4net.dll' KeyPath='yes' />
+						<File Id='log4netXml' Name='log4net.xml' DiskId='1' Source='InstallerData/log4net.xml' />
+					</Component>					
+					<Component Id='MicrosoftThreadingTasksLibrary' Guid='972dc58f-85ed-4d4a-804b-f0e7f39ccdc0'>
+						<File Id='MicrosoftThreadingTasks' Name='Microsoft.Threading.Tasks.dll' DiskId='1' Source='InstallerData/Microsoft.Threading.Tasks.dll' KeyPath='yes' />
+						<File Id='MicrosoftThreadingTasksXml' Name='Microsoft.Threading.Tasks.xml' DiskId='1' Source='InstallerData/Microsoft.Threading.Tasks.xml' />
+					</Component>
+					<Component Id='MusicianHelperCommonLibrary' Guid='c727ea55-5685-4ab2-8a34-1bd773f5a634'>
+						<File Id='MusicianHelperCommon' Name='MusicianHelper.Common.dll' DiskId='1' Source='InstallerData/MusicianHelper.Common.dll' KeyPath='yes' />
+					</Component>
+					<Component Id='MusicianHelperInfrastructureLibrary' Guid='3508de6b-e712-4f08-98aa-056c68803b05'>
+						<File Id='MusicianHelperInfrastructure' Name='MusicianHelper.Infrastructure.dll' DiskId='1' Source='InstallerData/MusicianHelper.Infrastructure.dll' KeyPath='yes' />
+					</Component>
+					<Component Id='MusicianHelperWinFormsLibrary' Guid='29009857-b94e-40fc-b1a9-2afba2f03c85'>
+						<File Id='MusicianHelperWinForms' Name='MusicianHelper.WinForms.exe' DiskId='1' Source='InstallerData/MusicianHelper.WinForms.exe' KeyPath='yes' />
+						<File Id='MusicianHelperWinFormsConfig' Name='MusicianHelper.WinForms.exe.config' DiskId='1' Source='InstallerData/MusicianHelper.WinForms.exe.config' />
+					</Component>
+					<Component Id='MusicianHelperWinFormsVshostLibrary' Guid='5a84174a-2741-4c60-9d05-0333362ae9f1'>
+						<File Id='MusicianHelperWinFormsVshost' Name='MusicianHelper.WinForms.vshost.exe' DiskId='1' Source='InstallerData/MusicianHelper.WinForms.vshost.exe' KeyPath='yes' />
+						<File Id='MusicianHelperWinFormsVshostConfig' Name='MusicianHelper.WinForms.vshost.exe.config' DiskId='1' Source='InstallerData/MusicianHelper.WinForms.vshost.exe.config' />
+						<File Id='MusicianHelperWinFormsVshostManifest' Name='MusicianHelper.WinForms.vshost.exe.manifest' DiskId='1' Source='InstallerData/MusicianHelper.WinForms.vshost.exe.manifest' />
+					</Component>
+					<Component Id='NewtonsoftJsonLibrary' Guid='ab52aa08-a1f4-4bbc-8e57-5b995062502b'>
+						<File Id='NewtonsoftJson' Name='Newtonsoft.Json.dll' DiskId='1' Source='InstallerData/Newtonsoft.Json.dll' KeyPath='yes' />
+						<File Id='NewtonsoftJsonXml' Name='Newtonsoft.Json.xml' DiskId='1' Source='InstallerData/Newtonsoft.Json.xml' />
+					</Component>
+					<Component Id='NinjectLibrary' Guid='14436945-0704-4bb5-8f8f-e474388d0c1d'>
+						<File Id='Ninject' Name='Ninject.dll' DiskId='1' Source='InstallerData/Ninject.dll' KeyPath='yes' />
+						<File Id='NinjectXml' Name='Ninject.xml' DiskId='1' Source='InstallerData/Ninject.xml' />
+					</Component>
+					<Component Id='SplicerLibrary' Guid='2ea6d3c3-4b35-4e86-bdd5-0940212aa6ae'>
+						<File Id='Splicer' Name='Splicer.dll' DiskId='1' Source='InstallerData/Splicer.dll' KeyPath='yes' />
+					</Component>
+					<Component Id='SystemNetHttpPrimitivesLibrary' Guid='e6607204-b543-4ae0-9592-a1c51eaff5f0'>
+						<File Id='SystemNetHttpPrimitives' Name='System.Net.Http.Primitives.dll' DiskId='1' Source='InstallerData/System.Net.Http.Primitives.dll' KeyPath='yes' />
+						<File Id='SystemNetHttpPrimitivesXml' Name='System.Net.Http.Primitives.xml' DiskId='1' Source='InstallerData/System.Net.Http.Primitives.xml' />
+					</Component>
+					<Component Id='ZlibPortableLibrary' Guid='3d78e70b-2863-467f-b462-a1e08b027edd'>
+						<File Id='ZlibPortable' Name='Zlib.Portable.dll' DiskId='1' Source='InstallerData/Zlib.Portable.dll' KeyPath='yes' />
+						<File Id='ZlibPortableXml' Name='Zlib.Portable.xml' DiskId='1' Source='InstallerData/Zlib.Portable.xml' />
+					</Component>					
+				</Directory>
             </Directory>
          </Directory>
  
          <Directory Id="ProgramMenuFolder">
-            <Directory Id="ProgramMenuSubfolder" Name="MusicianSocialMediaSuite">
-               <Component Id="ApplicationShortcuts" Guid="90fca32f-a2eb-40d2-a874-df6f296eed78">
-                  <Shortcut Id="ApplicationShortcut1" Name="MusicianHelper" Description="Musician Social Media Suite" 
-                            Target="[INSTALLDIR]MusicianHelper.exe" WorkingDirectory="INSTALLDIR"/>
-                  <RegistryValue Root="HKCU" Key="Software\Supermortal\Musician Social Media Suite" 
-                            Name="installed" Type="integer" Value="1" KeyPath="yes"/>
-                  <RemoveFolder Id="ProgramMenuSubfolder" On="uninstall"/>
-               </Component>
-            </Directory>
+			 <Directory Id="ProgramMenuSubfolder" Name="Supermortal Software">
+				   <Component Id="ApplicationShortcuts" Guid="90fca32f-a2eb-40d2-a874-df6f296eed78">
+					  <Shortcut Id="ApplicationShortcut1" Name="Musician Helper" Description="Musician Helper" 
+								Target="[INSTALLDIR]MusicianHelper.WinForms.exe" WorkingDirectory="INSTALLDIR"/>
+					  <RegistryValue Root="HKCU" Key="Software\Supermortal\Musician Helper" 
+								Name="installed" Type="integer" Value="1" KeyPath="yes"/>		  
+					  <RemoveFolder Id='ProgramMenuSubfolder' On='uninstall' />
+				   </Component>			   
+			</Directory>
          </Directory>
       </Directory>
- 
+	  
       <InstallExecuteSequence>
          <RemoveExistingProducts After="InstallValidate"/>
       </InstallExecuteSequence>
  
       <Feature Id="DefaultFeature" Level="1">
-         <ComponentRef Id="ApplicationFiles"/>
          <ComponentRef Id="ApplicationShortcuts"/>		 
+		 <ComponentRef Id="DirectShowLibrary"/>	
+		 <ComponentRef Id="GoogleApisCoreLibrary"/>	
+		 <ComponentRef Id="GoogleApisLibrary"/>
+		 <ComponentRef Id="GoogleApisYoutubeLibrary"/>	
+		 <ComponentRef Id="log4netLibrary"/>		 
+		 <ComponentRef Id="MicrosoftThreadingTasksLibrary"/>
+		 <ComponentRef Id="MusicianHelperCommonLibrary"/>
+		 <ComponentRef Id="MusicianHelperInfrastructureLibrary"/>
+		 <ComponentRef Id="MusicianHelperWinFormsLibrary"/>
+		 <ComponentRef Id="MusicianHelperWinFormsVshostLibrary"/>
+		 <ComponentRef Id="NewtonsoftJsonLibrary"/>
+		 <ComponentRef Id="NinjectLibrary"/>
+		 <ComponentRef Id="SplicerLibrary"/>
+		 <ComponentRef Id="SystemNetHttpPrimitivesLibrary"/>
+		 <ComponentRef Id="ZlibPortableLibrary"/>
+		 <ComponentRef Id="Settings"/>
+		 <ComponentRef Id="log4netConfigure"/>
       </Feature>
    </Product>
 </Wix>
