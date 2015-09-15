@@ -201,6 +201,7 @@ namespace MusicianHelper.WinForms
 
         private void YouTubeCredentialsButton_Click(object sender, EventArgs e)
         {
+            AppendToLog("Starting YouTube credentials set...");
             var ytw = new YouTubeWindow();
             ytw.Closed += YouTubeWindow_Closed;
             ytw.Show(this);
@@ -224,7 +225,9 @@ namespace MusicianHelper.WinForms
         {
             try
             {
-                
+                AppendToLog("YouTube credentials set!");
+                _videoCredentialsSet = true;
+                ConfigureAudioButton.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -237,6 +240,7 @@ namespace MusicianHelper.WinForms
             if (string.IsNullOrEmpty(AudioDirectory.Text) || string.IsNullOrEmpty(VideoDirectory.Text) ||
                 string.IsNullOrEmpty(VideoDirectory.Text))
             {
+                AppendToLog("Audio directory, images directory, and video directory must be set to configure audio!");
                 return;
             }
 

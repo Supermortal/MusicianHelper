@@ -64,6 +64,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
         {
             try
             {
+#if DEBUG
                 if (_basePath == null)
                 {
                     var currentDir = Environment.CurrentDirectory;
@@ -85,6 +86,9 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                 }
 
                 return _basePath;
+#endif
+
+                return Environment.CurrentDirectory;
             }
             catch (Exception ex)
             {
