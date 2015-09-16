@@ -51,8 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="log4net.Debug.config" />
-    <None Include="log4net.Release.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -119,7 +119,7 @@ namespace MusicianHelper.Common.Helpers.Log
 
     public void Error(object message, Exception exception)
     {
-        throw exception;
+        
     }
 
     public void ErrorFormat(string format, params object[] args)

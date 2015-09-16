@@ -110,6 +110,7 @@
     <Compile Include="Services\Abstract\IVideoManagementService.cs" />
     <Compile Include="Services\Abstract\IVideoNetworkService.cs" />
     <Compile Include="Services\Abstract\IVideoProcessingService.cs" />
+    <Compile Include="Services\Concrete\BootstrapperStorageService.cs" />
     <Compile Include="Services\Concrete\DefaultAPIKeyService.cs" />
     <Compile Include="Services\Concrete\DefaultMasterService.cs" />
     <Compile Include="Services\Concrete\DefaultVideoManagementService.cs" />
