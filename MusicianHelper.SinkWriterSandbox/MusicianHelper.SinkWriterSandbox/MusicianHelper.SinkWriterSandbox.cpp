@@ -1,6 +1,10 @@
 /*https://msdn.microsoft.com/en-us/library/windows/desktop/ff819477(v=vs.85).aspx*/
 /*http://tipsandtricks.runicsoft.com/Cpp/BitmapTutorial.html*/
 /*http://www.ucancode.net/Visual_C_Source_Code/Load-DIB-Bitmap-File-Save-Bitmap-file-Convert-dib-to-bitmap-c-rotate-bitmap-file-vc-example.htm*/
+/*https://msdn.microsoft.com/en-us/library/windows/desktop/ee663624(v=vs.85).aspx*/
+/*https://msdn.microsoft.com/en-us/library/windows/desktop/aa372553(v=vs.85).aspx*/
+/*https://msdn.microsoft.com/en-us/library/windows/desktop/dd757929(v=vs.85).aspx*/
+/*https://social.msdn.microsoft.com/Forums/windowsdesktop/en-US/110456dc-b7fb-479c-817c-bad5028e4102/how-to-add-audio-data-to-a-video-file-created-by-a-sinkwriter-?forum=mediafoundationdevelopment*/
 
 #include "stdafx.h"
 
@@ -14,6 +18,8 @@
 #include <mferror.h>
 #include <atlstr.h>
 #include <stack>
+#include <mfreadwrite.h>
+#include <Mmreg.h>
 
 #pragma comment(lib, "mfreadwrite")
 #pragma comment(lib, "mfplat")
@@ -26,6 +32,132 @@ template <class T> void SafeRelease(T **ppT)
         (*ppT)->Release();
         *ppT = NULL;
     }
+}
+
+HRESULT WriteWaveHeader(
+    /*HANDLE hFile,   */            // Output file.
+    IMFMediaType *pMediaType,   // PCM audio format.
+    DWORD *pcbWritten
+    )
+{
+    HRESULT hr = S_OK;
+    UINT32 cbFormat = 0;
+
+    WAVEFORMATEX *pWav = NULL;
+
+    *pcbWritten = 0;
+
+    // Convert the PCM audio format into a WAVEFORMATEX structure.
+    hr = MFCreateWaveFormatExFromMFMediaType(pMediaType, &pWav, &cbFormat);
+
+    // Write the 'RIFF' header and the start of the 'fmt ' chunk.
+    if (SUCCEEDED(hr))
+    {
+        DWORD header[] = {
+            // RIFF header
+            FCC('RIFF'),
+            0,
+            FCC('WAVE'),
+            // Start of 'fmt ' chunk
+            FCC('fmt '),
+            cbFormat
+        };
+
+        DWORD dataHeader[] = { FCC('data'), 0 };
+
+        /*hr = WriteToFile(hFile, header, sizeof(header));*/
+
+        // Write the WAVEFORMATEX structure.
+        //if (SUCCEEDED(hr))
+        //{
+        //    hr = WriteToFile(hFile, pWav, cbFormat);
+        //}
+
+        //// Write the start of the 'data' chunk
+
+        //if (SUCCEEDED(hr))
+        //{
+        //    hr = WriteToFile(hFile, dataHeader, sizeof(dataHeader));
+        //}
+
+        if (SUCCEEDED(hr))
+        {
+            *pcbWritten = sizeof(header) + cbFormat + sizeof(dataHeader);
+        }
+    }
+
+
+    //CoTaskMemFree(pWav);
+    return hr;
+}
+
+
+HRESULT ConfigureAudioStream(
+    IMFSourceReader *pReader,   // Pointer to the source reader.
+    IMFMediaType **ppPCMAudio   // Receives the audio format.
+    )
+{
+    IMFMediaType *pUncompressedAudioType = NULL;
+    IMFMediaType *pPartialType = NULL;
+
+    // Select the first audio stream, and deselect all other streams.
+    HRESULT hr = pReader->SetStreamSelection(
+        (DWORD)MF_SOURCE_READER_ALL_STREAMS, FALSE);
+
+    if (SUCCEEDED(hr))
+    {
+        hr = pReader->SetStreamSelection(
+            (DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, TRUE);
+    }
+
+    // Create a partial media type that specifies uncompressed PCM audio.
+    hr = MFCreateMediaType(&pPartialType);
+
+    if (SUCCEEDED(hr))
+    {
+        hr = pPartialType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        hr = pPartialType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
+    }
+
+    // Set this type on the source reader. The source reader will
+    // load the necessary decoder.
+    if (SUCCEEDED(hr))
+    {
+        hr = pReader->SetCurrentMediaType(
+            (DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+            NULL, pPartialType);
+    }
+
+    // Get the complete uncompressed format.
+    if (SUCCEEDED(hr))
+    {
+        hr = pReader->GetCurrentMediaType(
+            (DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+            &pUncompressedAudioType);
+    }
+
+    // Ensure the stream is selected.
+    if (SUCCEEDED(hr))
+    {
+        hr = pReader->SetStreamSelection(
+            (DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+            TRUE);
+    }
+
+    // Return the PCM format to the caller.
+    if (SUCCEEDED(hr))
+    {
+        *ppPCMAudio = pUncompressedAudioType;
+        (*ppPCMAudio)->AddRef();
+    }
+
+    SafeRelease(&pUncompressedAudioType);
+    SafeRelease(&pPartialType);
+    return hr;
 }
 
 BYTE* ConvertBMPToRGBBuffer(BYTE* Buffer, int width, int height)
@@ -320,29 +452,143 @@ bool ConvertToDIB(HBITMAP& hBitmap)
     return bConverted;
 }
 
+const UINT32 DURATION = 5;
+
 // Format constants
-UINT32 VIDEO_WIDTH = 640;
-UINT32 VIDEO_HEIGHT = 480;
+UINT32 VIDEO_WIDTH = 0;
+UINT32 VIDEO_HEIGHT = 0;
 const UINT32 VIDEO_FPS = 30;
 const UINT64 VIDEO_FRAME_DURATION = 10 * 1000 * 1000 / VIDEO_FPS;
 const UINT32 VIDEO_BIT_RATE = 800000;
 const GUID   VIDEO_ENCODING_FORMAT = MFVideoFormat_H264;
 const GUID   VIDEO_INPUT_FORMAT = MFVideoFormat_RGB32;
-UINT32 VIDEO_PELS = VIDEO_WIDTH * VIDEO_HEIGHT;
-const UINT32 VIDEO_FRAME_COUNT = 20 * VIDEO_FPS;
+UINT32 VIDEO_PELS = 0;
+const UINT32 VIDEO_FRAME_COUNT = DURATION * VIDEO_FPS;
+
+GUID   AUDIO_ENCODING_FORMAT = MFAudioFormat_MP3;
+UINT32 AUDIO_CHANNELS = 1;
+UINT32 AUDIO_AVG_BYTES_PER_SECOND = 11000;
+UINT32 AUDIO_SAMPLES_PER_SECOND = 320;
 
 // Buffer to hold the video frame data.
 //DWORD videoFrameBuffer[VIDEO_PELS];
 
-HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex)
+HRESULT WriteWaveData(
+    /*HANDLE hFile, */              // Output file.
+    IMFSinkWriter *ppWriter,
+    IMFSourceReader *pReader,   // Source reader.
+    DWORD cbMaxAudioData,       // Maximum amount of audio data (bytes).
+    DWORD *pcbDataWritten       // Receives the amount of data written.
+    )
+{
+    HRESULT hr = S_OK;
+    DWORD cbAudioData = 0;
+    DWORD cbBuffer = 0;
+    BYTE *pAudioData = NULL;
+
+    IMFSample *pSample = NULL;
+    IMFMediaBuffer *pBuffer = NULL;
+
+    // Get audio samples from the source reader.
+    while (true)
+    {
+        DWORD dwFlags = 0;
+
+        // Read the next sample.
+        hr = pReader->ReadSample(
+            (DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM,
+            0, NULL, &dwFlags, NULL, &pSample);
+
+        if (FAILED(hr)) { break; }
+
+        if (dwFlags & MF_SOURCE_READERF_CURRENTMEDIATYPECHANGED)
+        {
+            printf("Type change - not supported by WAVE file format.\n");
+            break;
+        }
+        if (dwFlags & MF_SOURCE_READERF_ENDOFSTREAM)
+        {
+            printf("End of input file.\n");
+            break;
+        }
+
+        if (pSample == NULL)
+        {
+            printf("No sample\n");
+            continue;
+        }
+
+        // Get a pointer to the audio data in the sample.
+
+        hr = pSample->ConvertToContiguousBuffer(&pBuffer);
+
+        if (FAILED(hr)) { break; }
+
+
+        hr = pBuffer->Lock(&pAudioData, NULL, &cbBuffer);
+
+        if (FAILED(hr)) { break; }
+
+
+        // Make sure not to exceed the specified maximum size.
+        if (cbMaxAudioData - cbAudioData < cbBuffer)
+        {
+            cbBuffer = cbMaxAudioData - cbAudioData;
+        }
+
+        // Write this data to the output file.
+        //hr = WriteToFile(hFile, pAudioData, cbBuffer);
+        ppWriter->WriteSample(1, pSample);
+
+        if (FAILED(hr)) { break; }
+
+        // Unlock the buffer.
+        hr = pBuffer->Unlock();
+        pAudioData = NULL;
+
+        if (FAILED(hr)) { break; }
+
+        // Update running total of audio data.
+        cbAudioData += cbBuffer;
+
+        if (cbAudioData >= cbMaxAudioData)
+        {
+            break;
+        }
+
+        SafeRelease(&pSample);
+        SafeRelease(&pBuffer);
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        printf("Wrote %d bytes of audio data.\n", cbAudioData);
+
+        *pcbDataWritten = cbAudioData;
+    }
+
+    if (pAudioData)
+    {
+        pBuffer->Unlock();
+    }
+
+    SafeRelease(&pBuffer);
+    SafeRelease(&pSample);
+    return hr;
+}
+
+    HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD blockSize)
 {
     *ppWriter = NULL;
     *pStreamIndex = NULL;
 
     IMFSinkWriter   *pSinkWriter = NULL;
     IMFMediaType    *pMediaTypeOut = NULL;
+    IMFMediaType    *pMediaTypeOutAudio = NULL;
     IMFMediaType    *pMediaTypeIn = NULL;
+    IMFMediaType    *pMediaTypeInAudio = NULL;
     DWORD           streamIndex;
+    DWORD           audioStreamIndex;
 
     HRESULT hr = MFCreateSinkWriterFromURL(L"output.mp4", NULL, NULL, &pSinkWriter);
 
@@ -384,6 +630,36 @@ HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex)
         hr = pSinkWriter->AddStream(pMediaTypeOut, &streamIndex);
     }
 
+    // Set the output audio media type.
+    if (SUCCEEDED(hr))
+    {
+        hr = MFCreateMediaType(&pMediaTypeOutAudio);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeOutAudio->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeOutAudio->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_MP3);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeOutAudio->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, 320);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeOutAudio->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, 2);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeOutAudio->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, 44100);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pSinkWriter->AddStream(pMediaTypeOutAudio, &audioStreamIndex);
+    }
+
     // Set the input media type.
     if (SUCCEEDED(hr))
     {
@@ -418,6 +694,36 @@ HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex)
         hr = pSinkWriter->SetInputMediaType(streamIndex, pMediaTypeIn, NULL);
     }
 
+    // Set the input audio media type.
+    if (SUCCEEDED(hr))
+    {
+        hr = MFCreateMediaType(&pMediaTypeInAudio);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeInAudio->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeInAudio->SetGUID(MF_MT_SUBTYPE, AUDIO_ENCODING_FORMAT);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeInAudio->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, 320);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeInAudio->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, AUDIO_CHANNELS);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeInAudio->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, AUDIO_SAMPLES_PER_SECOND);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pSinkWriter->SetInputMediaType(audioStreamIndex, pMediaTypeInAudio, NULL);
+    }
+
     // Tell the sink writer to start accepting data.
     if (SUCCEEDED(hr))
     {
@@ -435,6 +741,7 @@ HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex)
     SafeRelease(&pSinkWriter);
     SafeRelease(&pMediaTypeOut);
     SafeRelease(&pMediaTypeIn);
+    SafeRelease(&pMediaTypeInAudio);
     return hr;
 }
 
@@ -442,7 +749,10 @@ HRESULT WriteFrame(
     IMFSinkWriter *pWriter,
     DWORD streamIndex,
     const LONGLONG& rtStart,        // Time stamp.
-    byte* vfb
+    byte* vfb,
+    IMFSourceReader **pReader,
+    DWORD cbMaxAudioData,       // Maximum amount of audio data (bytes).
+    DWORD *pcbDataWritten       // Receives the amount of data written.
     )
 {
     IMFSample *pSample = NULL;
@@ -509,14 +819,51 @@ HRESULT WriteFrame(
         hr = pWriter->WriteSample(streamIndex, pSample);
     }
 
+    if (SUCCEEDED(hr)) {
+        hr = WriteWaveData(pWriter, *pReader, cbMaxAudioData, pcbDataWritten);
+    }
+
     SafeRelease(&pSample);
     SafeRelease(&pBuffer);
     return hr;
 }
 
+DWORD CalculateMaxAudioDataSize(
+    IMFMediaType *pAudioType,    // The PCM audio format.
+    DWORD cbHeader,              // The size of the WAVE file header.
+    DWORD msecAudioData          // Maximum duration, in milliseconds.
+    )
+{
+    UINT32 cbBlockSize = 0;         // Audio frame size, in bytes.
+    UINT32 cbBytesPerSecond = 0;    // Bytes per second.
+
+    // Get the audio block size and number of bytes/second from the audio format.
+
+    cbBlockSize = MFGetAttributeUINT32(pAudioType, MF_MT_AUDIO_BLOCK_ALIGNMENT, 0);
+    cbBytesPerSecond = MFGetAttributeUINT32(pAudioType, MF_MT_AUDIO_AVG_BYTES_PER_SECOND, 0);
+
+    // Calculate the maximum amount of audio data to write.
+    // This value equals (duration in seconds x bytes/second), but cannot
+    // exceed the maximum size of the data chunk in the WAVE file.
+
+    // Size of the desired audio clip in bytes:
+    DWORD cbAudioClipSize = (DWORD)MulDiv(cbBytesPerSecond, msecAudioData, 1000);
+
+    // Largest possible size of the data chunk:
+    DWORD cbMaxSize = MAXDWORD - cbHeader;
+
+    // Maximum size altogether.
+    cbAudioClipSize = min(cbAudioClipSize, cbMaxSize);
+
+    // Round to the audio block size, so that we do not write a partial audio frame.
+    cbAudioClipSize = (cbAudioClipSize / cbBlockSize) * cbBlockSize;
+
+    return cbAudioClipSize;
+}
+
 void main()
 {
-    HBITMAP h = (HBITMAP)LoadImage(NULL, L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\11218847_1332157350140654_2658102053793722126_n.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+    HBITMAP h = (HBITMAP)LoadImage(NULL, L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\test.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 
     BITMAP stBitmap;
     bool success = ConvertToDIB(h);
@@ -526,25 +873,58 @@ void main()
     VIDEO_HEIGHT = stBitmap.bmHeight;
     VIDEO_PELS = VIDEO_WIDTH * VIDEO_HEIGHT;
 
+    IMFSourceReader *pReader = NULL;
+
     HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
     if (SUCCEEDED(hr))
     {
         hr = MFStartup(MF_VERSION);
         if (SUCCEEDED(hr))
         {
+            hr = MFCreateSourceReaderFromURL(L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Audio\\dangerzone.mp3", NULL, &pReader);
+            if (FAILED(hr))
+            {
+                printf("Error opening input file: %S\n", L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Audio\\sorry_dave.wav", hr);
+            }
+
+            IMFMediaType *pAudioType = NULL;
+            /*hr = ConfigureAudioStream(pReader, &pAudioType);*/
+            hr = pReader->GetCurrentMediaType(0, &pAudioType);
+
+            GUID majorType;
+            pAudioType->GetMajorType(&majorType);
+
+            GUID subType;
+            pAudioType->GetGUID(MF_MT_SUBTYPE, &subType);
+            AUDIO_ENCODING_FORMAT = subType;
+
+            DWORD pcbWritten;
+            WriteWaveHeader(pAudioType, &pcbWritten);
+
+            WAVEFORMATEX *pWav = NULL;
+            UINT32 cbFormat = 0;
+            // Convert the PCM audio format into a WAVEFORMATEX structure.
+            hr = MFCreateWaveFormatExFromMFMediaType(pAudioType, &pWav, &cbFormat);
+
+            AUDIO_AVG_BYTES_PER_SECOND = pWav->nAvgBytesPerSec;
+            AUDIO_CHANNELS = pWav->nChannels;
+            AUDIO_SAMPLES_PER_SECOND = pWav->nSamplesPerSec;
+
+            DWORD blockSize = CalculateMaxAudioDataSize(pAudioType, pcbWritten, DURATION * 1000);
+
             IMFSinkWriter *pSinkWriter = NULL;
             DWORD stream;
 
-            hr = InitializeSinkWriter(&pSinkWriter, &stream);
+            hr = InitializeSinkWriter(&pSinkWriter, &stream, blockSize);
             if (SUCCEEDED(hr))
             {
                 // Send frames to the sink writer.
                 LONGLONG rtStart = 0;
-
+                DWORD cbAudioData = 0;
 
                 for (DWORD i = 0; i < VIDEO_FRAME_COUNT; ++i)
                 {
-                    hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)stBitmap.bmBits);
+                    hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)stBitmap.bmBits, &pReader, blockSize, &cbAudioData);
                     if (FAILED(hr))
                     {
                         break;
@@ -559,6 +939,7 @@ void main()
             SafeRelease(&pSinkWriter);
             MFShutdown();
         }
+
         CoUninitialize();
     }
 }
