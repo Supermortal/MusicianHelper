@@ -1,4 +1,6 @@
 /*https://msdn.microsoft.com/en-us/library/windows/desktop/ff819477(v=vs.85).aspx*/
+/*http://tipsandtricks.runicsoft.com/Cpp/BitmapTutorial.html*/
+/*http://www.ucancode.net/Visual_C_Source_Code/Load-DIB-Bitmap-File-Save-Bitmap-file-Convert-dib-to-bitmap-c-rotate-bitmap-file-vc-example.htm*/
 
 #include "stdafx.h"
 
@@ -25,6 +27,71 @@ template <class T> void SafeRelease(T **ppT)
     }
 }
 
+BYTE* LoadBMP(int* width, int* height, long* size, LPCTSTR bmpfile)
+{
+    BITMAPFILEHEADER bmpheader;
+    BITMAPINFOHEADER bmpinfo;
+    DWORD bytesread;
+    /*Note that we take three pointers as parameters for width, height and size, since we will return the image dimensions and size in these variables.bmpfile is of course the filename of the bitmap, and the return value of the function will be a pointer to the image data.
+        First lets try to open the file :*/
+    HANDLE file = CreateFile(bmpfile, GENERIC_READ, FILE_SHARE_READ,
+        NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+    if (NULL == file)
+        return NULL;
+    /*Just a quick note here : it's useful to write if ( NULL == file ) instead of if ( file == NULL ) to prevent bugs, since on accidently typing if ( file = NULL ) the compiler will not complain but assign NULL to the file handle. if ( NULL = file ) will spawn a compiler error, so you can prevent bugs easily this way.
+        Back to the topic : now we opened the file and can read the file header.On error we will close the file and return from the function.*/
+    if (ReadFile(file, &bmpheader, sizeof(BITMAPFILEHEADER),
+        &bytesread, NULL) == false)
+    {
+        CloseHandle(file);
+        return NULL;
+    }
+    /*Now we can read the info header :*/
+    if (ReadFile(file, &bmpinfo, sizeof(BITMAPINFOHEADER),
+        &bytesread, NULL) == false)
+    {
+        CloseHandle(file);
+        return NULL;
+    }
+    /*Since we are only going to load 24bit.bmps here we now do some checking of the header contents.
+        First check if the file is actually a bitmap :*/
+    if (bmpheader.bfType != 'MB')
+    {
+        CloseHandle(file);
+        return NULL;
+    }
+    /*check if it's uncompressed*/
+    if (bmpinfo.biCompression != BI_RGB)
+    {
+        CloseHandle(file);
+        return NULL;
+    }
+    /*and check if it's 24bit*/
+    if (bmpinfo.biBitCount != 24)
+    {
+        CloseHandle(file);
+        return NULL;
+    }
+    /*When we are here we actually have a 24 bit bmp, so lets get its size and dimensions.We'll store them in the supplied variables:*/
+    *width = bmpinfo.biWidth;
+    *height = abs(bmpinfo.biHeight);
+    *size = bmpheader.bfSize - bmpheader.bfOffBits;
+    /*To be independent of the type of info header, we compute the imaga data size as the whole file size minus the distance from file origin to start of image data.
+        Now we create a buffer to hold the data*/
+    BYTE* Buffer = new BYTE[*size];
+    /*Again, to be independent of info header version, we set the file pointer to the start of image data as told by the bfOffBits :*/
+    SetFilePointer(file, bmpheader.bfOffBits, NULL, FILE_BEGIN);
+    /*And now we can read in the data.We make sure that on error the Buffer gets deleted so we don't create memory leaks:*/
+    if (ReadFile(file, Buffer, *size, &bytesread, NULL) == false)
+    {
+        delete[] Buffer;
+        CloseHandle(file);
+        return NULL;
+    }
+    /*and finish the function*/
+    CloseHandle(file);
+    return Buffer;
+}
 
 // This function converts the given bitmap to a DFB.
 // Returns true if the conversion took place,
@@ -329,7 +396,8 @@ HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex)
 HRESULT WriteFrame(
     IMFSinkWriter *pWriter,
     DWORD streamIndex,
-    const LONGLONG& rtStart        // Time stamp.
+    const LONGLONG& rtStart,        // Time stamp.
+    byte* vfb
     )
 {
     IMFSample *pSample = NULL;
@@ -349,11 +417,11 @@ HRESULT WriteFrame(
         hr = pBuffer->Lock(&pData, NULL, NULL);
     }
     if (SUCCEEDED(hr))
-    { 
+    {
         hr = MFCopyImage(
             pData,                      // Destination buffer.
             cbWidth,                    // Destination stride.
-            (BYTE*)videoFrameBuffer,    // First row in source image.
+            vfb,    // First row in source image.
             cbWidth,                    // Source stride.
             cbWidth,                    // Image width in bytes.
             VIDEO_HEIGHT                // Image height in pixels.
@@ -402,19 +470,33 @@ HRESULT WriteFrame(
 }
 
 void main()
-{        
-    HBITMAP h = (HBITMAP)LoadImage(NULL, L"C:\\paper-stained-3-texture.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+{
+    HBITMAP h = (HBITMAP)LoadImage(NULL, L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\paper-stained-3-texture.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
     bool b = (h == NULL);
     BITMAP bm;
     int hrr = GetObject(h, sizeof(BITMAP), &bm);
 
-    //b = ConvertToDFB(h);
     b = ConvertToDIB(h);
+    hrr = GetObject(h, sizeof(BITMAP), &bm);
+
+    byte* arr2;
+    hrr = GetObject(bm.bmBits, sizeof(byte), &arr2);
+
+    ////b = ConvertToDFB(h);
+    //b = ConvertToDIB(h);
+    //hrr = GetObject(h, sizeof(BITMAP), &bm);
+
+    int width = 2978;
+    int height = 2240;
+    long size = 20016694;
+
+    byte* arr = LoadBMP(&width, &height, &size, L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\paper-stained-3-texture.bmp");
 
     // Set all pixels to green
     for (DWORD i = 0; i < VIDEO_PELS; ++i)
     {
-        videoFrameBuffer[i] = 0x0000FF00;
+        //videoFrameBuffer[i] = 0x0000FF00;
+        videoFrameBuffer[i] = *(arr++);
     }
 
     HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
@@ -435,7 +517,7 @@ void main()
 
                 for (DWORD i = 0; i < VIDEO_FRAME_COUNT; ++i)
                 {
-                    hr = WriteFrame(pSinkWriter, stream, rtStart);
+                    hr = WriteFrame(pSinkWriter, stream, rtStart, arr);
                     if (FAILED(hr))
                     {
                         break;
