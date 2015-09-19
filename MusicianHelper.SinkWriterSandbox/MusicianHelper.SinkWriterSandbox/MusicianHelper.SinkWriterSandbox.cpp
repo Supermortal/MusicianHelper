@@ -13,6 +13,7 @@
 #include <Mfreadwrite.h>
 #include <mferror.h>
 #include <atlstr.h>
+#include <stack>
 
 #pragma comment(lib, "mfreadwrite")
 #pragma comment(lib, "mfplat")
@@ -325,7 +326,7 @@ UINT32 VIDEO_HEIGHT = 480;
 const UINT32 VIDEO_FPS = 30;
 const UINT64 VIDEO_FRAME_DURATION = 10 * 1000 * 1000 / VIDEO_FPS;
 const UINT32 VIDEO_BIT_RATE = 800000;
-const GUID   VIDEO_ENCODING_FORMAT = MFVideoFormat_WMV3;
+const GUID   VIDEO_ENCODING_FORMAT = MFVideoFormat_H264;
 const GUID   VIDEO_INPUT_FORMAT = MFVideoFormat_RGB32;
 UINT32 VIDEO_PELS = VIDEO_WIDTH * VIDEO_HEIGHT;
 const UINT32 VIDEO_FRAME_COUNT = 20 * VIDEO_FPS;
@@ -343,7 +344,7 @@ HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex)
     IMFMediaType    *pMediaTypeIn = NULL;
     DWORD           streamIndex;
 
-    HRESULT hr = MFCreateSinkWriterFromURL(L"output.wmv", NULL, NULL, &pSinkWriter);
+    HRESULT hr = MFCreateSinkWriterFromURL(L"output.mp4", NULL, NULL, &pSinkWriter);
 
     // Set the output media type.
     if (SUCCEEDED(hr))
@@ -516,111 +517,14 @@ HRESULT WriteFrame(
 void main()
 {
     HBITMAP h = (HBITMAP)LoadImage(NULL, L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\11218847_1332157350140654_2658102053793722126_n.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-    bool b = (h == NULL);
+
     BITMAP stBitmap;
-    int hrr = GetObject(h, sizeof(BITMAP), &stBitmap);
+    bool success = ConvertToDIB(h);
+    int errorCode = GetObject(h, sizeof(BITMAP), &stBitmap);
 
-    b = ConvertToDIB(h);
-    hrr = GetObject(h, sizeof(BITMAP), &stBitmap);
-
-    //HDC hScreen = GetDC(NULL);
-
-    BITMAPINFO bmi;
-    hrr = GetObject(h, sizeof(BITMAPINFO), &bmi);
-
-    VIDEO_WIDTH = bmi.bmiHeader.biWidth;
-    VIDEO_HEIGHT = bmi.bmiHeader.biHeight;
+    VIDEO_WIDTH = stBitmap.bmWidth;
+    VIDEO_HEIGHT = stBitmap.bmHeight;
     VIDEO_PELS = VIDEO_WIDTH * VIDEO_HEIGHT;
-
-    /*byte* buf;*/
-    /*GetDIBits(hScreen, h, 0, 0, NULL, &bmi, DIB_RGB_COLORS);*/
-
-    //// create the pixel buffer
-    //BYTE* lpPixels = new BYTE[bmi.bmiHeader.biSizeImage];
-
-    //// We'll change the received BITMAPINFOHEADER to request the data in a
-    //// 32 bit RGB format (and not upside-down) so that we can iterate over
-    //// the pixels easily. 
-
-    //// requesting a 32 bit image means that no stride/padding will be necessary,
-    //// although it always contains an (possibly unused) alpha channel
-    //bmi.bmiHeader.biBitCount = 32;
-    //bmi.bmiHeader.biCompression = BI_RGB;  // no compression -> easier to use
-    //// correct the bottom-up ordering of lines (abs is in cstdblib and stdlib.h)
-    //bmi.bmiHeader.biHeight = abs(bmi.bmiHeader.biHeight);
-
-    //// Call GetDIBits a second time, this time to (format and) store the actual
-    //// bitmap data (the "pixels") in the buffer lpPixels
-    //if (0 == GetDIBits(hScreen, h, 0, bmi.bmiHeader.biHeight,
-    //    lpPixels, &bmi, DIB_RGB_COLORS))
-    //{
-    //    char* t = "t";
-    //}
-    // clean up: deselect bitmap from device context, close handles, delete buffer
-
-    /*byte* arr2;
-    hrr = GetObject(bm.bmBits, sizeof(byte), &arr2);*/
-
-    ////b = ConvertToDFB(h);
-    //b = ConvertToDIB(h);
-    //hrr = GetObject(h, sizeof(BITMAP), &bm);
-
-    int width = 2978;
-    int height = 2240;
-    long size = 20016694;
-
-    //byte* arr = LoadBMP(&width, &height, &size, L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\paper-stained-3-texture.bmp");
-
-    //byte* arr3 = ConvertBMPToRGBBuffer((byte*)bm.bmBits, bm.bmWidth, bm.bmHeight);
-
-    // Set all pixels to green
-    //for (DWORD i = 0; i < VIDEO_PELS; ++i)
-    //{
-    //    //videoFrameBuffer[i] = 0x0000FF00;
-    //    videoFrameBuffer[i] = *(arr++);
-    //}
-
-    /*HDC m_hAviDC;
-    m_hAviDC = CreateCompatibleDC(NULL);*/
-
-    //union {
-    //    BITMAPINFO stBitmapInfo;
-    //    BYTE pReserveSpace[sizeof(BITMAPINFO)
-    //        + 0xFF * sizeof(RGBQUAD)];
-    //};
-    //ZeroMemory(pReserveSpace, sizeof(pReserveSpace));
-    //stBitmapInfo.bmiHeader.biSize = sizeof(stBitmapInfo.bmiHeader);
-    //stBitmapInfo.bmiHeader.biWidth = stBitmap.bmWidth;
-    //stBitmapInfo.bmiHeader.biHeight = stBitmap.bmHeight;
-    //stBitmapInfo.bmiHeader.biPlanes = 1;
-    //stBitmapInfo.bmiHeader.biBitCount = stBitmap.bmBitsPixel;
-    //stBitmapInfo.bmiHeader.biCompression = BI_RGB;
-
-    //if (stBitmap.bmBitsPixel <= 8)
-    //{
-    //    stBitmapInfo.bmiHeader.biClrUsed =
-    //        1 << stBitmap.bmBitsPixel;
-    //    // This image is paletted-managed.
-    //    // Hence we have to synthesize its palette.
-    //}
-    //stBitmapInfo.bmiHeader.biClrImportant =
-    //    stBitmapInfo.bmiHeader.biClrUsed;
-
-    //PVOID pBits;
-    //HBITMAP hDib = CreateDIBSection(m_hAviDC,
-    //    &stBitmapInfo, DIB_RGB_COLORS, &pBits, NULL, 0);
-
-    //h = (HBITMAP)LoadImage(NULL, L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\paper-stained-3-texture.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-
-    ///*b = ConvertToDIB(h);
-    //hrr = GetObject(h, sizeof(BITMAP), &stBitmap);*/
-
-    //BITMAPINFO bmi;
-    //hrr = GetObject(h, sizeof(BITMAPINFO), &bmi);
-
-    ////GetDIBits(m_hAviDC, h, );
-    //LPVOID buf;
-    //GetDIBits(m_hAviDC, h, 0, 0, &buf, &bmi, DIB_RGB_COLORS);
 
     HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
     if (SUCCEEDED(hr))
