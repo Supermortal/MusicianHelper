@@ -7,6 +7,7 @@
 /*https://social.msdn.microsoft.com/Forums/windowsdesktop/en-US/110456dc-b7fb-479c-817c-bad5028e4102/how-to-add-audio-data-to-a-video-file-created-by-a-sinkwriter-?forum=mediafoundationdevelopment*/
 
 #include "stdafx.h"
+#include "VideoEncoder.h"
 
 #define _AFXDLL
 
@@ -863,6 +864,11 @@ DWORD CalculateMaxAudioDataSize(
 
 void main()
 {
+    VideoEncoder *ve = new VideoEncoder(L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\test.bmp");
+    VideoSettings vs;
+
+    vs.videoFps = 60;
+
     HBITMAP h = (HBITMAP)LoadImage(NULL, L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\test.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 
     BITMAP stBitmap;
