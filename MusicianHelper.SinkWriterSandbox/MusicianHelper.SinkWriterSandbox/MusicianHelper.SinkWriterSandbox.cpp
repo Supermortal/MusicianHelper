@@ -3,6 +3,7 @@
 /*http://www.ucancode.net/Visual_C_Source_Code/Load-DIB-Bitmap-File-Save-Bitmap-file-Convert-dib-to-bitmap-c-rotate-bitmap-file-vc-example.htm*/
 
 #include "stdafx.h"
+#include "VideoEncoder.h"
 
 #define _AFXDLL
 
