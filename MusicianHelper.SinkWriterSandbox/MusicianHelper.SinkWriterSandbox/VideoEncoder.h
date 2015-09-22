@@ -55,46 +55,12 @@ public:
     UINT32 CalcVideoFrameCount(VideoSettings vs, int duration);
     void SetVideoSettings(VideoSettings vs);
     void SetAudioSettings(AudioSettings as);
-    HRESULT FixUpChunkSizes(
-        HANDLE hFile,           // Output file.
-        DWORD cbHeader,         // Size of the 'fmt ' chuck.
-        DWORD cbAudioData       // Size of the 'data' chunk.
-        );
-    HRESULT WriteWaveData(
-        HANDLE hFile,               // Output file.
-        IMFSourceReader *pReader,   // Source reader.
-        DWORD cbMaxAudioData,       // Maximum amount of audio data (bytes).
-        DWORD *pcbDataWritten       // Receives the amount of data written.
-        );
-    HRESULT WriteToFile(HANDLE hFile, void* p, DWORD cb);
-    DWORD CalculateMaxAudioDataSize(
-        IMFMediaType *pAudioType,    // The PCM audio format.
-        DWORD cbHeader,              // The size of the WAVE file header.
-        DWORD msecAudioData          // Maximum duration, in milliseconds.
-        );
-    HRESULT WriteWaveHeader(
-        HANDLE hFile,               // Output file.
-        IMFMediaType *pMediaType,   // PCM audio format.
-        DWORD *pcbWritten           // Receives the size of the header.
-        );
-    HRESULT ConfigureAudioStream(
-        IMFSourceReader *pReader,   // Pointer to the source reader.
-        IMFMediaType **ppPCMAudio   // Receives the audio format.
-        );
-    HRESULT WriteWaveFile(
-        IMFSourceReader *pReader,   // Pointer to the source reader.
-        HANDLE hFile,               // Handle to the output file.
-        LONG msecAudioData          // Maximum amount of audio data to write, in msec.
-        );
-    HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD blockSize, LPCWSTR videoOutputFilePath);
+    HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, LPCWSTR videoOutputFilePath);
     HRESULT WriteFrame(
         IMFSinkWriter *pWriter,
         DWORD streamIndex,
         const LONGLONG& rtStart,        // Time stamp.
-        byte* vfb,
-        IMFSourceReader **pReader,
-        DWORD cbMaxAudioData,       // Maximum amount of audio data (bytes).
-        DWORD *pcbDataWritten       // Receives the amount of data written.
+        byte* vfb
         );
     void SetDuration(UINT64 duration);
 private:
