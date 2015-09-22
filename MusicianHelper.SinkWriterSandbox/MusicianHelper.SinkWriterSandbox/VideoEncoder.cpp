@@ -29,9 +29,12 @@ struct FOURCC
 
 unsigned int id(FOURCC<'a', 'b', 'c', 'd'>::value);
 
-VideoEncoder::VideoEncoder(LPCWSTR imageFilePath)
+VideoEncoder::VideoEncoder(LPCWSTR imageFilePath, LPCWSTR videoOutputPath, UINT64 duration, VideoSettings vs)
 {
     mImageFilePath = imageFilePath;
+    mVideoOutputPath = videoOutputPath;
+    mDuration = duration;
+    SetVideoSettings(vs);
 }
 
 VideoEncoder::~VideoEncoder()
@@ -244,12 +247,12 @@ void VideoEncoder::SetVideoSettings(VideoSettings vs) {
     mVideoBitRate = vs.videoBitRate;
     mVideoEncodingFormat = vs.videoEncodingFormat;
     mVideoFps = vs.videoFps;
-    mVideoFrameCount = vs.videoFrameCount;
-    mVideoFrameDuration = vs.videoFrameDuration;
-    mVideoHeight = vs.videoHeight;
+    //mVideoFrameCount = vs.videoFrameCount;
+    //mVideoFrameDuration = vs.videoFrameDuration;
+    //mVideoHeight = vs.videoHeight;
     mVideoInputFormat = vs.videoInputFormat;
     mVideoPels = vs.videoPels;
-    mVideoWidth = vs.videoWidth;
+    //mVideoWidth = vs.videoWidth;
 }
 
 void VideoEncoder::SetAudioSettings(AudioSettings as) {
@@ -315,31 +318,31 @@ HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStr
     // Set the output audio media type.
     /*if (SUCCEEDED(hr))
     {
-        hr = MFCreateMediaType(&pMediaTypeOutAudio);
+    hr = MFCreateMediaType(&pMediaTypeOutAudio);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeOutAudio->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
+    hr = pMediaTypeOutAudio->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeOutAudio->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_MP3);
+    hr = pMediaTypeOutAudio->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_MP3);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeOutAudio->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, 320);
+    hr = pMediaTypeOutAudio->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, 320);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeOutAudio->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, 2);
+    hr = pMediaTypeOutAudio->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, 2);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeOutAudio->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, 44100);
+    hr = pMediaTypeOutAudio->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, 44100);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pSinkWriter->AddStream(pMediaTypeOutAudio, &audioStreamIndex);
+    hr = pSinkWriter->AddStream(pMediaTypeOutAudio, &audioStreamIndex);
     }*/
 
     // Set the input media type.
@@ -379,31 +382,31 @@ HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStr
     // Set the input audio media type.
     /*if (SUCCEEDED(hr))
     {
-        hr = MFCreateMediaType(&pMediaTypeInAudio);
+    hr = MFCreateMediaType(&pMediaTypeInAudio);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeInAudio->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
+    hr = pMediaTypeInAudio->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeInAudio->SetGUID(MF_MT_SUBTYPE, mAudioEncodingFormat);
+    hr = pMediaTypeInAudio->SetGUID(MF_MT_SUBTYPE, mAudioEncodingFormat);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeInAudio->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, 320);
+    hr = pMediaTypeInAudio->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, 320);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeInAudio->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, mAudioChannels);
+    hr = pMediaTypeInAudio->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, mAudioChannels);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeInAudio->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, mAudioSamplesPerSecond);
+    hr = pMediaTypeInAudio->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, mAudioSamplesPerSecond);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pSinkWriter->SetInputMediaType(audioStreamIndex, pMediaTypeInAudio, NULL);
+    hr = pSinkWriter->SetInputMediaType(audioStreamIndex, pMediaTypeInAudio, NULL);
     }*/
 
     // Tell the sink writer to start accepting data.
@@ -500,7 +503,7 @@ HRESULT VideoEncoder::WriteFrame(
 
     /*if (SUCCEEDED(hr)) {
         hr = WriteWaveData(pWriter, *pReader, cbMaxAudioData, pcbDataWritten);
-    }*/
+        }*/
 
     SafeRelease(&pSample);
     SafeRelease(&pBuffer);
@@ -509,4 +512,76 @@ HRESULT VideoEncoder::WriteFrame(
 
 void VideoEncoder::SetDuration(UINT64 duration) {
     mDuration = duration;
+}
+
+HRESULT VideoEncoder::StartMediaFoundation() {
+    HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+    if (SUCCEEDED(hr))
+    {
+        hr = MFStartup(MF_VERSION);
+        if (SUCCEEDED(hr))
+        {
+            return hr;
+        }
+    }
+
+    return ERROR;
+}
+
+UINT64 VideoEncoder::GetVideoFrameCount() {
+    return 10 * 1000 * 1000 / mVideoFps;
+}
+
+UINT64 VideoEncoder::GetVideoFrameDuration(){
+    return mDuration * mVideoFps;
+}
+
+void VideoEncoder::Encode() {
+    HBITMAP h = LoadImageFromFilePath(mImageFilePath);
+
+    BITMAP b;
+    GetDIBFromHandle(h, &b);
+
+    SetVideoHeightAndWidth(b);
+
+    HRESULT hr = StartMediaFoundation();
+
+    if (SUCCEEDED(hr)) {
+        IMFSinkWriter *pSinkWriter = NULL;
+        DWORD stream;
+
+        UINT64 videoFrameDuration = GetVideoFrameDuration();
+        UINT64 videoFrameCount = GetVideoFrameCount();
+
+        hr = InitializeSinkWriter(&pSinkWriter, &stream, mVideoOutputPath);
+        if (SUCCEEDED(hr))
+        {
+            // Send frames to the sink writer.
+            LONGLONG rtStart = 0;
+            DWORD cbAudioData = 0;
+
+            for (DWORD i = 0; i < videoFrameCount; ++i)
+            {
+                hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
+                if (FAILED(hr))
+                {
+                    break;
+                }
+                rtStart += videoFrameDuration;
+            }
+        }
+        if (SUCCEEDED(hr))
+        {
+            hr = pSinkWriter->Finalize();
+        }
+        SafeRelease(&pSinkWriter);
+        MFShutdown();
+    }
+
+    CoUninitialize();
+}
+
+void VideoEncoder::SetVideoHeightAndWidth(BITMAP bitmap) {
+    mVideoHeight = bitmap.bmHeight;
+    mVideoWidth = bitmap.bmWidth;
 }

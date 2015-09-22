@@ -16,15 +16,15 @@
 #pragma comment(lib, "mfuuid")
 
 struct VideoSettings {
-    UINT32 videoWidth = 0;
-    UINT32 videoHeight = 0;
+    /*UINT32 videoWidth = 0;
+    UINT32 videoHeight = 0;*/
     UINT32 videoFps = 30;
-    UINT64 videoFrameDuration = 30000000;
+    /*UINT64 videoFrameDuration = 30000000;*/
     UINT32 videoBitRate = 800000;
     GUID   videoEncodingFormat = MFVideoFormat_H264;
     GUID   videoInputFormat = MFVideoFormat_RGB32;
     UINT32 videoPels = 0;
-    UINT32 videoFrameCount = 1800;
+    /*UINT32 videoFrameCount = 1800;*/
 };
 
 struct AudioSettings {
@@ -38,7 +38,7 @@ struct AudioSettings {
 class VideoEncoder
 {
 public:
-    VideoEncoder(LPCWSTR imageFilePath);
+    VideoEncoder(LPCWSTR imageFilePath, LPCWSTR videoOutputPath, UINT64 duration, VideoSettings vs);
     ~VideoEncoder();
     // This function converts the given bitmap to a DIB.
     // Returns true if the conversion took place,
@@ -63,11 +63,15 @@ public:
         byte* vfb
         );
     void SetDuration(UINT64 duration);
+    HRESULT StartMediaFoundation();
+    UINT64 GetVideoFrameCount();
+    UINT64 GetVideoFrameDuration();
+    void Encode();
+    void SetVideoHeightAndWidth(BITMAP bitmap);
 private:
     LPCWSTR mImageFilePath;
+    LPCWSTR mVideoOutputPath;
     HBITMAP mHBitmap;
-    UINT32 mVideoWidth = 0;
-    UINT32 mVideoHeight = 0;
     UINT32 mVideoFps = 30;
     UINT64 mVideoFrameDuration = 30000000;
     UINT32 mVideoBitRate = 800000;
@@ -80,5 +84,7 @@ private:
     UINT32 mAudioAvgBytesPerSecond = 11000;
     UINT32 mAudioSamplesPerSecond = 320;
     UINT64 mDuration = 60;
+    UINT32 mVideoWidth = 0;
+    UINT32 mVideoHeight = 0;
 };
 

@@ -37,64 +37,19 @@ template <class T> void SafeRelease(T **ppT)
 
 void main()
 {
-    VideoEncoder *ve = new VideoEncoder(L"C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Images\\test.bmp");
-
-    HBITMAP h = ve->LoadImageFromFilePath(L"C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Images\\test.bmp");
-
-    BITMAP b;
-    ve->GetDIBFromHandle(h, &b);
-
     UINT64 duration = 30;
 
     VideoSettings vs;
     vs.videoFps = 60;
     vs.videoBitRate = 800000;
     vs.videoFps = 30;
-    vs.videoWidth = b.bmWidth;
-    vs.videoHeight = b.bmHeight;
+    /*vs.videoWidth = b.bmWidth;
+    vs.videoHeight = b.bmHeight;*/
     vs.videoEncodingFormat = MFVideoFormat_H264;
     vs.videoInputFormat = MFVideoFormat_RGB32;
     vs.videoPels = 0;
-    vs.videoFrameDuration = ve->CalcVideoFrameDuration(vs);
-    vs.videoFrameCount = ve->CalcVideoFrameCount(vs, duration);
-    
-    ve->SetVideoSettings(vs);
-    ve->SetDuration(duration);
 
-    HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
-    if (SUCCEEDED(hr))
-    {
-        hr = MFStartup(MF_VERSION);
-        if (SUCCEEDED(hr))
-        {
-            IMFSinkWriter *pSinkWriter = NULL;
-            DWORD stream;
+    VideoEncoder *ve = new VideoEncoder(L"C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Images\\test.bmp", L"output.mp4", 30, vs);
 
-            hr = ve->InitializeSinkWriter(&pSinkWriter, &stream, L"testOutput.mp4");
-            if (SUCCEEDED(hr))
-            {
-                // Send frames to the sink writer.
-                LONGLONG rtStart = 0;
-                DWORD cbAudioData = 0;
-
-                for (DWORD i = 0; i < vs.videoFrameCount; ++i)
-                {
-                    hr = ve->WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
-                    if (FAILED(hr))
-                    {
-                        break;
-                    }
-                    rtStart += vs.videoFrameDuration;
-                }
-            }
-            if (SUCCEEDED(hr))
-            {
-                hr = pSinkWriter->Finalize();
-            }
-            SafeRelease(&pSinkWriter);
-            MFShutdown();
-        }
-
-        CoUninitialize();
-    }
+    ve->Encode();
 }
