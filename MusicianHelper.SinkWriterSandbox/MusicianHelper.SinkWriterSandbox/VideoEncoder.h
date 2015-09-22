@@ -38,7 +38,7 @@ struct AudioSettings {
 class VideoEncoder
 {
 public:
-    VideoEncoder(LPCWSTR filePath);
+    VideoEncoder(LPCWSTR imageFilePath);
     ~VideoEncoder();
     // This function converts the given bitmap to a DIB.
     // Returns true if the conversion took place,
@@ -51,8 +51,8 @@ public:
     HBITMAP LoadImageFromFilePath(LPCWSTR filePath);
     template <class T> void SafeRelease(T **ppT);
     int GetDIBFromHandle(HBITMAP hBitmap, BITMAP *bitmap);
-    UINT64 CalcVideoFrameDuration();
-    UINT32 CalcVideoFrameCount();
+    UINT64 CalcVideoFrameDuration(VideoSettings vs);
+    UINT32 CalcVideoFrameCount(VideoSettings vs, int duration);
     void SetVideoSettings(VideoSettings vs);
     void SetAudioSettings(AudioSettings as);
     HRESULT FixUpChunkSizes(
@@ -86,7 +86,7 @@ public:
         HANDLE hFile,               // Handle to the output file.
         LONG msecAudioData          // Maximum amount of audio data to write, in msec.
         );
-    HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD blockSize);
+    HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD blockSize, LPCWSTR videoOutputFilePath);
     HRESULT WriteFrame(
         IMFSinkWriter *pWriter,
         DWORD streamIndex,
@@ -96,8 +96,9 @@ public:
         DWORD cbMaxAudioData,       // Maximum amount of audio data (bytes).
         DWORD *pcbDataWritten       // Receives the amount of data written.
         );
+    void SetDuration(UINT64 duration);
 private:
-    LPCWSTR mFilePath;
+    LPCWSTR mImageFilePath;
     HBITMAP mHBitmap;
     UINT32 mVideoWidth = 0;
     UINT32 mVideoHeight = 0;

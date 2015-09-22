@@ -29,9 +29,9 @@ struct FOURCC
 
 unsigned int id(FOURCC<'a', 'b', 'c', 'd'>::value);
 
-VideoEncoder::VideoEncoder(LPCWSTR filePath)
+VideoEncoder::VideoEncoder(LPCWSTR imageFilePath)
 {
-    mFilePath = filePath;
+    mImageFilePath = imageFilePath;
 }
 
 VideoEncoder::~VideoEncoder()
@@ -232,12 +232,12 @@ int VideoEncoder::GetDIBFromHandle(HBITMAP hBitmap, BITMAP *bitmap) {
     return errorCode;
 }
 
-UINT64 VideoEncoder::CalcVideoFrameDuration() {
-    return 10 * 1000 * 1000 / mVideoFps;
+UINT64 VideoEncoder::CalcVideoFrameDuration(VideoSettings vs) {
+    return 10 * 1000 * 1000 / vs.videoFps;
 }
 
-UINT32 VideoEncoder::CalcVideoFrameCount() {
-    return mDuration * mVideoFps;
+UINT32 VideoEncoder::CalcVideoFrameCount(VideoSettings vs, int duration) {
+    return duration * vs.videoFps;
 }
 
 void VideoEncoder::SetVideoSettings(VideoSettings vs) {
@@ -624,7 +624,7 @@ HRESULT VideoEncoder::WriteWaveFile(
     return hr;
 }
 
-HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD blockSize)
+HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD blockSize, LPCWSTR videoOutputFilePath)
 {
     *ppWriter = NULL;
     *pStreamIndex = NULL;
@@ -637,7 +637,7 @@ HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStr
     DWORD           streamIndex;
     DWORD           audioStreamIndex;
 
-    HRESULT hr = MFCreateSinkWriterFromURL(L"output.mp4", NULL, NULL, &pSinkWriter);
+    HRESULT hr = MFCreateSinkWriterFromURL(videoOutputFilePath, NULL, NULL, &pSinkWriter);
 
     // Set the output media type.
     if (SUCCEEDED(hr))
@@ -678,7 +678,7 @@ HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStr
     }
 
     // Set the output audio media type.
-    if (SUCCEEDED(hr))
+    /*if (SUCCEEDED(hr))
     {
         hr = MFCreateMediaType(&pMediaTypeOutAudio);
     }
@@ -705,7 +705,7 @@ HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStr
     if (SUCCEEDED(hr))
     {
         hr = pSinkWriter->AddStream(pMediaTypeOutAudio, &audioStreamIndex);
-    }
+    }*/
 
     // Set the input media type.
     if (SUCCEEDED(hr))
@@ -742,7 +742,7 @@ HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStr
     }
 
     // Set the input audio media type.
-    if (SUCCEEDED(hr))
+    /*if (SUCCEEDED(hr))
     {
         hr = MFCreateMediaType(&pMediaTypeInAudio);
     }
@@ -769,7 +769,7 @@ HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStr
     if (SUCCEEDED(hr))
     {
         hr = pSinkWriter->SetInputMediaType(audioStreamIndex, pMediaTypeInAudio, NULL);
-    }
+    }*/
 
     // Tell the sink writer to start accepting data.
     if (SUCCEEDED(hr))
@@ -866,11 +866,15 @@ HRESULT VideoEncoder::WriteFrame(
         hr = pWriter->WriteSample(streamIndex, pSample);
     }
 
-    if (SUCCEEDED(hr)) {
+    /*if (SUCCEEDED(hr)) {
         hr = WriteWaveData(pWriter, *pReader, cbMaxAudioData, pcbDataWritten);
-    }
+    }*/
 
     SafeRelease(&pSample);
     SafeRelease(&pBuffer);
     return hr;
+}
+
+void VideoEncoder::SetDuration(UINT64 duration) {
+    mDuration = duration;
 }

@@ -864,12 +864,31 @@ DWORD CalculateMaxAudioDataSize(
 
 void main()
 {
-    VideoEncoder *ve = new VideoEncoder(L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\test.bmp");
+    VideoEncoder *ve = new VideoEncoder(L"C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Images\\test.bmp");
+
+    HBITMAP h = ve->LoadImageFromFilePath(L"C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Images\\test.bmp");
+
+    BITMAP b;
+    ve->GetDIBFromHandle(h, &b);
+
+    UINT64 duration = 30;
+
     VideoSettings vs;
-
     vs.videoFps = 60;
+    vs.videoBitRate = 800000;
+    vs.videoFps = 30;
+    vs.videoWidth = b.bmWidth;
+    vs.videoHeight = b.bmHeight;
+    vs.videoEncodingFormat = MFVideoFormat_H264;
+    vs.videoInputFormat = MFVideoFormat_RGB32;
+    vs.videoPels = 0;
+    vs.videoFrameDuration = ve->CalcVideoFrameDuration(vs);
+    vs.videoFrameCount = ve->CalcVideoFrameCount(vs, duration);
+    
+    ve->SetVideoSettings(vs);
+    ve->SetDuration(duration);
 
-    HBITMAP h = (HBITMAP)LoadImage(NULL, L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\test.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+    /*HBITMAP h = (HBITMAP)LoadImage(NULL, L"C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Images\\test.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 
     BITMAP stBitmap;
     bool success = ConvertToDIB(h);
@@ -877,7 +896,7 @@ void main()
 
     VIDEO_WIDTH = stBitmap.bmWidth;
     VIDEO_HEIGHT = stBitmap.bmHeight;
-    VIDEO_PELS = VIDEO_WIDTH * VIDEO_HEIGHT;
+    VIDEO_PELS = VIDEO_WIDTH * VIDEO_HEIGHT;*/
 
     IMFSourceReader *pReader = NULL;
 
@@ -887,10 +906,10 @@ void main()
         hr = MFStartup(MF_VERSION);
         if (SUCCEEDED(hr))
         {
-            hr = MFCreateSourceReaderFromURL(L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Audio\\dangerzone.mp3", NULL, &pReader);
+            hr = MFCreateSourceReaderFromURL(L"C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Audio\\dangerzone.mp3", NULL, &pReader);
             if (FAILED(hr))
             {
-                printf("Error opening input file: %S\n", L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Audio\\sorry_dave.wav", hr);
+                printf("Error opening input file: %S\n", L"C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Audio\\sorry_dave.wav", hr);
             }
 
             IMFMediaType *pAudioType = NULL;
@@ -921,7 +940,7 @@ void main()
             IMFSinkWriter *pSinkWriter = NULL;
             DWORD stream;
 
-            hr = InitializeSinkWriter(&pSinkWriter, &stream, blockSize);
+            hr = ve->InitializeSinkWriter(&pSinkWriter, &stream, blockSize, L"testOutput.mp4");
             if (SUCCEEDED(hr))
             {
                 // Send frames to the sink writer.
@@ -930,7 +949,7 @@ void main()
 
                 for (DWORD i = 0; i < VIDEO_FRAME_COUNT; ++i)
                 {
-                    hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)stBitmap.bmBits, &pReader, blockSize, &cbAudioData);
+                    hr = ve->WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits, &pReader, blockSize, &cbAudioData);
                     if (FAILED(hr))
                     {
                         break;
