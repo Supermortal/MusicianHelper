@@ -86,6 +86,16 @@ public:
         HANDLE hFile,               // Handle to the output file.
         LONG msecAudioData          // Maximum amount of audio data to write, in msec.
         );
+    HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD blockSize);
+    HRESULT WriteFrame(
+        IMFSinkWriter *pWriter,
+        DWORD streamIndex,
+        const LONGLONG& rtStart,        // Time stamp.
+        byte* vfb,
+        IMFSourceReader **pReader,
+        DWORD cbMaxAudioData,       // Maximum amount of audio data (bytes).
+        DWORD *pcbDataWritten       // Receives the amount of data written.
+        );
 private:
     LPCWSTR mFilePath;
     HBITMAP mHBitmap;

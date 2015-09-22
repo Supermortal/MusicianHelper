@@ -29,12 +29,10 @@ struct FOURCC
 
 unsigned int id(FOURCC<'a', 'b', 'c', 'd'>::value);
 
-
 VideoEncoder::VideoEncoder(LPCWSTR filePath)
 {
     mFilePath = filePath;
 }
-
 
 VideoEncoder::~VideoEncoder()
 {
@@ -412,7 +410,7 @@ HRESULT VideoEncoder::WriteWaveData(
 }
 
 
-    HRESULT VideoEncoder::WriteToFile(HANDLE hFile, void* p, DWORD cb)
+HRESULT VideoEncoder::WriteToFile(HANDLE hFile, void* p, DWORD cb)
 {
     DWORD cbWritten = 0;
     HRESULT hr = S_OK;
@@ -425,7 +423,7 @@ HRESULT VideoEncoder::WriteWaveData(
     return hr;
 }
 
-    DWORD VideoEncoder::CalculateMaxAudioDataSize(
+DWORD VideoEncoder::CalculateMaxAudioDataSize(
     IMFMediaType *pAudioType,    // The PCM audio format.
     DWORD cbHeader,              // The size of the WAVE file header.
     DWORD msecAudioData          // Maximum duration, in milliseconds.
@@ -458,7 +456,7 @@ HRESULT VideoEncoder::WriteWaveData(
     return cbAudioClipSize;
 }
 
-    HRESULT VideoEncoder::WriteWaveHeader(
+HRESULT VideoEncoder::WriteWaveHeader(
     HANDLE hFile,               // Output file.
     IMFMediaType *pMediaType,   // PCM audio format.
     DWORD *pcbWritten           // Receives the size of the header.
@@ -515,7 +513,7 @@ HRESULT VideoEncoder::WriteWaveData(
     return hr;
 }
 
-    HRESULT VideoEncoder::ConfigureAudioStream(
+HRESULT VideoEncoder::ConfigureAudioStream(
     IMFSourceReader *pReader,   // Pointer to the source reader.
     IMFMediaType **ppPCMAudio   // Receives the audio format.
     )
@@ -583,7 +581,7 @@ HRESULT VideoEncoder::WriteWaveData(
     return hr;
 }
 
-    HRESULT VideoEncoder::WriteWaveFile(
+HRESULT VideoEncoder::WriteWaveFile(
     IMFSourceReader *pReader,   // Pointer to the source reader.
     HANDLE hFile,               // Handle to the output file.
     LONG msecAudioData          // Maximum amount of audio data to write, in msec.
@@ -623,5 +621,256 @@ HRESULT VideoEncoder::WriteWaveData(
     }
 
     SafeRelease(&pAudioType);
+    return hr;
+}
+
+HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD blockSize)
+{
+    *ppWriter = NULL;
+    *pStreamIndex = NULL;
+
+    IMFSinkWriter   *pSinkWriter = NULL;
+    IMFMediaType    *pMediaTypeOut = NULL;
+    IMFMediaType    *pMediaTypeOutAudio = NULL;
+    IMFMediaType    *pMediaTypeIn = NULL;
+    IMFMediaType    *pMediaTypeInAudio = NULL;
+    DWORD           streamIndex;
+    DWORD           audioStreamIndex;
+
+    HRESULT hr = MFCreateSinkWriterFromURL(L"output.mp4", NULL, NULL, &pSinkWriter);
+
+    // Set the output media type.
+    if (SUCCEEDED(hr))
+    {
+        hr = MFCreateMediaType(&pMediaTypeOut);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeOut->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeOut->SetGUID(MF_MT_SUBTYPE, mVideoEncodingFormat);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeOut->SetUINT32(MF_MT_AVG_BITRATE, mVideoBitRate);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeOut->SetUINT32(MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = MFSetAttributeSize(pMediaTypeOut, MF_MT_FRAME_SIZE, mVideoWidth, mVideoHeight);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = MFSetAttributeRatio(pMediaTypeOut, MF_MT_FRAME_RATE, mVideoFps, 1);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = MFSetAttributeRatio(pMediaTypeOut, MF_MT_PIXEL_ASPECT_RATIO, 1, 1);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pSinkWriter->AddStream(pMediaTypeOut, &streamIndex);
+    }
+
+    // Set the output audio media type.
+    if (SUCCEEDED(hr))
+    {
+        hr = MFCreateMediaType(&pMediaTypeOutAudio);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeOutAudio->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeOutAudio->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_MP3);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeOutAudio->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, 320);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeOutAudio->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, 2);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeOutAudio->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, 44100);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pSinkWriter->AddStream(pMediaTypeOutAudio, &audioStreamIndex);
+    }
+
+    // Set the input media type.
+    if (SUCCEEDED(hr))
+    {
+        hr = MFCreateMediaType(&pMediaTypeIn);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeIn->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeIn->SetGUID(MF_MT_SUBTYPE, mVideoInputFormat);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeIn->SetUINT32(MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = MFSetAttributeSize(pMediaTypeIn, MF_MT_FRAME_SIZE, mVideoWidth, mVideoHeight);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = MFSetAttributeRatio(pMediaTypeIn, MF_MT_FRAME_RATE, mVideoFps, 1);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = MFSetAttributeRatio(pMediaTypeIn, MF_MT_PIXEL_ASPECT_RATIO, 1, 1);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pSinkWriter->SetInputMediaType(streamIndex, pMediaTypeIn, NULL);
+    }
+
+    // Set the input audio media type.
+    if (SUCCEEDED(hr))
+    {
+        hr = MFCreateMediaType(&pMediaTypeInAudio);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeInAudio->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeInAudio->SetGUID(MF_MT_SUBTYPE, mAudioEncodingFormat);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeInAudio->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, 320);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeInAudio->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, mAudioChannels);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pMediaTypeInAudio->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, mAudioSamplesPerSecond);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pSinkWriter->SetInputMediaType(audioStreamIndex, pMediaTypeInAudio, NULL);
+    }
+
+    // Tell the sink writer to start accepting data.
+    if (SUCCEEDED(hr))
+    {
+        hr = pSinkWriter->BeginWriting();
+    }
+
+    // Return the pointer to the caller.
+    if (SUCCEEDED(hr))
+    {
+        *ppWriter = pSinkWriter;
+        (*ppWriter)->AddRef();
+        *pStreamIndex = streamIndex;
+    }
+
+    SafeRelease(&pSinkWriter);
+    SafeRelease(&pMediaTypeOut);
+    SafeRelease(&pMediaTypeIn);
+    SafeRelease(&pMediaTypeInAudio);
+    return hr;
+}
+
+HRESULT VideoEncoder::WriteFrame(
+    IMFSinkWriter *pWriter,
+    DWORD streamIndex,
+    const LONGLONG& rtStart,        // Time stamp.
+    byte* vfb,
+    IMFSourceReader **pReader,
+    DWORD cbMaxAudioData,       // Maximum amount of audio data (bytes).
+    DWORD *pcbDataWritten       // Receives the amount of data written.
+    )
+{
+    IMFSample *pSample = NULL;
+    IMFMediaBuffer *pBuffer = NULL;
+
+    const LONG cbWidth = 4 * mVideoWidth;
+    const DWORD cbBuffer = cbWidth * mVideoHeight;
+
+    BYTE *pData = NULL;
+
+    // Create a new memory buffer.
+    HRESULT hr = MFCreateMemoryBuffer(cbBuffer, &pBuffer);
+
+    // Lock the buffer and copy the video frame to the buffer.
+    if (SUCCEEDED(hr))
+    {
+        hr = pBuffer->Lock(&pData, NULL, NULL);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = MFCopyImage(
+            pData,                      // Destination buffer.
+            cbWidth,                    // Destination stride.
+            vfb,    // First row in source image.
+            cbWidth,                    // Source stride.
+            cbWidth,                    // Image width in bytes.
+            mVideoHeight                // Image height in pixels.
+            );
+    }
+    if (pBuffer)
+    {
+        pBuffer->Unlock();
+    }
+
+    // Set the data length of the buffer.
+    if (SUCCEEDED(hr))
+    {
+        hr = pBuffer->SetCurrentLength(cbBuffer);
+    }
+
+    // Create a media sample and add the buffer to the sample.
+    if (SUCCEEDED(hr))
+    {
+        hr = MFCreateSample(&pSample);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pSample->AddBuffer(pBuffer);
+    }
+
+    // Set the time stamp and the duration.
+    if (SUCCEEDED(hr))
+    {
+        hr = pSample->SetSampleTime(rtStart);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pSample->SetSampleDuration(mVideoFrameDuration);
+    }
+
+    // Send the sample to the Sink Writer.
+    if (SUCCEEDED(hr))
+    {
+        hr = pWriter->WriteSample(streamIndex, pSample);
+    }
+
+    if (SUCCEEDED(hr)) {
+        hr = WriteWaveData(pWriter, *pReader, cbMaxAudioData, pcbDataWritten);
+    }
+
+    SafeRelease(&pSample);
+    SafeRelease(&pBuffer);
     return hr;
 }
