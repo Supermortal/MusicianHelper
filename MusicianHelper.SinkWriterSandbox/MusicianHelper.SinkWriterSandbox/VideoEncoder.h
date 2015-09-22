@@ -55,6 +55,37 @@ public:
     UINT32 CalcVideoFrameCount();
     void SetVideoSettings(VideoSettings vs);
     void SetAudioSettings(AudioSettings as);
+    HRESULT FixUpChunkSizes(
+        HANDLE hFile,           // Output file.
+        DWORD cbHeader,         // Size of the 'fmt ' chuck.
+        DWORD cbAudioData       // Size of the 'data' chunk.
+        );
+    HRESULT WriteWaveData(
+        HANDLE hFile,               // Output file.
+        IMFSourceReader *pReader,   // Source reader.
+        DWORD cbMaxAudioData,       // Maximum amount of audio data (bytes).
+        DWORD *pcbDataWritten       // Receives the amount of data written.
+        );
+    HRESULT WriteToFile(HANDLE hFile, void* p, DWORD cb);
+    DWORD CalculateMaxAudioDataSize(
+        IMFMediaType *pAudioType,    // The PCM audio format.
+        DWORD cbHeader,              // The size of the WAVE file header.
+        DWORD msecAudioData          // Maximum duration, in milliseconds.
+        );
+    HRESULT WriteWaveHeader(
+        HANDLE hFile,               // Output file.
+        IMFMediaType *pMediaType,   // PCM audio format.
+        DWORD *pcbWritten           // Receives the size of the header.
+        );
+    HRESULT ConfigureAudioStream(
+        IMFSourceReader *pReader,   // Pointer to the source reader.
+        IMFMediaType **ppPCMAudio   // Receives the audio format.
+        );
+    HRESULT WriteWaveFile(
+        IMFSourceReader *pReader,   // Pointer to the source reader.
+        HANDLE hFile,               // Handle to the output file.
+        LONG msecAudioData          // Maximum amount of audio data to write, in msec.
+        );
 private:
     LPCWSTR mFilePath;
     HBITMAP mHBitmap;
