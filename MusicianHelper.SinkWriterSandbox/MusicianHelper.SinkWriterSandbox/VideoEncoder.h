@@ -15,6 +15,25 @@
 #pragma comment(lib, "mfplat")
 #pragma comment(lib, "mfuuid")
 
+struct VideoSettings {
+    UINT32 videoWidth = 0;
+    UINT32 videoHeight = 0;
+    UINT32 videoFps = 30;
+    UINT64 videoFrameDuration = 30000000;
+    UINT32 videoBitRate = 800000;
+    GUID   videoEncodingFormat = MFVideoFormat_H264;
+    GUID   videoInputFormat = MFVideoFormat_RGB32;
+    UINT32 videoPels = 0;
+    UINT32 videoFrameCount = 1800;
+};
+
+struct AudioSettings {
+    GUID   audioEncodingFormat = MFAudioFormat_MP3;
+    UINT32 audioChannels = 1;
+    UINT32 audioAvgBytesPerSecond = 11000;
+    UINT32 audioSamplesPerSecond = 320;
+};
+
 #pragma once
 class VideoEncoder
 {
@@ -34,6 +53,8 @@ public:
     int GetDIBFromHandle(HBITMAP hBitmap, BITMAP *bitmap);
     UINT64 CalcVideoFrameDuration();
     UINT32 CalcVideoFrameCount();
+    void SetVideoSettings(VideoSettings vs);
+    void SetAudioSettings(AudioSettings as);
 private:
     LPCWSTR mFilePath;
     HBITMAP mHBitmap;
@@ -51,24 +72,5 @@ private:
     UINT32 mAudioAvgBytesPerSecond = 11000;
     UINT32 mAudioSamplesPerSecond = 320;
     UINT64 mDuration = 60;
-};
-
-struct VideoSettings {
-    UINT32 videoWidth = 0;
-    UINT32 videoHeight = 0;
-    UINT32 videoFps = 30;
-    UINT64 videoFrameDuration = 30000000;
-    UINT32 videoBitRate = 800000;
-    GUID   videoEncodingFormat = MFVideoFormat_H264;
-    GUID   videoInputFormat = MFVideoFormat_RGB32;
-    UINT32 videoPels = 0;
-    UINT32 videoFrameCount = 1800;
-};
-
-struct AudioSettings {
-    GUID   audioEncodingFormat = MFAudioFormat_MP3;
-    UINT32 audioChannels = 1;
-    UINT32 audioAvgBytesPerSecond = 11000;
-    UINT32 audioSamplesPerSecond = 320;
 };
 

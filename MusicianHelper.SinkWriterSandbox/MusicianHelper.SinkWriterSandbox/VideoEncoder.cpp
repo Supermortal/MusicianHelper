@@ -229,3 +229,22 @@ UINT64 VideoEncoder::CalcVideoFrameDuration() {
 UINT32 VideoEncoder::CalcVideoFrameCount() {
     return mDuration * mVideoFps;
 }
+
+void VideoEncoder::SetVideoSettings(VideoSettings vs) {
+    mVideoBitRate = vs.videoBitRate;
+    mVideoEncodingFormat = vs.videoEncodingFormat;
+    mVideoFps = vs.videoFps;
+    mVideoFrameCount = vs.videoFrameCount;
+    mVideoFrameDuration = vs.videoFrameDuration;
+    mVideoHeight = vs.videoHeight;
+    mVideoInputFormat = vs.videoInputFormat;
+    mVideoPels = vs.videoPels;
+    mVideoWidth = vs.videoWidth;
+}
+
+void VideoEncoder::SetAudioSettings(AudioSettings as) {
+    mAudioAvgBytesPerSecond = as.audioAvgBytesPerSecond;
+    mAudioChannels = as.audioChannels;
+    mAudioEncodingFormat = as.audioEncodingFormat;
+    mAudioSamplesPerSecond = as.audioSamplesPerSecond;
+}
