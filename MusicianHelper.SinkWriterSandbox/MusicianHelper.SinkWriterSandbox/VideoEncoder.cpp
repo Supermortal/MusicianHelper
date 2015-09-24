@@ -243,9 +243,9 @@ UINT32 VideoEncoder::CalcVideoFrameCount(VideoSettings vs, int duration) {
     return duration * vs.videoFps;
 }
 
-UINT32 VideoEncoder::CalcVideoPels(UINT32 videoWidth, UINT32 videoHeight) {
-    return videoWidth * videoHeight;
-}
+//UINT32 VideoEncoder::CalcVideoPels(UINT32 videoWidth, UINT32 videoHeight) {
+//    return videoWidth * videoHeight;
+//}
 
 void VideoEncoder::SetVideoSettings(VideoSettings vs) {
     mVideoBitRate = vs.videoBitRate;
@@ -533,11 +533,11 @@ HRESULT VideoEncoder::StartMediaFoundation() {
 }
 
 UINT64 VideoEncoder::GetVideoFrameCount() {
-    return 10 * 1000 * 1000 / mVideoFps;
+    return 20 * mVideoFps;
 }
 
 UINT64 VideoEncoder::GetVideoFrameDuration(){
-    return mDuration * mVideoFps;
+    return 10 * 1000 * 1000 / mVideoFps;
 }
 
 void VideoEncoder::Encode() {
@@ -590,6 +590,6 @@ void VideoEncoder::SetVideoHeightAndWidth(BITMAP bitmap) {
     mVideoWidth = bitmap.bmWidth;
 }
 
-UINT32 VideoEncoder::GetVideoPels() {
-    return mVideoWidth * mVideoHeight;
-}
+//UINT32 VideoEncoder::GetVideoPels() {
+//    return mVideoWidth * mVideoHeight;
+//}

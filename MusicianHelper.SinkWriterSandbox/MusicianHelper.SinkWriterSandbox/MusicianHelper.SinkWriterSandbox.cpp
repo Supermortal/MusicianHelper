@@ -47,9 +47,9 @@ void main()
     vs.videoHeight = b.bmHeight;*/
     vs.videoEncodingFormat = MFVideoFormat_H264;
     vs.videoInputFormat = MFVideoFormat_RGB32;
-    vs.videoPels = 0;
+    //vs.videoPels = 0;
 
-    VideoEncoder *ve = new VideoEncoder(L"C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Images\\test.bmp", L"output.mp4", 30, vs);
+    VideoEncoder *ve = new VideoEncoder(L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\test.bmp", L"output.mp4", 30, vs);
 
     ve->Encode();
 }
