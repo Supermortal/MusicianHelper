@@ -316,7 +316,7 @@ HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStr
     }
 
     // Set the output audio media type.
-    /*if (SUCCEEDED(hr))
+    if (SUCCEEDED(hr))
     {
     hr = MFCreateMediaType(&pMediaTypeOutAudio);
     }
@@ -326,7 +326,7 @@ HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStr
     }
     if (SUCCEEDED(hr))
     {
-    hr = pMediaTypeOutAudio->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_MP3);
+    hr = pMediaTypeOutAudio->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
     }
     if (SUCCEEDED(hr))
     {
@@ -334,7 +334,7 @@ HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStr
     }
     if (SUCCEEDED(hr))
     {
-    hr = pMediaTypeOutAudio->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, 2);
+    hr = pMediaTypeOutAudio->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, 1);
     }
     if (SUCCEEDED(hr))
     {
@@ -343,7 +343,7 @@ HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStr
     if (SUCCEEDED(hr))
     {
     hr = pSinkWriter->AddStream(pMediaTypeOutAudio, &audioStreamIndex);
-    }*/
+    }
 
     // Set the input media type.
     if (SUCCEEDED(hr))
