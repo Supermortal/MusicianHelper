@@ -23,7 +23,7 @@ struct VideoSettings {
     UINT32 videoBitRate = 800000;
     GUID   videoEncodingFormat = MFVideoFormat_H264;
     GUID   videoInputFormat = MFVideoFormat_RGB32;
-    UINT32 videoPels = 0;
+    /*UINT32 videoPels = 0;*/
     /*UINT32 videoFrameCount = 1800;*/
 };
 
@@ -66,8 +66,10 @@ public:
     HRESULT StartMediaFoundation();
     UINT64 GetVideoFrameCount();
     UINT64 GetVideoFrameDuration();
+    /*UINT32 GetVideoPels();*/
     void Encode();
     void SetVideoHeightAndWidth(BITMAP bitmap);
+    //UINT32 CalcVideoPels(UINT32 videoWidth, UINT32 videoHeight);
 private:
     LPCWSTR mImageFilePath;
     LPCWSTR mVideoOutputPath;
@@ -77,7 +79,7 @@ private:
     UINT32 mVideoBitRate = 800000;
     GUID   mVideoEncodingFormat = MFVideoFormat_H264;
     GUID   mVideoInputFormat = MFVideoFormat_RGB32;
-    UINT32 mVideoPels = 0;
+    //UINT32 mVideoPels = 0;
     UINT32 mVideoFrameCount = 1800;
     GUID   mAudioEncodingFormat = MFAudioFormat_MP3;
     UINT32 mAudioChannels = 1;
