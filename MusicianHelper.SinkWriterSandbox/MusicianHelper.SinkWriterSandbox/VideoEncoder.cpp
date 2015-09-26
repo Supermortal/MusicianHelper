@@ -38,6 +38,7 @@ VideoEncoder::VideoEncoder(LPCWSTR imageFilePath, LPCWSTR audioFilePath, LPCWSTR
     SetVideoSettings(vs);
 }
 
+
 VideoEncoder::~VideoEncoder()
 {
 
