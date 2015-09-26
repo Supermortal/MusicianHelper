@@ -30,12 +30,11 @@ struct FOURCC
 
 unsigned int id(FOURCC<'a', 'b', 'c', 'd'>::value);
 
-VideoEncoder::VideoEncoder(LPCWSTR imageFilePath, LPCWSTR audioFilePath, LPCWSTR videoOutputPath, UINT64 duration, VideoSettings vs)
+VideoEncoder::VideoEncoder(LPCWSTR imageFilePath, LPCWSTR audioFilePath, LPCWSTR videoOutputPath, VideoSettings vs)
 {
     mImageFilePath = imageFilePath;
     mVideoOutputPath = videoOutputPath;
     mAudioFilePath = audioFilePath;
-    mDuration = duration;
     SetVideoSettings(vs);
 }
 
@@ -249,19 +248,6 @@ void VideoEncoder::SetVideoSettings(VideoSettings vs) {
     mVideoBitRate = vs.videoBitRate;
     mVideoEncodingFormat = vs.videoEncodingFormat;
     mVideoFps = vs.videoFps;
-    //mVideoFrameCount = vs.videoFrameCount;
-    //mVideoFrameDuration = vs.videoFrameDuration;
-    //mVideoHeight = vs.videoHeight;
-    mVideoInputFormat = vs.videoInputFormat;
-    //mVideoPels = vs.videoPels;
-    //mVideoWidth = vs.videoWidth;
-}
-
-void VideoEncoder::SetAudioSettings(AudioSettings as) {
-    mAudioAvgBytesPerSecond = as.audioAvgBytesPerSecond;
-    mAudioChannels = as.audioChannels;
-    mAudioEncodingFormat = as.audioEncodingFormat;
-    mAudioSamplesPerSecond = as.audioSamplesPerSecond;
 }
 
 HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD *pAudioStreamIndex, LPCWSTR videoOutputFilePath, IMFSourceReader *pReader)

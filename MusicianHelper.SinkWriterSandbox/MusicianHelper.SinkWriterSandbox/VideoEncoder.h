@@ -19,21 +19,13 @@ struct VideoSettings {
     UINT32 videoFps = 30;
     UINT32 videoBitRate = 800000;
     GUID   videoEncodingFormat = MFVideoFormat_H264;
-    GUID   videoInputFormat = MFVideoFormat_RGB32;
-};
-
-struct AudioSettings {
-    GUID   audioEncodingFormat = MFAudioFormat_MP3;
-    UINT32 audioChannels = 1;
-    UINT32 audioAvgBytesPerSecond = 11000;
-    UINT32 audioSamplesPerSecond = 320;
 };
 
 #pragma once
 class VideoEncoder
 {
 public:
-    VideoEncoder(LPCWSTR imageFilePath, LPCWSTR audioFilePath, LPCWSTR videoOutputPath, UINT64 duration, VideoSettings vs);
+    VideoEncoder(LPCWSTR imageFilePath, LPCWSTR audioFilePath, LPCWSTR videoOutputPath, VideoSettings vs);
     ~VideoEncoder();
     // This function converts the given bitmap to a DIB.
     // Returns true if the conversion took place,
@@ -49,7 +41,6 @@ public:
     UINT64 CalcVideoFrameDuration(VideoSettings vs);
     UINT32 CalcVideoFrameCount(VideoSettings vs, int duration);
     void SetVideoSettings(VideoSettings vs);
-    void SetAudioSettings(AudioSettings as);
     HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD *pAudioStreamIndex, LPCWSTR videoOutputPath, IMFSourceReader *pReader);
     HRESULT WriteFrame(
         IMFSinkWriter *pWriter,
