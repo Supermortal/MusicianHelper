@@ -16,15 +16,10 @@
 #pragma comment(lib, "mfuuid")
 
 struct VideoSettings {
-    /*UINT32 videoWidth = 0;
-    UINT32 videoHeight = 0;*/
     UINT32 videoFps = 30;
-    /*UINT64 videoFrameDuration = 30000000;*/
     UINT32 videoBitRate = 800000;
     GUID   videoEncodingFormat = MFVideoFormat_H264;
     GUID   videoInputFormat = MFVideoFormat_RGB32;
-    /*UINT32 videoPels = 0;*/
-    /*UINT32 videoFrameCount = 1800;*/
 };
 
 struct AudioSettings {
@@ -38,7 +33,7 @@ struct AudioSettings {
 class VideoEncoder
 {
 public:
-    VideoEncoder(LPCWSTR imageFilePath, LPCWSTR videoOutputPath, UINT64 duration, VideoSettings vs);
+    VideoEncoder(LPCWSTR imageFilePath, LPCWSTR audioFilePath, LPCWSTR videoOutputPath, UINT64 duration, VideoSettings vs);
     ~VideoEncoder();
     // This function converts the given bitmap to a DIB.
     // Returns true if the conversion took place,
@@ -55,7 +50,7 @@ public:
     UINT32 CalcVideoFrameCount(VideoSettings vs, int duration);
     void SetVideoSettings(VideoSettings vs);
     void SetAudioSettings(AudioSettings as);
-    HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, LPCWSTR videoOutputFilePath);
+    HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD *pAudioStreamIndex, IMFMediaType **pAudioType, LPCWSTR videoOutputFilePath);
     HRESULT WriteFrame(
         IMFSinkWriter *pWriter,
         DWORD streamIndex,
@@ -66,26 +61,46 @@ public:
     HRESULT StartMediaFoundation();
     UINT64 GetVideoFrameCount();
     UINT64 GetVideoFrameDuration();
-    /*UINT32 GetVideoPels();*/
     void Encode();
     void SetVideoHeightAndWidth(BITMAP bitmap);
-    //UINT32 CalcVideoPels(UINT32 videoWidth, UINT32 videoHeight);
+    HRESULT WriteWaveData(
+        IMFSinkWriter *pWriter,
+        //HANDLE hFile,               // Output file.
+        IMFSourceReader *pReader,   // Source reader.
+        DWORD cbMaxAudioData,       // Maximum amount of audio data (bytes).
+        DWORD *pcbDataWritten,       // Receives the amount of data written.
+        DWORD audioStreamIndex
+        );
+    DWORD CalculateMaxAudioDataSize(
+        IMFMediaType *pAudioType,    // The PCM audio format.
+        DWORD msecAudioData          // Maximum duration, in milliseconds.
+        );
+    HRESULT ConfigureAudioStream(
+        IMFSourceReader *pReader,   // Pointer to the source reader.
+        IMFMediaType **ppPCMAudio   // Receives the audio format.
+        );
+    HRESULT CreateMediaSource(
+        PCWSTR pszURL,
+        IPropertyStore *pConfig,    // Optional, can be NULL
+        IMFMediaSource **ppSource
+        );
+    HRESULT GetSourceDuration(IMFMediaSource *pSource, MFTIME *pDuration);
 private:
     LPCWSTR mImageFilePath;
     LPCWSTR mVideoOutputPath;
+    LPCWSTR mAudioFilePath;
     HBITMAP mHBitmap;
     UINT32 mVideoFps = 30;
     UINT64 mVideoFrameDuration = 30000000;
     UINT32 mVideoBitRate = 800000;
     GUID   mVideoEncodingFormat = MFVideoFormat_H264;
     GUID   mVideoInputFormat = MFVideoFormat_RGB32;
-    //UINT32 mVideoPels = 0;
     UINT32 mVideoFrameCount = 1800;
     GUID   mAudioEncodingFormat = MFAudioFormat_MP3;
     UINT32 mAudioChannels = 1;
-    UINT32 mAudioAvgBytesPerSecond = 11000;
+    UINT32 mAudioAvgBytesPerSecond = 176400;
     UINT32 mAudioSamplesPerSecond = 320;
-    UINT64 mDuration = 60;
+    UINT64 mDuration = 5;
     UINT32 mVideoWidth = 0;
     UINT32 mVideoHeight = 0;
 };
