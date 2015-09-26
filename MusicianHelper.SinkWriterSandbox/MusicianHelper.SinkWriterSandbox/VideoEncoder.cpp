@@ -130,7 +130,7 @@ bool VideoEncoder::ConvertToDIB(HBITMAP& hBitmap) {
             ZeroMemory(pReserveSpace, sizeof(pReserveSpace));
             stBitmapInfo.bmiHeader.biSize = sizeof(stBitmapInfo.bmiHeader);
             stBitmapInfo.bmiHeader.biWidth = stBitmap.bmWidth;
-            stBitmapInfo.bmiHeader.biHeight = stBitmap.bmHeight;
+            stBitmapInfo.bmiHeader.biHeight = -stBitmap.bmHeight;
             stBitmapInfo.bmiHeader.biPlanes = 1;
             stBitmapInfo.bmiHeader.biBitCount = stBitmap.bmBitsPixel;
             stBitmapInfo.bmiHeader.biCompression = BI_RGB;
