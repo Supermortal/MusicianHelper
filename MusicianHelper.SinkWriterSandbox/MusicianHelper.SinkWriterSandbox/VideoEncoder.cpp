@@ -38,7 +38,6 @@ VideoEncoder::VideoEncoder(LPCWSTR imageFilePath, LPCWSTR audioFilePath, LPCWSTR
     SetVideoSettings(vs);
 }
 
-
 VideoEncoder::~VideoEncoder()
 {
 
@@ -632,7 +631,7 @@ void VideoEncoder::Encode() {
             UINT64 baseTime = (UINT64)mft / videoFrameCount;
             for (DWORD i = 0; i < videoFrameCount; ++i)
             {
-                hr = pReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, nullptr, &pStreamFlags, &timestamp, &sample);
+                hr = pReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, NULL, &pStreamFlags, &timestamp, &sample);
                 if (sample) 
                 {
                     hr = sample->SetSampleTime(timestamp - rtStart);
@@ -752,20 +751,20 @@ HRESULT VideoEncoder::ConfigureDecoder(IMFSourceReader *pReader, DWORD dwStreamI
         goto done;
     }
 
-    //// Select a subtype.
-    //if (majorType == MFMediaType_Video)
-    //{
-    //    subtype = MFVideoFormat_RGB32;
-    //}
-    //else if (majorType == MFMediaType_Audio)
-    //{
-        subtype = MFAudioFormat_MP3;
-    //}
-    //else
-    //{
-    //    // Unrecognized type. Skip.
-    //    goto done;
-    //}
+    // Select a subtype.
+    if (majorType == MFMediaType_Video)
+    {
+        subtype = MFVideoFormat_RGB32;
+    }
+    else if (majorType == MFMediaType_Audio)
+    {
+        subtype = MFAudioFormat_PCM;
+    }
+    else
+    {
+        // Unrecognized type. Skip.
+        goto done;
+    }
 
     hr = pType->SetGUID(MF_MT_SUBTYPE, subtype);
     if (FAILED(hr))
@@ -785,3 +784,4 @@ done:
     SafeRelease(&pType);
     return hr;
 }
+
