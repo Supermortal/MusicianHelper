@@ -18,6 +18,7 @@
 #pragma comment(lib, "mfreadwrite")
 #pragma comment(lib, "mfplat")
 #pragma comment(lib, "mfuuid")
+#pragma comment(lib, "Mf")
 
 #include "VideoEncoder.h"
 
@@ -263,88 +264,204 @@ void VideoEncoder::SetAudioSettings(AudioSettings as) {
     mAudioSamplesPerSecond = as.audioSamplesPerSecond;
 }
 
-HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, LPCWSTR videoOutputFilePath)
+HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD *pAudioStreamIndex, LPCWSTR videoOutputFilePath, IMFSourceReader *pReader)
 {
     *ppWriter = NULL;
     *pStreamIndex = NULL;
 
     IMFSinkWriter   *pSinkWriter = NULL;
-    IMFMediaType    *pMediaTypeOut = NULL;
-    IMFMediaType    *pMediaTypeIn = NULL;
+    /*IMFMediaType    *pMediaTypeOut = NULL;
+    IMFMediaType    *pMediaTypeIn = NULL;*/
+    IMFMediaType  *videoTypeOut = NULL;  // <-- previously mediaTypeOut
+    IMFMediaType  *videoTypeIn = NULL;   // <-- previously mediaTypeIn
+    IMFMediaType  *audioTypeOut = NULL;
+    IMFMediaType  *audioTypeIn = NULL;
     DWORD           streamIndex;
+    DWORD audioStreamIndex;
 
     HRESULT hr = MFCreateSinkWriterFromURL(videoOutputFilePath, NULL, NULL, &pSinkWriter);
 
-    // Set the output media type.
+    // Set the output video type.
     if (SUCCEEDED(hr))
     {
-        hr = MFCreateMediaType(&pMediaTypeOut);
+        hr = MFCreateMediaType(&videoTypeOut);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeOut->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);
+        hr = videoTypeOut->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeOut->SetGUID(MF_MT_SUBTYPE, mVideoEncodingFormat);
+        hr = videoTypeOut->SetGUID(MF_MT_SUBTYPE, mVideoEncodingFormat);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeOut->SetUINT32(MF_MT_AVG_BITRATE, mVideoBitRate);
+        hr = videoTypeOut->SetUINT32(MF_MT_AVG_BITRATE, mVideoBitRate);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeOut->SetUINT32(MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive);
+        hr = videoTypeOut->SetUINT32(MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive);
     }
     if (SUCCEEDED(hr))
     {
-        hr = MFSetAttributeSize(pMediaTypeOut, MF_MT_FRAME_SIZE, mVideoWidth, mVideoHeight);
+        hr = MFSetAttributeSize(videoTypeOut, MF_MT_FRAME_SIZE, mVideoWidth, mVideoHeight);
     }
     if (SUCCEEDED(hr))
     {
-        hr = MFSetAttributeRatio(pMediaTypeOut, MF_MT_FRAME_RATE, mVideoFps, 1);
+        hr = MFSetAttributeRatio(videoTypeOut, MF_MT_FRAME_RATE, mVideoFps, 1);
     }
     if (SUCCEEDED(hr))
     {
-        hr = MFSetAttributeRatio(pMediaTypeOut, MF_MT_PIXEL_ASPECT_RATIO, 1, 1);
+        hr = MFSetAttributeRatio(videoTypeOut, MF_MT_PIXEL_ASPECT_RATIO, 1, 1);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pSinkWriter->AddStream(pMediaTypeOut, &streamIndex);
+        hr = pSinkWriter->AddStream(videoTypeOut, &streamIndex);
     }
 
-    // Set the input media type.
+    // Set the input video type.
     if (SUCCEEDED(hr))
     {
-        hr = MFCreateMediaType(&pMediaTypeIn);
+        hr = MFCreateMediaType(&videoTypeIn);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeIn->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);
+        hr = videoTypeIn->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeIn->SetGUID(MF_MT_SUBTYPE, mVideoInputFormat);
+        hr = videoTypeIn->SetGUID(MF_MT_SUBTYPE, mVideoInputFormat);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pMediaTypeIn->SetUINT32(MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive);
+        hr = videoTypeIn->SetUINT32(MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive);
     }
     if (SUCCEEDED(hr))
     {
-        hr = MFSetAttributeSize(pMediaTypeIn, MF_MT_FRAME_SIZE, mVideoWidth, mVideoHeight);
+        hr = MFSetAttributeSize(videoTypeIn, MF_MT_FRAME_SIZE, mVideoWidth, mVideoHeight);
     }
     if (SUCCEEDED(hr))
     {
-        hr = MFSetAttributeRatio(pMediaTypeIn, MF_MT_FRAME_RATE, mVideoFps, 1);
+        hr = MFSetAttributeRatio(videoTypeIn, MF_MT_FRAME_RATE, mVideoFps, 1);
     }
     if (SUCCEEDED(hr))
     {
-        hr = MFSetAttributeRatio(pMediaTypeIn, MF_MT_PIXEL_ASPECT_RATIO, 1, 1);
+        hr = MFSetAttributeRatio(videoTypeIn, MF_MT_PIXEL_ASPECT_RATIO, 1, 1);
     }
     if (SUCCEEDED(hr))
     {
-        hr = pSinkWriter->SetInputMediaType(streamIndex, pMediaTypeIn, NULL);
+        hr = pSinkWriter->SetInputMediaType(streamIndex, videoTypeIn, NULL);
+    }
+
+    //set audio type in
+    if (SUCCEEDED(hr))
+    {
+        hr = MFCreateMediaType(&audioTypeOut);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = audioTypeOut->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = audioTypeOut->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_MP3);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = audioTypeOut->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, 320);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = audioTypeOut->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, 2);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = audioTypeOut->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, 44100);
+    }
+    /*if (SUCCEEDED(hr))
+    {
+        hr = pSinkWriter->AddStream(audioTypeOut, &audioStreamIndex);
+    }*/
+
+    IMFCollection *availableTypes = NULL;
+    hr = MFTranscodeGetAudioOutputAvailableTypes(MFAudioFormat_WMAudioV9, MFT_ENUM_FLAG_ALL, NULL, &availableTypes);
+
+    DWORD count = 0;
+    hr = availableTypes->GetElementCount(&count);  // Get the number of elements in the list.
+
+    IUnknown     *pUnkAudioType = NULL;
+    IMFMediaType *audioOutputType = NULL;
+    for (DWORD i = 0; i < count; ++i)
+    {
+        hr = availableTypes->GetElement(i, &pUnkAudioType);
+        hr = pUnkAudioType->QueryInterface(IID_PPV_ARGS(&audioTypeOut));
+
+        // compare channels, sampleRate, and bitsPerSample to target numbers
+        {
+            GUID subtype;
+            hr = audioTypeOut->GetGUID(MF_MT_SUBTYPE, &subtype);
+
+            UINT32 avgBytesPerSecond;
+            hr = audioTypeOut->GetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, &avgBytesPerSecond);
+
+            UINT32 bitsPerSample;
+            hr = audioTypeOut->GetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, &bitsPerSample);
+
+            UINT32 numChannels;
+            hr = audioTypeOut->GetUINT32(MF_MT_AUDIO_NUM_CHANNELS, &numChannels);
+
+            UINT32 samPerSec;
+            hr = audioTypeOut->GetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, &samPerSec);
+
+            if (55002 == avgBytesPerSecond && 2 == numChannels && 24 == bitsPerSample && 44100 == samPerSec)// && numChannels == 2 && bitsPerSample == 16 && samPerSec = 44100)
+                break;
+        }
+
+        //audioOutputType.Reset();
+        //SafeRelease(&audioOutputType);
+    }
+
+    SafeRelease(&availableTypes);
+
+    if (SUCCEEDED(hr)) 
+    {
+        hr = pSinkWriter->AddStream(audioTypeOut, &audioStreamIndex);
+        SafeRelease(&audioTypeOut);
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        //ConfigureDecoder(pReader, (DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM);
+
+        //IMFMediaType *pNativeType = NULL;
+        //IMFMediaType *pType = NULL;
+
+        //// Find the native format of the stream.
+        ////hr = pReader->GetNativeMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, &pNativeType);
+        hr = pReader->GetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, &audioTypeIn);
+
+        GUID subtype;
+        hr = audioTypeIn->GetGUID(MF_MT_SUBTYPE, &subtype);
+
+        UINT32 bitsPerSample;
+        hr = audioTypeIn->GetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, &bitsPerSample);
+
+        //hr = audioTypeIn->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, 320);
+
+        UINT32 avgBytesPerSecond;
+        hr = audioTypeIn->GetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, &avgBytesPerSecond);
+
+        UINT32 numChannels;
+        hr = audioTypeIn->GetUINT32(MF_MT_AUDIO_NUM_CHANNELS, &numChannels);
+
+        UINT32 samPerSec;
+        hr = audioTypeIn->GetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, &samPerSec);
+
+        //IMFMediaType *audioTypeIn = NULL;  // <-- declaration from above
+        // NOTE: audioReader is an IMFMediaSource used to read the audio file
+        //hr = pReader->GetCurrentMediaType((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, &audioTypeIn);
+        hr = pSinkWriter->SetInputMediaType(audioStreamIndex, audioTypeIn, NULL);
+        SafeRelease(&audioTypeIn);
     }
 
     // Tell the sink writer to start accepting data.
@@ -359,11 +476,12 @@ HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStr
         *ppWriter = pSinkWriter;
         (*ppWriter)->AddRef();
         *pStreamIndex = streamIndex;
+        *pAudioStreamIndex = audioStreamIndex;
     }
 
     SafeRelease(&pSinkWriter);
-    SafeRelease(&pMediaTypeOut);
-    SafeRelease(&pMediaTypeIn);
+    SafeRelease(&videoTypeOut);
+    SafeRelease(&videoTypeIn);
     return hr;
 }
 
@@ -497,23 +615,42 @@ void VideoEncoder::Encode() {
 
             hr = GetSourceDuration(ms, &mft);
             mDuration = mft / 10 / 1000 / 1000;
+
+            SafeRelease(&ms);
+        }
+
+        IMFSourceReader *pReader = NULL;
+        if (SUCCEEDED(hr)) 
+        {
+            hr = MFCreateSourceReaderFromURL(mAudioFilePath, NULL, &pReader);
         }
 
         IMFSinkWriter *pSinkWriter = NULL;
         DWORD stream;
+        DWORD audioStream;
 
         UINT64 videoFrameDuration = GetVideoFrameDuration();
         UINT64 videoFrameCount = GetVideoFrameCount();
 
-        hr = InitializeSinkWriter(&pSinkWriter, &stream, mVideoOutputPath);
+        hr = InitializeSinkWriter(&pSinkWriter, &stream, &audioStream, mVideoOutputPath, pReader);
         if (SUCCEEDED(hr))
         {
             // Send frames to the sink writer.
             LONGLONG rtStart = 0;
             DWORD cbAudioData = 0;
+            DWORD pStreamFlags;
+            LONGLONG timestamp = 0;
+            IMFSample *sample = NULL;
 
+            UINT64 baseTime = (UINT64)mft / videoFrameCount;
             for (DWORD i = 0; i < videoFrameCount; ++i)
             {
+                hr = pReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, nullptr, &pStreamFlags, &timestamp, &sample);
+                if (sample) 
+                {
+                    hr = sample->SetSampleTime(timestamp - rtStart);
+                    hr = pSinkWriter->WriteSample(audioStream, sample);
+                }
                 hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
                 if (FAILED(hr))
                 {
@@ -591,5 +728,73 @@ HRESULT VideoEncoder::GetSourceDuration(IMFMediaSource *pSource, MFTIME *pDurati
         hr = pPD->GetUINT64(MF_PD_DURATION, (UINT64*)pDuration);
         pPD->Release();
     }
+    return hr;
+}
+
+HRESULT VideoEncoder::ConfigureDecoder(IMFSourceReader *pReader, DWORD dwStreamIndex)
+{
+    IMFMediaType *pNativeType = NULL;
+    IMFMediaType *pType = NULL;
+
+    // Find the native format of the stream.
+    HRESULT hr = pReader->GetNativeMediaType(dwStreamIndex, 0, &pNativeType);
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+
+    GUID majorType, subtype;
+
+    // Find the major type.
+    hr = pNativeType->GetGUID(MF_MT_MAJOR_TYPE, &majorType);
+    if (FAILED(hr))
+    {
+        goto done;
+    }
+
+    // Define the output type.
+    hr = MFCreateMediaType(&pType);
+    if (FAILED(hr))
+    {
+        goto done;
+    }
+
+    hr = pType->SetGUID(MF_MT_MAJOR_TYPE, majorType);
+    if (FAILED(hr))
+    {
+        goto done;
+    }
+
+    //// Select a subtype.
+    //if (majorType == MFMediaType_Video)
+    //{
+    //    subtype = MFVideoFormat_RGB32;
+    //}
+    //else if (majorType == MFMediaType_Audio)
+    //{
+        subtype = MFAudioFormat_MP3;
+    //}
+    //else
+    //{
+    //    // Unrecognized type. Skip.
+    //    goto done;
+    //}
+
+    hr = pType->SetGUID(MF_MT_SUBTYPE, subtype);
+    if (FAILED(hr))
+    {
+        goto done;
+    }
+
+    // Set the uncompressed format.
+    hr = pReader->SetCurrentMediaType(dwStreamIndex, NULL, pType);
+    if (FAILED(hr))
+    {
+        goto done;
+    }
+
+done:
+    SafeRelease(&pNativeType);
+    SafeRelease(&pType);
     return hr;
 }

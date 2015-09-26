@@ -50,7 +50,7 @@ public:
     UINT32 CalcVideoFrameCount(VideoSettings vs, int duration);
     void SetVideoSettings(VideoSettings vs);
     void SetAudioSettings(AudioSettings as);
-    HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, LPCWSTR videoOutputPath);
+    HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD *pAudioStreamIndex, LPCWSTR videoOutputPath, IMFSourceReader *pReader);
     HRESULT WriteFrame(
         IMFSinkWriter *pWriter,
         DWORD streamIndex,
@@ -69,6 +69,7 @@ public:
         IMFMediaSource **ppSource
         );
     HRESULT GetSourceDuration(IMFMediaSource *pSource, MFTIME *pDuration);
+    HRESULT ConfigureDecoder(IMFSourceReader *pReader, DWORD dwStreamIndex);
 private:
     LPCWSTR mImageFilePath;
     LPCWSTR mVideoOutputPath;
