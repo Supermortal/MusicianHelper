@@ -8,6 +8,7 @@
 /*http://stackoverflow.com/questions/27352989/audio-sample-adding-to-a-video-using-sink-writer-in-windows-media-foundation*/
 /*http://blogs.msdn.com/b/eternalcoding/archive/2013/03/06/developing-a-winrt-component-to-create-a-video-file-using-media-foundation.aspx*/
 /*https://msdn.microsoft.com/en-us/library/windows/desktop/dd389281%28v=vs.85%29.aspx?f=255&MSPPError=-2147217396*/
+/*http://stackoverflow.com/questions/9022784/bitblt-drawing-bitmap-upside-down*/
 
 #include "stdafx.h"
 #include "VideoEncoder.h"
@@ -61,14 +62,9 @@ int main()
     vs.videoEncodingFormat = MFVideoFormat_WMV3;
     vs.videoInputFormat = MFVideoFormat_RGB32;
 
-    VideoEncoder *ve = new VideoEncoder(L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\test.bmp", L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Audio\\sorry_dave.wav", L"output.wmv", duration, vs);
+    VideoEncoder *ve = new VideoEncoder(L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\paper-stained-3-texture.bmp", L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Audio\\sorry_dave.wav", L"output.wmv", duration, vs);
 
     ve->Encode();
-
-    /*HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL, 0);
-
-    const WCHAR *wszSourceFile = L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Audio\\dangerzone.mp3";
-    const WCHAR *wszTargetFile = L"audioOutput.wav";*/
 
     return SUCCEEDED(hr) ? 0 : 1;
 }
