@@ -49,7 +49,9 @@ template <class T> void SafeRelease(T **ppT)
 
 int main()
 {
-    /*UINT64 duration = 1;
+    HRESULT hr = S_OK;
+
+    UINT64 duration = 30;
 
     VideoSettings vs;
     vs.videoFps = 60;
@@ -60,14 +62,12 @@ int main()
 
     VideoEncoder *ve = new VideoEncoder(L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\test.bmp", L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Audio\\dangerzone.mp3", L"output.mp4", duration, vs);
 
-    ve->Encode();*/
+    ve->Encode();
 
-    HRESULT hr = S_OK;
-
-    HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL, 0);
+    /*HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL, 0);
 
     const WCHAR *wszSourceFile = L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Audio\\dangerzone.mp3";
-    const WCHAR *wszTargetFile = L"audioOutput.wav";
+    const WCHAR *wszTargetFile = L"audioOutput.wav";*/
 
     return SUCCEEDED(hr) ? 0 : 1;
 }

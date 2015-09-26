@@ -50,7 +50,7 @@ public:
     UINT32 CalcVideoFrameCount(VideoSettings vs, int duration);
     void SetVideoSettings(VideoSettings vs);
     void SetAudioSettings(AudioSettings as);
-    HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD *pAudioStreamIndex, IMFMediaType **pAudioType, LPCWSTR videoOutputFilePath);
+    HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, LPCWSTR videoOutputPath);
     HRESULT WriteFrame(
         IMFSinkWriter *pWriter,
         DWORD streamIndex,
@@ -63,22 +63,6 @@ public:
     UINT64 GetVideoFrameDuration();
     void Encode();
     void SetVideoHeightAndWidth(BITMAP bitmap);
-    HRESULT WriteWaveData(
-        IMFSinkWriter *pWriter,
-        //HANDLE hFile,               // Output file.
-        IMFSourceReader *pReader,   // Source reader.
-        DWORD cbMaxAudioData,       // Maximum amount of audio data (bytes).
-        DWORD *pcbDataWritten,       // Receives the amount of data written.
-        DWORD audioStreamIndex
-        );
-    DWORD CalculateMaxAudioDataSize(
-        IMFMediaType *pAudioType,    // The PCM audio format.
-        DWORD msecAudioData          // Maximum duration, in milliseconds.
-        );
-    HRESULT ConfigureAudioStream(
-        IMFSourceReader *pReader,   // Pointer to the source reader.
-        IMFMediaType **ppPCMAudio   // Receives the audio format.
-        );
     HRESULT CreateMediaSource(
         PCWSTR pszURL,
         IPropertyStore *pConfig,    // Optional, can be NULL
