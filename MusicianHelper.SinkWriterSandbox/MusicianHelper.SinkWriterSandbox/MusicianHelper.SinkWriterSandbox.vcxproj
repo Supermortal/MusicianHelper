@@ -79,17 +79,23 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioUtilities.h" />
+    <ClInclude Include="ImageUtilities.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VideoEncoder.h" />
+    <ClInclude Include="VideoUtilities.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AudioUtilities.cpp" />
+    <ClCompile Include="ImageUtilities.cpp" />
     <ClCompile Include="MusicianHelper.SinkWriterSandbox.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="VideoEncoder.cpp" />
+    <ClCompile Include="VideoUtilities.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
