@@ -15,8 +15,6 @@
 #pragma comment(lib, "mfplat")
 #pragma comment(lib, "mfuuid")
 
-#using <System.dll>
-
 struct VideoSettings {
 	UINT32 videoFps = 30;
 	UINT32 videoBitRate = 800000;

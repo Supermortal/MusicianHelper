@@ -613,21 +613,21 @@ void VideoEncoder::Encode() {
 
 	if (SUCCEEDED(hr)) {
 
-		MFTIME mft;
-		if (SUCCEEDED(hr)) {
-			IMFMediaSource *ms = NULL;
+		MFTIME mft = 1000;
+		//if (SUCCEEDED(hr)) {
+		//	IMFMediaSource *ms = NULL;
 
-			CreateMediaSource(
-				mAudioFilePath,
-				NULL,    // Optional, can be NULL
-				&ms
-				);
+		//	CreateMediaSource(
+		//		mAudioFilePath,
+		//		NULL,    // Optional, can be NULL
+		//		&ms
+		//		);
 
-			hr = GetSourceDuration(ms, &mft);
-			mDuration = mft / 10 / 1000 / 1000;
+		//	hr = GetSourceDuration(ms, &mft);
+		//	mDuration = mft / 10 / 1000 / 1000;
 
-			SafeRelease(&ms);
-		}
+		//	SafeRelease(&ms);
+		//}
 
 		IMFSourceReader *pReader = NULL;
 		if (SUCCEEDED(hr))
@@ -810,19 +810,16 @@ done:
 }
 
 void VideoEncoder::SetImageFilePath(System::String ^ imageFilePath) {
-	WIN32_FIND_DATA data;
 	pin_ptr<const wchar_t> wname = PtrToStringChars(imageFilePath);
 	mImageFilePath = wname;
 }
 
 void VideoEncoder::SetVideoOutputPath(System::String ^ videoOutputPath){
-	WIN32_FIND_DATA data;
 	pin_ptr<const wchar_t> wname = PtrToStringChars(videoOutputPath);
 	mVideoOutputPath = wname;
 }
 
 void VideoEncoder::SetAudioFilePath(System::String ^ audioFilePath){
-	WIN32_FIND_DATA data;
 	pin_ptr<const wchar_t> wname = PtrToStringChars(audioFilePath);
 	mAudioFilePath = wname;
 }

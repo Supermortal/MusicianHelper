@@ -1,0 +1,38 @@
+// MusicianHelperNativeVideoEncoder.idl : IDL source for MusicianHelper.NativeVideoEncoder
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (MusicianHelperNativeVideoEncoder.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(3AA011CB-0805-4544-A39B-DCC856AB8B85),
+	dual,
+	nonextensible,
+	pointer_default(unique)
+]
+interface IVideoEncoderWrapper : IDispatch{
+    [id(1)] HRESULT Encode();
+    [propput, id(2)] HRESULT ImageFilePath([in] LPCWSTR newVal);
+    [propput, id(3)] HRESULT AudioFilePath([in] LPCWSTR newVal);
+    [propput, id(4)] HRESULT VideoOutputPath([in] LPCWSTR newVal);
+};
+[
+	uuid(FB90BCDC-2F7F-48B4-B826-6D4B064068ED),
+	version(1.0),
+]
+library MusicianHelperNativeVideoEncoderLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(2AE46469-1021-47D5-9DD8-9F74EE5F81A6)		
+	]
+	coclass VideoEncoderWrapper
+	{
+		[default] interface IVideoEncoderWrapper;
+	};
+};
+

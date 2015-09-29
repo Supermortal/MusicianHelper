@@ -30,9 +30,9 @@ namespace MusicianHelper.Infrastructure.Tests
 
             var vps = new NativeMediaFoundationVideoProcessingService();
 
-            var imagePaths = new List<string>() { "C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\paper-stained-3-texture.bmp" };
+            var imagePaths = new List<string>() { "C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Images\\paper-stained-3-texture.bmp" };
 
-            vps.CreateVideoFromImages(imagePaths, "C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Audio\\sorry_dave.wav", outputPath, VideoQuality.FullHD);
+            vps.CreateVideoFromImages(imagePaths, "C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Audio\\sorry_dave.wav", outputPath, VideoQuality.FullHD);
 
             Assert.True(File.Exists(outputPath));
         }

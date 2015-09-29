@@ -137,10 +137,6 @@
       <Project>{8b1f9093-89d4-4d97-be31-0afb2eda2031}</Project>
       <Name>MusicianHelper.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MusicianHelper.NativeVideoEncoder\MusicianHelper.NativeVideoEncoder.vcxproj">
-      <Project>{b66ad252-3da8-4c42-86f0-7571b99b00ae}</Project>
-      <Name>MusicianHelper.NativeVideoEncoder</Name>
-    </ProjectReference>
     <ProjectReference Include="..\splicer-99885\src\Splicer.Contrib\Splicer.Contrib.csproj">
       <Project>{4de8d46c-1974-4d80-b71d-0683e66ad9e2}</Project>
       <Name>Splicer.Contrib</Name>
@@ -152,7 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="MusicianHelperNativeVideoEncoderLib">
-      <Guid>{6EC2524C-4253-4E14-B7C7-32E3FF6FF91B}</Guid>
+      <Guid>{62188D94-EE04-44A2-8AC6-5B7FA2DB44D2}</Guid>
       <VersionMajor>1</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>

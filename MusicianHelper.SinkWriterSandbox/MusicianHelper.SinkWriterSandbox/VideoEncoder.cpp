@@ -10,7 +10,7 @@
 #include <atlstr.h>
 #include <stack>
 
-#define WINVER _WIN32_WINNT_WIN7
+//#define WINVER _WIN32_WINNT_WIN7
 
 #include <stdio.h>
 
@@ -20,8 +20,6 @@
 #pragma comment(lib, "Mf")
 
 #include "VideoEncoder.h"
-
-#using <System.dll>
 
 template <int a, int b, int c, int d>
 struct FOURCC

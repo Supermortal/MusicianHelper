@@ -8,14 +8,14 @@ using MusicianHelper.Common.Helpers.Log;
 using MusicianHelper.Infrastructure.Models;
 using MusicianHelper.Infrastructure.Models.Enums;
 using MusicianHelper.Infrastructure.Services.Abstract;
-using SupermortalNative;
+using MusicianHelperNativeVideoEncoderLib;
 
 namespace MusicianHelper.Infrastructure.Services.Concrete
 {
     public class NativeMediaFoundationVideoProcessingService : IVideoProcessingService
     {
 
-        private static readonly ILog Log = LogHelper.GetLogger(typeof (NativeMediaFoundationVideoProcessingService));
+        private static readonly ILog Log = LogHelper.GetLogger(typeof(NativeMediaFoundationVideoProcessingService));
 
         private readonly VideoEncoderWrapper _ve;
 
@@ -29,11 +29,12 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
         {
             try
             {
-                //_ve.SetImageFilePath(imagePaths[0]);
-                //_ve.SetAudioFilePath(GetCorrectFilename(audioPath));
-                //_ve.SetVideoOutputPath(outputPath);
+                _ve.ImageFilePath = imagePaths[0];
+                _ve.AudioFilePath = GetCorrectFilename(audioPath);
+                _ve.VideoOutputPath = outputPath;
 
                 _ve.Encode();
+
             }
             catch (Exception ex)
             {
@@ -72,11 +73,11 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
         {
             try
             {
-                _ve.SetImageFilePath(imagePaths[0]);
-                _ve.SetAudioFilePath(GetCorrectFilename(audio.AudioPath));
-                _ve.SetVideoOutputPath(outputPath);
+                //_ve.SetImageFilePath(imagePaths[0]);
+                //_ve.SetAudioFilePath(GetCorrectFilename(audio.AudioPath));
+                //_ve.SetVideoOutputPath(outputPath);
 
-                _ve.Encode();
+                //_ve.Encode();
             }
             catch (Exception ex)
             {
