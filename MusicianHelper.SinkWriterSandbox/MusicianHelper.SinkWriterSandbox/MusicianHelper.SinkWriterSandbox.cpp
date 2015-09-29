@@ -56,7 +56,6 @@ int main()
     VideoSettings vs;
     vs.videoFps = 60;
     vs.videoBitRate = 800000;
-    vs.videoFps = 30;
     vs.videoEncodingFormat = MFVideoFormat_WMV3;
 
     VideoEncoder *ve = new VideoEncoder(L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\paper-stained-3-texture.bmp", L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Audio\\sorry_dave.wav", L"output.wmv", vs);

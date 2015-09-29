@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -115,6 +116,7 @@
     <Compile Include="Services\Concrete\DefaultMasterService.cs" />
     <Compile Include="Services\Concrete\DefaultVideoManagementService.cs" />
     <Compile Include="Services\Concrete\JsonNetStorageService.cs" />
+    <Compile Include="Services\Concrete\NativeMediaFoundationVideoProcessingService.cs" />
     <Compile Include="Services\Concrete\SplicerWMVVideoProcessingService.cs" />
     <Compile Include="Services\Concrete\YouTubeVideoNetworkService.cs" />
   </ItemGroup>
@@ -135,6 +137,10 @@
       <Project>{8b1f9093-89d4-4d97-be31-0afb2eda2031}</Project>
       <Name>MusicianHelper.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MusicianHelper.NativeVideoEncoder\MusicianHelper.NativeVideoEncoder.vcxproj">
+      <Project>{b66ad252-3da8-4c42-86f0-7571b99b00ae}</Project>
+      <Name>MusicianHelper.NativeVideoEncoder</Name>
+    </ProjectReference>
     <ProjectReference Include="..\splicer-99885\src\Splicer.Contrib\Splicer.Contrib.csproj">
       <Project>{4de8d46c-1974-4d80-b71d-0683e66ad9e2}</Project>
       <Name>Splicer.Contrib</Name>
@@ -143,6 +149,17 @@
       <Project>{77c46d9d-1bc1-4caf-87cf-9242721066ef}</Project>
       <Name>Splicer</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="MusicianHelperNativeVideoEncoderLib">
+      <Guid>{6EC2524C-4253-4E14-B7C7-32E3FF6FF91B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
