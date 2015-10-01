@@ -6,43 +6,19 @@
 
 // CVideoEncoderWrapper
 
-class VideoEncoderWrapper : CVideoEncoderWrapper {
-    VideoEncoderWrapper() {
-
-    }
-    ~VideoEncoderWrapper() {
-
-    }
-};
 
 
-
-STDMETHODIMP CVideoEncoderWrapper::Encode()
+STDMETHODIMP CVideoEncoderWrapper::get_ImageFilePath(LPCWSTR* pVal)
 {
-    
+    *pVal = L"Test string";
 
     return S_OK;
 }
+
 
 STDMETHODIMP CVideoEncoderWrapper::put_ImageFilePath(LPCWSTR newVal)
 {
-    // TODO: Add your implementation code here
-
-    return S_OK;
-}
-
-
-STDMETHODIMP CVideoEncoderWrapper::put_AudioFilePath(LPCWSTR newVal)
-{
-    // TODO: Add your implementation code here
-
-    return S_OK;
-}
-
-
-STDMETHODIMP CVideoEncoderWrapper::put_VideoOutputPath(LPCWSTR newVal)
-{
-    // TODO: Add your implementation code here
+    mImageFilePath = newVal;
 
     return S_OK;
 }

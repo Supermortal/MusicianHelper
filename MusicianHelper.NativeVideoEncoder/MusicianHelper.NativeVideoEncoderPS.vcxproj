@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CA4BCDFB-5172-4889-B833-A265E7F4E030}</ProjectGuid>
+    <ProjectGuid>{10CB7C08-D2F4-45AD-B178-106912AFD43A}</ProjectGuid>
     <Keyword>AtlPSProj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

@@ -53,10 +53,21 @@ public:
 
 
 
-    STDMETHOD(Encode)();
+protected:
+    LPCWSTR mImageFilePath;
+public:
+
+//    void SetImageFilePath(LPCWSTR imageFilePath)
+//    {
+//        mImageFilePath = imageFilePath;
+//    }
+
+//    LPCWSTR GetImageFilePath()
+//    {
+//        return mImageFilePath;
+//    }
+    STDMETHOD(get_ImageFilePath)(LPCWSTR* pVal);
     STDMETHOD(put_ImageFilePath)(LPCWSTR newVal);
-    STDMETHOD(put_AudioFilePath)(LPCWSTR newVal);
-    STDMETHOD(put_VideoOutputPath)(LPCWSTR newVal);
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(VideoEncoderWrapper), CVideoEncoderWrapper)

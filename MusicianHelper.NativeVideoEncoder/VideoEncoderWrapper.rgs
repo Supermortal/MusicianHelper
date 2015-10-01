@@ -2,14 +2,14 @@ HKCR
 {
 	NoRemove CLSID
 	{
-		ForceRemove {2AE46469-1021-47D5-9DD8-9F74EE5F81A6} = s 'VideoEncoderWrapper Class'
+		ForceRemove {7AC47479-9A6A-4A44-AD88-3C756802DBBA} = s 'VideoEncoderWrapper Class'
 		{
 			ForceRemove Programmable
 			InprocServer32 = s '%MODULE%'
 			{
 				val ThreadingModel = s 'Apartment'
 			}
-			TypeLib = s '{FB90BCDC-2F7F-48B4-B826-6D4B064068ED}'
+			TypeLib = s '{351A3835-16A2-4D7B-A51A-9E6FC4A5D20B}'
 			Version = s '1.0'
 		}
 	}

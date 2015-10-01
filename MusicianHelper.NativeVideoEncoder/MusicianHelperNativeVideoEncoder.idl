@@ -9,26 +9,24 @@ import "ocidl.idl";
 
 [
 	object,
-	uuid(3AA011CB-0805-4544-A39B-DCC856AB8B85),
+	uuid(44E702F5-BDD4-4ADB-A21E-3450E3EED6FE),
 	dual,
 	nonextensible,
 	pointer_default(unique)
 ]
 interface IVideoEncoderWrapper : IDispatch{
-    [id(1)] HRESULT Encode();
-    [propput, id(2)] HRESULT ImageFilePath([in] LPCWSTR newVal);
-    [propput, id(3)] HRESULT AudioFilePath([in] LPCWSTR newVal);
-    [propput, id(4)] HRESULT VideoOutputPath([in] LPCWSTR newVal);
+    [propget, id(1)] HRESULT ImageFilePath([out, retval] LPCWSTR* pVal);
+    [propput, id(1)] HRESULT ImageFilePath([in] LPCWSTR newVal);
 };
 [
-	uuid(FB90BCDC-2F7F-48B4-B826-6D4B064068ED),
+	uuid(351A3835-16A2-4D7B-A51A-9E6FC4A5D20B),
 	version(1.0),
 ]
 library MusicianHelperNativeVideoEncoderLib
 {
 	importlib("stdole2.tlb");
 	[
-		uuid(2AE46469-1021-47D5-9DD8-9F74EE5F81A6)		
+		uuid(7AC47479-9A6A-4A44-AD88-3C756802DBBA)		
 	]
 	coclass VideoEncoderWrapper
 	{

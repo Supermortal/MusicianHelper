@@ -29,12 +29,17 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
         {
             try
             {
-                _ve.ImageFilePath = imagePaths[0];
-                _ve.AudioFilePath = GetCorrectFilename(audioPath);
-                _ve.VideoOutputPath = outputPath;
+                //_ve.ImageFilePath = imagePaths[0];
+                ////_ve.AudioFilePath = GetCorrectFilename(audioPath);
+                ////_ve.VideoOutputPath = outputPath;
 
-                _ve.Encode();
+              System.Diagnostics.Debug.WriteLine("Testttt");
+              var t = _ve.ImageFilePath;
+                System.Diagnostics.Debug.WriteLine(t);
 
+                //_ve.Encode();
+
+                var s = "s";
             }
             catch (Exception ex)
             {
