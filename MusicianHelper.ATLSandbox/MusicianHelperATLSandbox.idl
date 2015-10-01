@@ -1,0 +1,18 @@
+// MusicianHelperATLSandbox.idl : IDL source for MusicianHelper.ATLSandbox
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (MusicianHelperATLSandbox.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	uuid(3D7677A1-DD6E-4B54-9D11-6240A14DA5BE),
+	version(1.0),
+]
+library MusicianHelperATLSandboxLib
+{
+	importlib("stdole2.tlb");
+};
+

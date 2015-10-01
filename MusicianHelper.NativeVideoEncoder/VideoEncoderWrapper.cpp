@@ -10,7 +10,9 @@
 
 STDMETHODIMP CVideoEncoderWrapper::get_ImageFilePath(LPCWSTR* pVal)
 {
-    *pVal = L"Test string";
+    LPCWSTR *test = new LPCWSTR;
+    *test = L"Test string";
+    pVal = test;
 
     return S_OK;
 }
