@@ -20,3 +20,26 @@ STDMETHODIMP CVideoEncoder::InterfaceSupportsErrorInfo(REFIID riid)
 	}
 	return S_FALSE;
 }
+
+
+STDMETHODIMP CVideoEncoder::get_ImageFilePath(BSTR* pVal)
+{
+    _bstr_t bstr1(mImageFilePath);
+    BSTR bstr;
+
+    bstr = bstr1.copy();
+
+    *pVal = bstr;
+
+    return S_OK;
+}
+
+
+STDMETHODIMP CVideoEncoder::put_ImageFilePath(BSTR newVal)
+{
+    _bstr_t bstrStart(newVal);
+
+    mImageFilePath = (LPCWSTR)bstrStart;
+
+    return S_OK;
+}

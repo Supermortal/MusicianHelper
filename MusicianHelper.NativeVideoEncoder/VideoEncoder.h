@@ -62,8 +62,13 @@ END_CONNECTION_POINT_MAP()
 
 public:
 
-
-
+private:
+    LPCWSTR mImageFilePath;
+    LPCWSTR mVideoOutputPath;
+    LPCWSTR mAudioFilePath;
+public:
+    STDMETHOD(get_ImageFilePath)(BSTR* pVal);
+    STDMETHOD(put_ImageFilePath)(BSTR newVal);
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(VideoEncoder), CVideoEncoder)

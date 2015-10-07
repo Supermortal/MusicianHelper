@@ -15,6 +15,8 @@ import "ocidl.idl";
 	pointer_default(unique)
 ]
 interface IVideoEncoder : IDispatch{
+    [propget, id(1)] HRESULT ImageFilePath([out, retval] BSTR* pVal);
+    [propput, id(1)] HRESULT ImageFilePath([in] BSTR newVal);
 };
 [
 	uuid(CCD4ECB4-F945-4228-8AF4-4A486BBDF2BC),
