@@ -1,5 +1,8 @@
 // VideoEncoder.h : Declaration of the CVideoEncoder
 
+/*http://stackoverflow.com/questions/295067/passing-an-array-using-com*/
+/*http://www.codeproject.com/Articles/4829/Guide-to-BSTR-and-C-String-Conversions*/
+
 #pragma once
 #include "resource.h"       // main symbols
 
@@ -30,6 +33,9 @@ class ATL_NO_VTABLE CVideoEncoder :
 public:
 	CVideoEncoder()
 	{
+        mVideoBitRate = 800000;
+        mVideoFps = 60;
+        mVideoEncodingFormat = MFVideoFormat_WMV3;
 	}
 
 DECLARE_REGISTRY_RESOURCEID(IDR_VIDEOENCODER)
@@ -80,6 +86,27 @@ private:
     UINT64 mDuration = 5;
     UINT32 mVideoWidth = 0;
     UINT32 mVideoHeight = 0;
+    HBITMAP LoadImageFromFilePath(LPCWSTR filePath);
+    int GetDIBFromHandle(HBITMAP hBitmap, BITMAP *bitmap);
+    void SetVideoHeightAndWidth(BITMAP bitmap);
+    HRESULT StartMediaFoundation();
+    HRESULT CreateMediaSource(
+        PCWSTR pszURL,
+        IPropertyStore *pConfig,    // Optional, can be NULL
+        IMFMediaSource **ppSource
+        );
+    HRESULT GetSourceDuration(IMFMediaSource *pSource, MFTIME *pDuration);
+    template <class T> void SafeRelease(T **ppT);
+    UINT64 GetVideoFrameCount();
+    UINT64 GetVideoFrameDuration();
+    HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD *pAudioStreamIndex, LPCWSTR videoOutputPath, IMFSourceReader *pReader);
+    HRESULT WriteFrame(
+        IMFSinkWriter *pWriter,
+        DWORD streamIndex,
+        const LONGLONG& rtStart,        // Time stamp.
+        byte* vfb
+        );
+    bool ConvertToDIB(HBITMAP& hBitmap);
 public:
     STDMETHOD(get_ImageFilePath)(BSTR* pVal);
     STDMETHOD(put_ImageFilePath)(BSTR newVal);
@@ -87,6 +114,7 @@ public:
     STDMETHOD(put_VideoOutputPath)(BSTR newVal);
     STDMETHOD(get_AudioFilePath)(BSTR* pVal);
     STDMETHOD(put_AudioFilePath)(BSTR newVal);
+    STDMETHOD(Encode)();
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(VideoEncoder), CVideoEncoder)

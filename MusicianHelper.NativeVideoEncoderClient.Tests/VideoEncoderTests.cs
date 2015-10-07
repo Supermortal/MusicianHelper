@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,6 +46,26 @@ namespace MusicianHelper.NativeVideoEncoderClient.Tests
             var obj = new VideoEncoder { AudioFilePath = expected };
 
             Assert.Equal(expected, obj.AudioFilePath);
+        }
+
+        [Fact]
+        public void videoencoder_encode()
+        {
+            //VideoEncoder *ve = new VideoEncoder(L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\paper-stained-3-texture.bmp", L"C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Audio\\sorry_dave.wav", L"output.wmv", vs);
+            //VideoEncoder *ve = new VideoEncoder(L"C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Images\\paper-stained-3-texture.bmp", L"C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Audio\\sorry_dave.wav", L"output.wmv", vs);
+
+            const string imageFilePath = "C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\paper-stained-3-texture.bmp";
+            const string audioFilePath = "C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Audio\\sorry_dave.wav";
+            const string videoOutputPath = "output.wmv";
+
+            var encoder = new VideoEncoder();
+            encoder.ImageFilePath = imageFilePath;
+            encoder.AudioFilePath = audioFilePath;
+            encoder.VideoOutputPath = videoOutputPath;
+
+            encoder.Encode();
+
+            Assert.True(File.Exists("output.wmv"));
         }
     }
 }

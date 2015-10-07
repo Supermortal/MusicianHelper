@@ -21,6 +21,7 @@ interface IVideoEncoder : IDispatch{
     [propput, id(2)] HRESULT VideoOutputPath([in] BSTR newVal);
     [propget, id(3)] HRESULT AudioFilePath([out, retval] BSTR* pVal);
     [propput, id(3)] HRESULT AudioFilePath([in] BSTR newVal);
+    [id(4)] HRESULT Encode();
 };
 [
 	uuid(CCD4ECB4-F945-4228-8AF4-4A486BBDF2BC),

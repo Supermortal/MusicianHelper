@@ -28,13 +28,17 @@
 
 #define _AFXDLL
 
+//#include <afx.h>
+
 #include <mfapi.h>
 #include <mfidl.h>
 #include <Mfreadwrite.h>
 #include <mferror.h>
 #include <atlstr.h>
 #include <stack>
+#include <stdio.h>
 
 #pragma comment(lib, "mfreadwrite")
 #pragma comment(lib, "mfplat")
 #pragma comment(lib, "mfuuid")
+#pragma comment(lib, "Mf")
