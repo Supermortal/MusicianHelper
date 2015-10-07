@@ -26,5 +26,25 @@ namespace MusicianHelper.NativeVideoEncoderClient.Tests
 
             Assert.Equal(expected, obj.ImageFilePath);
         }
+
+        [Fact]
+        public void videoencoder_get_set_videooutputpath()
+        {
+            const string expected = "Test set string";
+
+            var obj = new VideoEncoder { VideoOutputPath = expected };
+
+            Assert.Equal(expected, obj.VideoOutputPath);
+        }
+
+        [Fact]
+        public void videoencoder_get_set_audiofilepath()
+        {
+            const string expected = "Test set string";
+
+            var obj = new VideoEncoder { AudioFilePath = expected };
+
+            Assert.Equal(expected, obj.AudioFilePath);
+        }
     }
 }

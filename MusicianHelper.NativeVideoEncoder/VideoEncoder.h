@@ -69,6 +69,10 @@ private:
 public:
     STDMETHOD(get_ImageFilePath)(BSTR* pVal);
     STDMETHOD(put_ImageFilePath)(BSTR newVal);
+    STDMETHOD(get_VideoOutputPath)(BSTR* pVal);
+    STDMETHOD(put_VideoOutputPath)(BSTR newVal);
+    STDMETHOD(get_AudioFilePath)(BSTR* pVal);
+    STDMETHOD(put_AudioFilePath)(BSTR newVal);
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(VideoEncoder), CVideoEncoder)

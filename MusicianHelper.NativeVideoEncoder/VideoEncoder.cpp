@@ -28,7 +28,6 @@ STDMETHODIMP CVideoEncoder::get_ImageFilePath(BSTR* pVal)
     BSTR bstr;
 
     bstr = bstr1.copy();
-
     *pVal = bstr;
 
     return S_OK;
@@ -38,8 +37,49 @@ STDMETHODIMP CVideoEncoder::get_ImageFilePath(BSTR* pVal)
 STDMETHODIMP CVideoEncoder::put_ImageFilePath(BSTR newVal)
 {
     _bstr_t bstrStart(newVal);
-
     mImageFilePath = (LPCWSTR)bstrStart;
+
+    return S_OK;
+}
+
+
+STDMETHODIMP CVideoEncoder::get_VideoOutputPath(BSTR* pVal)
+{
+    _bstr_t bstr1(mVideoOutputPath);
+    BSTR bstr;
+
+    bstr = bstr1.copy();
+    *pVal = bstr;
+
+    return S_OK;
+}
+
+
+STDMETHODIMP CVideoEncoder::put_VideoOutputPath(BSTR newVal)
+{
+    _bstr_t bstrStart(newVal);
+    mVideoOutputPath = (LPCWSTR)bstrStart;
+
+    return S_OK;
+}
+
+
+STDMETHODIMP CVideoEncoder::get_AudioFilePath(BSTR* pVal)
+{
+    _bstr_t bstr1(mAudioFilePath);
+    BSTR bstr;
+
+    bstr = bstr1.copy();
+    *pVal = bstr;
+
+    return S_OK;
+}
+
+
+STDMETHODIMP CVideoEncoder::put_AudioFilePath(BSTR newVal)
+{
+    _bstr_t bstrStart(newVal);
+    mAudioFilePath = (LPCWSTR)bstrStart;
 
     return S_OK;
 }
