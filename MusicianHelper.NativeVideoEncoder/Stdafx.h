@@ -25,4 +25,16 @@
 #include <atlctl.h>
 
 #include <comdef.h>
+
+#define _AFXDLL
+
+#include <mfapi.h>
+#include <mfidl.h>
+#include <Mfreadwrite.h>
+#include <mferror.h>
 #include <atlstr.h>
+#include <stack>
+
+#pragma comment(lib, "mfreadwrite")
+#pragma comment(lib, "mfplat")
+#pragma comment(lib, "mfuuid")

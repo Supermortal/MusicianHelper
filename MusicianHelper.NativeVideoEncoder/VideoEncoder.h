@@ -66,6 +66,20 @@ private:
     LPCWSTR mImageFilePath;
     LPCWSTR mVideoOutputPath;
     LPCWSTR mAudioFilePath;
+    HBITMAP mHBitmap;
+    UINT32 mVideoFps = 30;
+    UINT64 mVideoFrameDuration = 30000000;
+    UINT32 mVideoBitRate = 800000;
+    GUID   mVideoEncodingFormat = MFVideoFormat_H264;
+    GUID   mVideoInputFormat = MFVideoFormat_RGB32;
+    UINT32 mVideoFrameCount = 1800;
+    GUID   mAudioEncodingFormat = MFAudioFormat_MP3;
+    UINT32 mAudioChannels = 1;
+    UINT32 mAudioAvgBytesPerSecond = 176400;
+    UINT32 mAudioSamplesPerSecond = 320;
+    UINT64 mDuration = 5;
+    UINT32 mVideoWidth = 0;
+    UINT32 mVideoHeight = 0;
 public:
     STDMETHOD(get_ImageFilePath)(BSTR* pVal);
     STDMETHOD(put_ImageFilePath)(BSTR newVal);
