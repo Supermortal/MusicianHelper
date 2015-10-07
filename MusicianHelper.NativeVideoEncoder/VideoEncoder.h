@@ -1,4 +1,4 @@
-// VideoEncoderWrapper.h : Declaration of the CVideoEncoderWrapper
+// VideoEncoder.h : Declaration of the CVideoEncoder
 
 #pragma once
 #include "resource.h"       // main symbols
@@ -6,6 +6,7 @@
 
 
 #include "MusicianHelperNativeVideoEncoder_i.h"
+#include "_IVideoEncoderEvents_CP.h"
 
 
 
@@ -16,26 +17,36 @@
 using namespace ATL;
 
 
-// CVideoEncoderWrapper
+// CVideoEncoder
 
-class ATL_NO_VTABLE CVideoEncoderWrapper :
+class ATL_NO_VTABLE CVideoEncoder :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CVideoEncoderWrapper, &CLSID_VideoEncoderWrapper>,
-	public IDispatchImpl<IVideoEncoderWrapper, &IID_IVideoEncoderWrapper, &LIBID_MusicianHelperNativeVideoEncoderLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
+	public CComCoClass<CVideoEncoder, &CLSID_VideoEncoder>,
+	public ISupportErrorInfo,
+	public IConnectionPointContainerImpl<CVideoEncoder>,
+	public CProxy_IVideoEncoderEvents<CVideoEncoder>,
+	public IDispatchImpl<IVideoEncoder, &IID_IVideoEncoder, &LIBID_MusicianHelperNativeVideoEncoderLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
 {
 public:
-	CVideoEncoderWrapper()
+	CVideoEncoder()
 	{
 	}
 
-DECLARE_REGISTRY_RESOURCEID(IDR_VIDEOENCODERWRAPPER)
+DECLARE_REGISTRY_RESOURCEID(IDR_VIDEOENCODER)
 
 
-BEGIN_COM_MAP(CVideoEncoderWrapper)
-	COM_INTERFACE_ENTRY(IVideoEncoderWrapper)
+BEGIN_COM_MAP(CVideoEncoder)
+	COM_INTERFACE_ENTRY(IVideoEncoder)
 	COM_INTERFACE_ENTRY(IDispatch)
+	COM_INTERFACE_ENTRY(ISupportErrorInfo)
+	COM_INTERFACE_ENTRY(IConnectionPointContainer)
 END_COM_MAP()
 
+BEGIN_CONNECTION_POINT_MAP(CVideoEncoder)
+	CONNECTION_POINT_ENTRY(__uuidof(_IVideoEncoderEvents))
+END_CONNECTION_POINT_MAP()
+// ISupportsErrorInfo
+	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
 
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
@@ -53,21 +64,6 @@ public:
 
 
 
-protected:
-    LPCWSTR mImageFilePath;
-public:
-
-//    void SetImageFilePath(LPCWSTR imageFilePath)
-//    {
-//        mImageFilePath = imageFilePath;
-//    }
-
-//    LPCWSTR GetImageFilePath()
-//    {
-//        return mImageFilePath;
-//    }
-    STDMETHOD(get_ImageFilePath)(LPCWSTR* pVal);
-    STDMETHOD(put_ImageFilePath)(LPCWSTR newVal);
 };
 
-OBJECT_ENTRY_AUTO(__uuidof(VideoEncoderWrapper), CVideoEncoderWrapper)
+OBJECT_ENTRY_AUTO(__uuidof(VideoEncoder), CVideoEncoder)

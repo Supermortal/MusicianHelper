@@ -14,7 +14,7 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Generated Files">
-      <UniqueIdentifier>{4f402fae-c11e-46e0-b828-99884b9ee754}</UniqueIdentifier>
+      <UniqueIdentifier>{15aa10b4-cede-4989-a20c-1842f0c73b7e}</UniqueIdentifier>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
   </ItemGroup>
@@ -31,7 +31,7 @@
     <ClCompile Include="MusicianHelperNativeVideoEncoder_i.c">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="VideoEncoderWrapper.cpp">
+    <ClCompile Include="VideoEncoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -51,7 +51,10 @@
     <ClInclude Include="MusicianHelperNativeVideoEncoder_i.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="VideoEncoderWrapper.h">
+    <ClInclude Include="_IVideoEncoderEvents_CP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoEncoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -70,7 +73,7 @@
     <None Include="MusicianHelper.NativeVideoEncoder.def">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="VideoEncoderWrapper.rgs">
+    <None Include="VideoEncoder.rgs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

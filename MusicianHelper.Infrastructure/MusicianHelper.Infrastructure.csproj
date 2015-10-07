@@ -116,7 +116,6 @@
     <Compile Include="Services\Concrete\DefaultMasterService.cs" />
     <Compile Include="Services\Concrete\DefaultVideoManagementService.cs" />
     <Compile Include="Services\Concrete\JsonNetStorageService.cs" />
-    <Compile Include="Services\Concrete\NativeMediaFoundationVideoProcessingService.cs" />
     <Compile Include="Services\Concrete\SplicerWMVVideoProcessingService.cs" />
     <Compile Include="Services\Concrete\YouTubeVideoNetworkService.cs" />
   </ItemGroup>

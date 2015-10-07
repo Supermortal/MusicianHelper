@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{B8855732-B69D-4635-9C05-2B5EC9468F71}</ProjectGuid>
+    <ProjectGuid>{F86DA5E6-0198-4A22-A1D6-012957DBDB97}</ProjectGuid>
     <Keyword>AtlProj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -133,7 +133,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="VideoEncoderWrapper.cpp" />
+    <ClCompile Include="VideoEncoder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dllmain.h" />
@@ -141,7 +141,8 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="VideoEncoderWrapper.h" />
+    <ClInclude Include="VideoEncoder.h" />
+    <ClInclude Include="_IVideoEncoderEvents_CP.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MusicianHelper.NativeVideoEncoder.rc" />
@@ -152,7 +153,7 @@
   <ItemGroup>
     <None Include="MusicianHelper.NativeVideoEncoder.def" />
     <None Include="MusicianHelper.NativeVideoEncoder.rgs" />
-    <None Include="VideoEncoderWrapper.rgs" />
+    <None Include="VideoEncoder.rgs" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="MusicianHelperNativeVideoEncoder.idl" />

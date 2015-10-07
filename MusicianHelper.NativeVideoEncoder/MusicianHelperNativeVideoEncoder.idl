@@ -9,28 +9,35 @@ import "ocidl.idl";
 
 [
 	object,
-	uuid(44E702F5-BDD4-4ADB-A21E-3450E3EED6FE),
+	uuid(561AE6DC-54F2-4978-BC61-E104318BE692),
 	dual,
 	nonextensible,
 	pointer_default(unique)
 ]
-interface IVideoEncoderWrapper : IDispatch{
-    [propget, id(1)] HRESULT ImageFilePath([out, retval] LPCWSTR* pVal);
-    [propput, id(1)] HRESULT ImageFilePath([in] LPCWSTR newVal);
+interface IVideoEncoder : IDispatch{
 };
 [
-	uuid(351A3835-16A2-4D7B-A51A-9E6FC4A5D20B),
+	uuid(CCD4ECB4-F945-4228-8AF4-4A486BBDF2BC),
 	version(1.0),
 ]
 library MusicianHelperNativeVideoEncoderLib
 {
 	importlib("stdole2.tlb");
 	[
-		uuid(7AC47479-9A6A-4A44-AD88-3C756802DBBA)		
+		uuid(485FD9A3-A3C1-4E59-8F28-02457F99EFEB)		
 	]
-	coclass VideoEncoderWrapper
+	dispinterface _IVideoEncoderEvents
 	{
-		[default] interface IVideoEncoderWrapper;
+		properties:
+		methods:
+	};
+	[
+		uuid(6D7C82B0-0623-4055-B630-D2477A811501)		
+	]
+	coclass VideoEncoder
+	{
+		[default] interface IVideoEncoder;
+		[default, source] dispinterface _IVideoEncoderEvents;
 	};
 };
 
