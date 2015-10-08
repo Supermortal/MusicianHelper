@@ -665,6 +665,7 @@ void VideoEncoder::Encode() {
 					break;
 				}
 				rtStart += videoFrameDuration;
+                SafeRelease(&sample);
 			}
 		}
 		if (SUCCEEDED(hr))
