@@ -212,8 +212,8 @@ HRESULT CVideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pSt
     IMFMediaType  *videoTypeIn = NULL;   // <-- previously mediaTypeIn
     IMFMediaType  *audioTypeOut = NULL;
     IMFMediaType  *audioTypeIn = NULL;
-    DWORD           streamIndex;
-    DWORD audioStreamIndex;
+    DWORD           streamIndex = NULL;
+    DWORD audioStreamIndex = NULL;
 
     HRESULT hr = MFCreateSinkWriterFromURL(videoOutputFilePath, NULL, NULL, &pSinkWriter);
 
@@ -323,16 +323,25 @@ HRESULT CVideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pSt
     hr = MFTranscodeGetAudioOutputAvailableTypes(MFAudioFormat_WMAudioV9, MFT_ENUM_FLAG_ALL, NULL, &availableTypes);
 
     DWORD count = 0;
-    hr = availableTypes->GetElementCount(&count);  // Get the number of elements in the list.
+    if (SUCCEEDED(hr)) {
+        hr = availableTypes->GetElementCount(&count);  // Get the number of elements in the list.
+    }
 
-    IUnknown     *pUnkAudioType = NULL;
-    IMFMediaType *audioOutputType = NULL;
-    for (DWORD i = 0; i < count; ++i)
-    {
-        hr = availableTypes->GetElement(i, &pUnkAudioType);
-        hr = pUnkAudioType->QueryInterface(IID_PPV_ARGS(&audioTypeOut));
+    if (SUCCEEDED(hr)) {
+        IUnknown     *pUnkAudioType = NULL;
+        IMFMediaType *audioOutputType;
+        for (DWORD i = 0; i < count; ++i)
+        {
+            hr = availableTypes->GetElement(i, &pUnkAudioType);
+            if (FAILED(hr)) {
+                break;
+            }
+            hr = pUnkAudioType->QueryInterface(IID_PPV_ARGS(&audioTypeOut));
+            if (FAILED(hr)) {
+                break;
+            }
 
-        // compare channels, sampleRate, and bitsPerSample to target numbers
+            // compare channels, sampleRate, and bitsPerSample to target numbers
         {
             GUID subtype;
             hr = audioTypeOut->GetGUID(MF_MT_SUBTYPE, &subtype);
@@ -355,6 +364,7 @@ HRESULT CVideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pSt
 
         //audioOutputType.Reset();
         //SafeRelease(&audioOutputType);
+        }
     }
 
     SafeRelease(&availableTypes);
@@ -636,44 +646,46 @@ STDMETHODIMP CVideoEncoder::Encode()
         UINT64 videoFrameDuration = GetVideoFrameDuration();
         UINT64 videoFrameCount = GetVideoFrameCount();
 
-        hr = InitializeSinkWriter(&pSinkWriter, &stream, &audioStream, mVideoOutputPath, pReader);
-        if (SUCCEEDED(hr))
-        {
-            // Send frames to the sink writer.
-            LONGLONG rtStart = 0;
-            DWORD cbAudioData = 0;
-            DWORD pStreamFlags;
-            LONGLONG timestamp = 0;
-            IMFSample *sample = NULL;
-
-            UINT64 baseTime = (UINT64)mft / videoFrameCount;
-            for (DWORD i = 0; i < videoFrameCount; ++i)
+        if (SUCCEEDED(hr)) {
+            hr = InitializeSinkWriter(&pSinkWriter, &stream, &audioStream, mVideoOutputPath, pReader);
+            if (SUCCEEDED(hr))
             {
-                hr = pReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, NULL, &pStreamFlags, &timestamp, &sample);
-                if (sample)
+                // Send frames to the sink writer.
+                LONGLONG rtStart = 0;
+                DWORD cbAudioData = 0;
+                DWORD pStreamFlags;
+                LONGLONG timestamp = 0;
+                IMFSample *sample = NULL;
+
+                UINT64 baseTime = (UINT64)mft / videoFrameCount;
+                for (DWORD i = 0; i < videoFrameCount; ++i)
                 {
-                    hr = sample->SetSampleTime(timestamp - rtStart);
-                    hr = pSinkWriter->WriteSample(audioStream, sample);
+                    hr = pReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, NULL, &pStreamFlags, &timestamp, &sample);
+                    if (sample)
+                    {
+                        hr = sample->SetSampleTime(timestamp - rtStart);
+                        hr = pSinkWriter->WriteSample(audioStream, sample);
+                    }
+                    hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
+                    if (FAILED(hr))
+                    {
+                        break;
+                    }
+                    rtStart += videoFrameDuration;
                 }
-                hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
-                if (FAILED(hr))
-                {
-                    break;
-                }
-                rtStart += videoFrameDuration;
             }
+            if (SUCCEEDED(hr))
+            {
+                hr = pSinkWriter->Finalize();
+            }
+            SafeRelease(&pSinkWriter);
+            MFShutdown();
         }
-        if (SUCCEEDED(hr))
-        {
-            hr = pSinkWriter->Finalize();
-        }
-        SafeRelease(&pSinkWriter);
-        MFShutdown();
     }
 
     CoUninitialize();
 
-    return S_OK;
+    return hr;
 }
 
 
