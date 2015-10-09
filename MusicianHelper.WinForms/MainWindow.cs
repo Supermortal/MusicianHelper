@@ -26,6 +26,7 @@ namespace MusicianHelper.WinForms
         private bool _audioMetadataSet = false;
         private bool _videosRendered = false;
         private bool _videosUploaded = false;
+        private bool _audioCredentialsSet = false;
 
         public MainWindow() : this(
             IoCHelper.Instance.GetService<IVideoManagementService>(), 
@@ -142,6 +143,8 @@ namespace MusicianHelper.WinForms
                 if (_ans.HasCredentials() == true)
                 {
                     SoundCloudCredentialsButton.Text = Resources.MainWindow_CheckCredentials_Reset_SoundCloud_Credentials;
+                    _audioCredentialsSet = true;
+                    ConfigureAudioButton.Enabled = true;
                     AppendToLog("SoundCloud credentials already set!");
                 }
 
@@ -224,7 +227,12 @@ namespace MusicianHelper.WinForms
             {
                 AppendToLog("Audio configuration complete!");
                 _audioMetadataSet = true;
-                RenderVideosButton.Enabled = true;
+
+                if (_videoCredentialsSet)
+                    RenderVideosButton.Enabled = true;
+
+                if (_audioCredentialsSet)
+                    UploadAudiosButton.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -239,6 +247,9 @@ namespace MusicianHelper.WinForms
                 AppendToLog("YouTube credentials set!");
                 _videoCredentialsSet = true;
                 ConfigureAudioButton.Enabled = true;
+
+                if (_audioMetadataSet)
+                    RenderVideosButton.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -251,6 +262,11 @@ namespace MusicianHelper.WinForms
             try
             {
                 AppendToLog("SoundCloud credentials set!");
+                _audioCredentialsSet = true;
+                ConfigureAudioButton.Enabled = true;
+
+                if (_audioMetadataSet)
+                    UploadAudiosButton.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -361,6 +377,11 @@ namespace MusicianHelper.WinForms
             {
                 Log.Error(ex.Message, ex);
             }
+        }
+
+        private void UploadAudiosButton_Click(object sender, EventArgs e)
+        {
+
         }
         #endregion
 

@@ -41,6 +41,7 @@
             this.RenderVideosButton = new System.Windows.Forms.Button();
             this.UploadVideosButton = new System.Windows.Forms.Button();
             this.SoundCloudCredentialsButton = new System.Windows.Forms.Button();
+            this.UploadAudiosButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // SetAudioDirectoryButton
@@ -100,7 +101,7 @@
             // ConfigureAudioButton
             // 
             this.ConfigureAudioButton.Enabled = false;
-            this.ConfigureAudioButton.Location = new System.Drawing.Point(252, 671);
+            this.ConfigureAudioButton.Location = new System.Drawing.Point(263, 671);
             this.ConfigureAudioButton.Name = "ConfigureAudioButton";
             this.ConfigureAudioButton.Size = new System.Drawing.Size(147, 23);
             this.ConfigureAudioButton.TabIndex = 6;
@@ -112,7 +113,7 @@
             // 
             this.YouTubeCredentialsButton.Location = new System.Drawing.Point(55, 671);
             this.YouTubeCredentialsButton.Name = "YouTubeCredentialsButton";
-            this.YouTubeCredentialsButton.Size = new System.Drawing.Size(147, 23);
+            this.YouTubeCredentialsButton.Size = new System.Drawing.Size(163, 23);
             this.YouTubeCredentialsButton.TabIndex = 7;
             this.YouTubeCredentialsButton.Text = "Set YouTube Credentials";
             this.YouTubeCredentialsButton.UseVisualStyleBackColor = true;
@@ -141,7 +142,7 @@
             // UploadVideosButton
             // 
             this.UploadVideosButton.Enabled = false;
-            this.UploadVideosButton.Location = new System.Drawing.Point(652, 671);
+            this.UploadVideosButton.Location = new System.Drawing.Point(645, 671);
             this.UploadVideosButton.Name = "UploadVideosButton";
             this.UploadVideosButton.Size = new System.Drawing.Size(147, 23);
             this.UploadVideosButton.TabIndex = 10;
@@ -153,17 +154,29 @@
             // 
             this.SoundCloudCredentialsButton.Location = new System.Drawing.Point(55, 709);
             this.SoundCloudCredentialsButton.Name = "SoundCloudCredentialsButton";
-            this.SoundCloudCredentialsButton.Size = new System.Drawing.Size(147, 23);
+            this.SoundCloudCredentialsButton.Size = new System.Drawing.Size(163, 23);
             this.SoundCloudCredentialsButton.TabIndex = 11;
             this.SoundCloudCredentialsButton.Text = "Set SoundCloud Credentials";
             this.SoundCloudCredentialsButton.UseVisualStyleBackColor = true;
             this.SoundCloudCredentialsButton.Click += new System.EventHandler(this.SoundCloudCredentials_Click);
+            // 
+            // UploadAudiosButton
+            // 
+            this.UploadAudiosButton.Enabled = false;
+            this.UploadAudiosButton.Location = new System.Drawing.Point(645, 709);
+            this.UploadAudiosButton.Name = "UploadAudiosButton";
+            this.UploadAudiosButton.Size = new System.Drawing.Size(147, 23);
+            this.UploadAudiosButton.TabIndex = 12;
+            this.UploadAudiosButton.Text = "Upload Audios";
+            this.UploadAudiosButton.UseVisualStyleBackColor = true;
+            this.UploadAudiosButton.Click += new System.EventHandler(this.UploadAudiosButton_Click);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1042, 784);
+            this.Controls.Add(this.UploadAudiosButton);
             this.Controls.Add(this.SoundCloudCredentialsButton);
             this.Controls.Add(this.UploadVideosButton);
             this.Controls.Add(this.RenderVideosButton);
@@ -198,6 +211,7 @@
         private System.Windows.Forms.Button RenderVideosButton;
         private System.Windows.Forms.Button UploadVideosButton;
         private System.Windows.Forms.Button SoundCloudCredentialsButton;
+        private System.Windows.Forms.Button UploadAudiosButton;
     }
 }
 

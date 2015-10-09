@@ -55,10 +55,10 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                 foreach (var tag in tags)
                 {
                     sb.Append(tag);
-                    sb.Append(' ');
+                    sb.Append(',');
                 }
 
-                return sb.ToString().TrimEnd(' ');
+                return sb.ToString().TrimEnd(',');
             }
             catch (Exception ex)
             {
