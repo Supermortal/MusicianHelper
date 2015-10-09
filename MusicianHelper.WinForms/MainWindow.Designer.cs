@@ -40,6 +40,7 @@
             this.ConsoleTextBox = new System.Windows.Forms.TextBox();
             this.RenderVideosButton = new System.Windows.Forms.Button();
             this.UploadVideosButton = new System.Windows.Forms.Button();
+            this.SoundCloudCredentialsButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // SetAudioDirectoryButton
@@ -148,11 +149,22 @@
             this.UploadVideosButton.UseVisualStyleBackColor = true;
             this.UploadVideosButton.Click += new System.EventHandler(this.UploadVideosButton_Click);
             // 
+            // SoundCloudCredentialsButton
+            // 
+            this.SoundCloudCredentialsButton.Location = new System.Drawing.Point(55, 709);
+            this.SoundCloudCredentialsButton.Name = "SoundCloudCredentialsButton";
+            this.SoundCloudCredentialsButton.Size = new System.Drawing.Size(147, 23);
+            this.SoundCloudCredentialsButton.TabIndex = 11;
+            this.SoundCloudCredentialsButton.Text = "Set SoundCloud Credentials";
+            this.SoundCloudCredentialsButton.UseVisualStyleBackColor = true;
+            this.SoundCloudCredentialsButton.Click += new System.EventHandler(this.SoundCloudCredentials_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1042, 784);
+            this.Controls.Add(this.SoundCloudCredentialsButton);
             this.Controls.Add(this.UploadVideosButton);
             this.Controls.Add(this.RenderVideosButton);
             this.Controls.Add(this.ConsoleTextBox);
@@ -185,6 +197,7 @@
         private System.Windows.Forms.TextBox ConsoleTextBox;
         private System.Windows.Forms.Button RenderVideosButton;
         private System.Windows.Forms.Button UploadVideosButton;
+        private System.Windows.Forms.Button SoundCloudCredentialsButton;
     }
 }
 

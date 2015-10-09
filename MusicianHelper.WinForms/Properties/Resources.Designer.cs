@@ -61,6 +61,15 @@ namespace MusicianHelper.WinForms.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset SoundCloud Credentials.
+        /// </summary>
+        internal static string MainWindow_CheckCredentials_Reset_SoundCloud_Credentials {
+            get {
+                return ResourceManager.GetString("MainWindow_CheckCredentials_Reset_SoundCloud_Credentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reset YouTube Credentials.
         /// </summary>
         internal static string MainWindow_CheckCredentials_Reset_YouTube_Credentials {

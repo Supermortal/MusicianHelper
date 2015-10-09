@@ -19,6 +19,7 @@ namespace MusicianHelper.WinForms
         private readonly IVideoNetworkService _vns;
         private readonly IStorageService _ss;
         private readonly IMasterService _ms;
+        private readonly IAudioNetworkService _ans;
 
         private List<AudioUoW> _audios;
         private bool _videoCredentialsSet = false;
@@ -30,18 +31,20 @@ namespace MusicianHelper.WinForms
             IoCHelper.Instance.GetService<IVideoManagementService>(), 
             IoCHelper.Instance.GetService<IVideoNetworkService>(), 
             IoCHelper.Instance.GetService<IStorageService>(),
-            IoCHelper.Instance.GetService<IMasterService>()
+            IoCHelper.Instance.GetService<IMasterService>(),
+            IoCHelper.Instance.GetService<IAudioNetworkService>()
             )
         {
             
         }
 
-        public MainWindow(IVideoManagementService vms, IVideoNetworkService vns, IStorageService ss, IMasterService ms)
+        public MainWindow(IVideoManagementService vms, IVideoNetworkService vns, IStorageService ss, IMasterService ms, IAudioNetworkService ans)
         {
             _vms = vms;
             _vns = vns;
             _ss = ss;
             _ms = ms;
+            _ans = ans;
 
             InitializeComponent();
             SetFolderDefaults();
@@ -116,6 +119,7 @@ namespace MusicianHelper.WinForms
         {
             try
             {
+
                 if (_vns.HasCredentials() == true)
                 {
                     YouTubeCredentialsButton.Text = Resources.MainWindow_CheckCredentials_Reset_YouTube_Credentials;
@@ -129,11 +133,18 @@ namespace MusicianHelper.WinForms
                     {
                         AppendToLog("Starting YouTube credentials refresh...");
                         ytm = _vns.RefreshRequestTokens(ytm);
-                        ytm.UpdateStorageModel(sm);
+                        ytm.UpdateYouTubeStorage(sm);
                         _ss.Save(sm);
                         AppendToLog("YouTube credentials refresh complete!");
                     }
-                } 
+                }
+
+                if (_ans.HasCredentials() == true)
+                {
+                    SoundCloudCredentialsButton.Text = Resources.MainWindow_CheckCredentials_Reset_SoundCloud_Credentials;
+                    AppendToLog("SoundCloud credentials already set!");
+                }
+
             }
             catch (Exception ex)
             {
@@ -235,6 +246,18 @@ namespace MusicianHelper.WinForms
             }
         }
 
+        private void SoundCloudWindow_Closed(object sender, EventArgs e)
+        {
+            try
+            {
+                AppendToLog("SoundCloud credentials set!");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
         private void ConfigureAudioButton_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(AudioDirectory.Text) || string.IsNullOrEmpty(VideoDirectory.Text) ||
@@ -318,6 +341,21 @@ namespace MusicianHelper.WinForms
             {
                 _videosUploaded = true;
                 AppendToLog("Video uploads complete!");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void SoundCloudCredentials_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                AppendToLog("Starting SoundCloud credentials set...");
+                var scw = new SoundCloudWindow();
+                scw.Closed += SoundCloudWindow_Closed;
+                scw.Show(this);
             }
             catch (Exception ex)
             {

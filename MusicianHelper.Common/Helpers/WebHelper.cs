@@ -197,7 +197,7 @@ namespace MusicianHelper.Common.Helpers
             }
         }
 
-        private static string ToQueryString(Dictionary<string, object> data)
+        public static string ToQueryString(Dictionary<string, object> data)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -208,7 +208,14 @@ namespace MusicianHelper.Common.Helpers
                 var value = data[key];
                 sb.Append(key);
                 sb.Append('=');
-                sb.Append(value);
+
+                var encodedValue = string.Empty;
+                if (value != null)
+                {
+                    encodedValue = Uri.EscapeDataString(value.ToString());
+                }
+
+                sb.Append(encodedValue);
                 sb.Append('&');
             }
 
