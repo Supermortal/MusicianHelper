@@ -79,12 +79,12 @@ namespace MusicianHelper.Common.Helpers
                     }
 
 
-                      var response = await client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")).ConfigureAwait(false);
-                      if (response.IsSuccessStatusCode)
-                      {
-                          var responseStr = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                          return JsonConvert.DeserializeObject<T>(responseStr);
-                      }
+                    var response = await client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")).ConfigureAwait(false);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseStr = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        return JsonConvert.DeserializeObject<T>(responseStr);
+                    }
                 }
 
                 return default(T);

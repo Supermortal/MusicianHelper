@@ -4,7 +4,6 @@ using System.Text;
 using MusicianHelper.Common;
 using MusicianHelper.Common.Concrete;
 using MusicianHelper.Common.Helpers;
-using MusicianHelper.Common.Helpers.Log;
 using MusicianHelper.Common.Models.Enums;
 using MusicianHelper.Infrastructure.Models;
 using MusicianHelper.Infrastructure.Services.Abstract;
