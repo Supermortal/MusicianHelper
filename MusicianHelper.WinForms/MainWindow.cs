@@ -20,6 +20,7 @@ namespace MusicianHelper.WinForms
         private readonly IStorageService _ss;
         private readonly IMasterService _ms;
         private readonly IAudioNetworkService _ans;
+        private readonly IAudioManagementService _ams;
 
         private List<AudioUoW> _audios;
         private bool _videoCredentialsSet = false;
@@ -27,25 +28,28 @@ namespace MusicianHelper.WinForms
         private bool _videosRendered = false;
         private bool _videosUploaded = false;
         private bool _audioCredentialsSet = false;
+        private bool _audiosUploaded = false;
 
         public MainWindow() : this(
             IoCHelper.Instance.GetService<IVideoManagementService>(), 
             IoCHelper.Instance.GetService<IVideoNetworkService>(), 
             IoCHelper.Instance.GetService<IStorageService>(),
             IoCHelper.Instance.GetService<IMasterService>(),
-            IoCHelper.Instance.GetService<IAudioNetworkService>()
+            IoCHelper.Instance.GetService<IAudioNetworkService>(),
+            IoCHelper.Instance.GetService<IAudioManagementService>()
             )
         {
             
         }
 
-        public MainWindow(IVideoManagementService vms, IVideoNetworkService vns, IStorageService ss, IMasterService ms, IAudioNetworkService ans)
+        public MainWindow(IVideoManagementService vms, IVideoNetworkService vns, IStorageService ss, IMasterService ms, IAudioNetworkService ans, IAudioManagementService ams)
         {
             _vms = vms;
             _vns = vns;
             _ss = ss;
             _ms = ms;
             _ans = ans;
+            _ams = ams;
 
             InitializeComponent();
             SetFolderDefaults();
@@ -121,10 +125,8 @@ namespace MusicianHelper.WinForms
             try
             {
                 var otm = _ss.Load().ToSoundCloudOauthTokenModel();
-                foreach (var audio in _audios)
-                {
-                    _ans.UploadAudio(audio, otm);
-                }
+                AppendToLog("Beginning audio uploads (this will probably take a while)...");  
+                _ams.UploadAllAudios(_audios, otm, AllAudiosUploaded, AudioUploaded, AppendToLog);
             }
             catch (Exception ex)
             {
@@ -373,6 +375,31 @@ namespace MusicianHelper.WinForms
             {
                 _videosUploaded = true;
                 AppendToLog("Video uploads complete!");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void AudioUploaded(object sender, AudioUploadedEventArgs e)
+        {
+            try
+            {
+                AppendToLog("Upload complete! " + e.Audio.Title);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void AllAudiosUploaded(object sender, EventArgs e)
+        {
+            try
+            {
+                _audiosUploaded = true;
+                AppendToLog("Audio uploads complete!");
             }
             catch (Exception ex)
             {
