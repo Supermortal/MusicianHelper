@@ -8,6 +8,10 @@ namespace MusicianHelper.Infrastructure.Models
         public string YouTubeRefreshToken { get; set; }
         public string YouTubeTokenType { get; set; }
         public DateTime? YouTubeAccessTokenExpiry { get; set; }
+        public string SoundCloudAccessToken { get; set; }
+        public string SoundCloudRefreshToken { get; set; }
+        public string SoundCloudTokenType { get; set; }
+        public DateTime? SoundCloudAccessTokenExpiry { get; set; }
         public string YouTubeClientId { get; set; }
         public string YouTubeClientSecret { get; set; }
         public string LastAudioDirectory { get; set; }
@@ -23,7 +27,7 @@ namespace MusicianHelper.Infrastructure.Models
 
         public OauthTokenModel ToSoundCloudOauthTokenModel()
         {
-            return new OauthTokenModel() {};
+            return new OauthTokenModel() { AccessToken = SoundCloudAccessToken, AccessTokenExpiry = SoundCloudAccessTokenExpiry, RefreshToken = SoundCloudRefreshToken, TokenType = SoundCloudTokenType};
         }
 
         public APIKeysModel ToAPIKeysModel()
