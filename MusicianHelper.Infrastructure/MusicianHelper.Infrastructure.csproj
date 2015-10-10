@@ -94,9 +94,12 @@
   <ItemGroup>
     <Compile Include="Models\APIKeysModel.cs" />
     <Compile Include="Models\AudioUoW.cs" />
+    <Compile Include="Models\AudioUploadedEventArgs.cs" />
     <Compile Include="Models\Enums\VideoQuality.cs" />
     <Compile Include="Models\OauthTokenModel.cs" />
     <Compile Include="Models\soundcloud_oauth_response.cs" />
+    <Compile Include="Models\soundcloud_track.cs" />
+    <Compile Include="Models\soundcloud_user.cs" />
     <Compile Include="Models\SplicerWMVProfile.cs" />
     <Compile Include="Models\StorageModel.cs" />
     <Compile Include="Models\VideoManagmentSettings.cs" />

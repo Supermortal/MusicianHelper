@@ -27,7 +27,7 @@ namespace MusicianHelper.Infrastructure.Models
 
         public OauthTokenModel ToSoundCloudOauthTokenModel()
         {
-            return new OauthTokenModel() {};
+            return new OauthTokenModel() { AccessToken = SoundCloudAccessToken, AccessTokenExpiry = SoundCloudAccessTokenExpiry, RefreshToken = SoundCloudRefreshToken, TokenType = SoundCloudTokenType};
         }
 
         public APIKeysModel ToAPIKeysModel()

@@ -47,18 +47,28 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             }
         }
 
-        public string GenerateTagsString(List<string> tags)
+        public string GenerateTagsString(List<string> tags, char delimiter = ',')
         {
             try
             {
                 var sb = new StringBuilder();
                 foreach (var tag in tags)
                 {
-                    sb.Append(tag);
-                    sb.Append(',');
+                    if (delimiter == ' ')
+                    {
+                        sb.Append('"');
+                        sb.Append(tag);
+                        sb.Append('"');
+                    }
+                    else
+                    {
+                        sb.Append(tag);
+                    }
+
+                    sb.Append(delimiter);
                 }
 
-                return sb.ToString().TrimEnd(',');
+                return sb.ToString().TrimEnd(delimiter);
             }
             catch (Exception ex)
             {

@@ -116,6 +116,22 @@ namespace MusicianHelper.WinForms
             }
         }
 
+        private void StartAudioUpload()
+        {
+            try
+            {
+                var otm = _ss.Load().ToSoundCloudOauthTokenModel();
+                foreach (var audio in _audios)
+                {
+                    _ans.UploadAudio(audio, otm);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
         private void CheckCredentials()
         {
             try
@@ -381,7 +397,8 @@ namespace MusicianHelper.WinForms
 
         private void UploadAudiosButton_Click(object sender, EventArgs e)
         {
-
+            UploadAudiosButton.Enabled = false;
+            StartAudioUpload();
         }
         #endregion
 

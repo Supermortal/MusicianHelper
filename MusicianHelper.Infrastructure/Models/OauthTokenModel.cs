@@ -35,5 +35,10 @@ namespace MusicianHelper.Infrastructure.Models
             sm.SoundCloudRefreshToken = RefreshToken;
             sm.SoundCloudAccessTokenExpiry = AccessTokenExpiry;
         }
+
+        //public SCAccessToken ToSCAccessToken()
+        //{
+        //    return new SCAccessToken() { AccessToken = AccessToken, ExpiresIn = (DateTime)AccessTokenExpiry - DateTime.Now, RefreshToken = RefreshToken, Scope = SCScope.NonExpiring };
+        //}
     }
 }
