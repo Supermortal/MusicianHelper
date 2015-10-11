@@ -29,6 +29,7 @@ namespace MusicianHelper.WinForms
         private bool _videosUploaded = false;
         private bool _audioCredentialsSet = false;
         private bool _audiosUploaded = false;
+        private bool _socialMediaCredentialsSet = false;
 
         public MainWindow() : this(
             IoCHelper.Instance.GetService<IVideoManagementService>(), 
@@ -292,6 +293,23 @@ namespace MusicianHelper.WinForms
             }
         }
 
+        private void FacebookWindow_Closed(object sender, EventArgs e)
+        {
+            try
+            {
+                AppendToLog("Facebook credentials set!");
+                _socialMediaCredentialsSet = true;
+                //ConfigureAudioButton.Enabled = true;
+
+                //if (_audioMetadataSet)
+                //    UploadAudiosButton.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
         private void ConfigureAudioButton_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(AudioDirectory.Text) || string.IsNullOrEmpty(VideoDirectory.Text) ||
@@ -426,6 +444,21 @@ namespace MusicianHelper.WinForms
         {
             UploadAudiosButton.Enabled = false;
             StartAudioUpload();
+        }
+
+        private void FacebookCredentialsButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                AppendToLog("Starting Facebook credentials set...");
+                var scw = new FacebookWindow();
+                scw.Closed += FacebookWindow_Closed;
+                scw.Show(this);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
         }
         #endregion
 

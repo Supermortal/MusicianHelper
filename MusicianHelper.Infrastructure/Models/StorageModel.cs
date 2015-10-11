@@ -12,6 +12,10 @@ namespace MusicianHelper.Infrastructure.Models
         public string SoundCloudRefreshToken { get; set; }
         public string SoundCloudTokenType { get; set; }
         public DateTime? SoundCloudAccessTokenExpiry { get; set; }
+        public string FacebookAccessToken { get; set; }
+        public string FacebookRefreshToken { get; set; }
+        public string FacebookTokenType { get; set; }
+        public DateTime? FacebookAccessTokenExpiry { get; set; }
         public string YouTubeClientId { get; set; }
         public string YouTubeClientSecret { get; set; }
         public string LastAudioDirectory { get; set; }
@@ -19,6 +23,8 @@ namespace MusicianHelper.Infrastructure.Models
         public string LastImagesDirectory { get; set; }
         public string SoundCloudClientId { get; set; }
         public string SoundCloudClientSecret { get; set; }
+        public string FacebookClientId { get; set; }
+        public string FacebookClientSecret { get; set; }
 
         public OauthTokenModel ToYouTubeOauthTokenModel()
         {
@@ -30,9 +36,14 @@ namespace MusicianHelper.Infrastructure.Models
             return new OauthTokenModel() { AccessToken = SoundCloudAccessToken, AccessTokenExpiry = SoundCloudAccessTokenExpiry, RefreshToken = SoundCloudRefreshToken, TokenType = SoundCloudTokenType};
         }
 
+        public OauthTokenModel ToFacebookOauthTokenModel()
+        {
+            return new OauthTokenModel() { AccessToken = FacebookAccessToken, AccessTokenExpiry = FacebookAccessTokenExpiry, RefreshToken = FacebookRefreshToken, TokenType = FacebookTokenType };
+        }
+
         public APIKeysModel ToAPIKeysModel()
         {
-            return new APIKeysModel() { YouTubeClientId = YouTubeClientId, YouTubeClientSecret = YouTubeClientSecret, SoundCloudClientId = SoundCloudClientId, SoundCloudClientSecret = SoundCloudClientSecret };
+            return new APIKeysModel() { YouTubeClientId = YouTubeClientId, YouTubeClientSecret = YouTubeClientSecret, SoundCloudClientId = SoundCloudClientId, SoundCloudClientSecret = SoundCloudClientSecret, FacebookClientId = FacebookClientId, FacebookClientSecret = FacebookClientSecret };
         }
     }
 }

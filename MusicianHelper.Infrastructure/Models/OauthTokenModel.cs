@@ -36,6 +36,14 @@ namespace MusicianHelper.Infrastructure.Models
             sm.SoundCloudAccessTokenExpiry = AccessTokenExpiry;
         }
 
+        public void UpdateFacebookStorage(StorageModel sm)
+        {
+            sm.FacebookAccessToken = AccessToken;
+            sm.FacebookTokenType = TokenType;
+            sm.FacebookRefreshToken = RefreshToken;
+            sm.FacebookAccessTokenExpiry = AccessTokenExpiry;
+        }
+
         //public SCAccessToken ToSCAccessToken()
         //{
         //    return new SCAccessToken() { AccessToken = AccessToken, ExpiresIn = (DateTime)AccessTokenExpiry - DateTime.Now, RefreshToken = RefreshToken, Scope = SCScope.NonExpiring };

@@ -49,6 +49,7 @@ namespace MusicianHelper.WinForms
             IoCHelper.Instance.BindService<IMasterService, DefaultMasterService>();
             IoCHelper.Instance.BindService<IAudioNetworkService, SoundCloudAudioNetworkService>(IoCBindingType.Normal, "SoundCloudNetwork");
             IoCHelper.Instance.BindService<IAudioManagementService, DefaultAudioManagementService>();
+            IoCHelper.Instance.BindService<ISocialMediaService, FacebookSocialMediaService>(IoCBindingType.Normal, "FacebookSocialMedia");
         }
     }
 }

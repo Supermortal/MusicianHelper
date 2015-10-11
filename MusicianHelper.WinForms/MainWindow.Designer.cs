@@ -42,6 +42,7 @@
             this.UploadVideosButton = new System.Windows.Forms.Button();
             this.SoundCloudCredentialsButton = new System.Windows.Forms.Button();
             this.UploadAudiosButton = new System.Windows.Forms.Button();
+            this.FacebookCredentialsButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // SetAudioDirectoryButton
@@ -171,11 +172,22 @@
             this.UploadAudiosButton.UseVisualStyleBackColor = true;
             this.UploadAudiosButton.Click += new System.EventHandler(this.UploadAudiosButton_Click);
             // 
+            // FacebookCredentialsButton
+            // 
+            this.FacebookCredentialsButton.Location = new System.Drawing.Point(55, 749);
+            this.FacebookCredentialsButton.Name = "FacebookCredentialsButton";
+            this.FacebookCredentialsButton.Size = new System.Drawing.Size(163, 23);
+            this.FacebookCredentialsButton.TabIndex = 13;
+            this.FacebookCredentialsButton.Text = "Set Facebook Credentials";
+            this.FacebookCredentialsButton.UseVisualStyleBackColor = true;
+            this.FacebookCredentialsButton.Click += new System.EventHandler(this.FacebookCredentialsButton_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1042, 784);
+            this.Controls.Add(this.FacebookCredentialsButton);
             this.Controls.Add(this.UploadAudiosButton);
             this.Controls.Add(this.SoundCloudCredentialsButton);
             this.Controls.Add(this.UploadVideosButton);
@@ -212,6 +224,7 @@
         private System.Windows.Forms.Button UploadVideosButton;
         private System.Windows.Forms.Button SoundCloudCredentialsButton;
         private System.Windows.Forms.Button UploadAudiosButton;
+        private System.Windows.Forms.Button FacebookCredentialsButton;
     }
 }
 

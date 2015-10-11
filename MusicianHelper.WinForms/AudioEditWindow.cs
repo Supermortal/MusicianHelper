@@ -89,6 +89,7 @@ namespace MusicianHelper.WinForms
                 TitleTextBox.Text = audio.Title;
                 DescriptionTextBox.Text = audio.Description;
                 TagsTextBox.Text = _ms.GenerateTagsString(audio.Tags);
+                SocialMediaMessageTextBox.Text = audio.SocialMediaMessage;
             }
             catch (Exception ex)
             {
@@ -103,6 +104,7 @@ namespace MusicianHelper.WinForms
                 audio.Title = TitleTextBox.Text;
                 audio.Description = DescriptionTextBox.Text;
                 audio.Tags = _ms.GetTagsFromTagString(TagsTextBox.Text);
+                audio.SocialMediaMessage = SocialMediaMessageTextBox.Text;
             }
             catch (Exception ex)
             {

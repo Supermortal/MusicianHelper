@@ -35,6 +35,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\splicer-99885\src\Libs\DirectShowLib-2005.dll</HintPath>
     </Reference>
+    <Reference Include="Facebook, Version=6.0.10.0, Culture=neutral, PublicKeyToken=58cb4f2111d1e6de, processorArchitecture=MSIL">
+      <HintPath>..\packages\Facebook.7.0.6\lib\net45\Facebook.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Google.Apis">
       <HintPath>..\packages\Google.Apis.1.9.3\lib\net40\Google.Apis.dll</HintPath>
     </Reference>
@@ -97,6 +101,7 @@
     <Compile Include="Models\AudioUploadedEventArgs.cs" />
     <Compile Include="Models\AudioUploadSession.cs" />
     <Compile Include="Models\Enums\VideoQuality.cs" />
+    <Compile Include="Models\facebook_oauth_response.cs" />
     <Compile Include="Models\OauthTokenModel.cs" />
     <Compile Include="Models\soundcloud_oauth_response.cs" />
     <Compile Include="Models\soundcloud_track.cs" />
@@ -113,6 +118,7 @@
     <Compile Include="Services\Abstract\IAudioManagementService.cs" />
     <Compile Include="Services\Abstract\IAudioNetworkService.cs" />
     <Compile Include="Services\Abstract\IMasterService.cs" />
+    <Compile Include="Services\Abstract\ISocialMediaService.cs" />
     <Compile Include="Services\Abstract\IStorageService.cs" />
     <Compile Include="Services\Abstract\IVideoManagementService.cs" />
     <Compile Include="Services\Abstract\IVideoNetworkService.cs" />
@@ -122,6 +128,7 @@
     <Compile Include="Services\Concrete\DefaultAudioManagementService.cs" />
     <Compile Include="Services\Concrete\DefaultMasterService.cs" />
     <Compile Include="Services\Concrete\DefaultVideoManagementService.cs" />
+    <Compile Include="Services\Concrete\FacebookSocialMediaService.cs" />
     <Compile Include="Services\Concrete\JsonNetStorageService.cs" />
     <Compile Include="Services\Concrete\SoundCloudAudioNetworkService.cs" />
     <Compile Include="Services\Concrete\SplicerWMVVideoProcessingService.cs" />
