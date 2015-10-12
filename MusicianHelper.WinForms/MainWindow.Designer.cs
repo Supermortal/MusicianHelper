@@ -43,6 +43,7 @@
             this.SoundCloudCredentialsButton = new System.Windows.Forms.Button();
             this.UploadAudiosButton = new System.Windows.Forms.Button();
             this.FacebookCredentialsButton = new System.Windows.Forms.Button();
+            this.PostSocialMediaButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // SetAudioDirectoryButton
@@ -182,11 +183,23 @@
             this.FacebookCredentialsButton.UseVisualStyleBackColor = true;
             this.FacebookCredentialsButton.Click += new System.EventHandler(this.FacebookCredentialsButton_Click);
             // 
+            // PostSocialMediaButton
+            // 
+            this.PostSocialMediaButton.Enabled = false;
+            this.PostSocialMediaButton.Location = new System.Drawing.Point(645, 749);
+            this.PostSocialMediaButton.Name = "PostSocialMediaButton";
+            this.PostSocialMediaButton.Size = new System.Drawing.Size(147, 23);
+            this.PostSocialMediaButton.TabIndex = 14;
+            this.PostSocialMediaButton.Text = "Post Social Media";
+            this.PostSocialMediaButton.UseVisualStyleBackColor = true;
+            this.PostSocialMediaButton.Click += new System.EventHandler(this.PostSocialMediaButton_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1042, 784);
+            this.Controls.Add(this.PostSocialMediaButton);
             this.Controls.Add(this.FacebookCredentialsButton);
             this.Controls.Add(this.UploadAudiosButton);
             this.Controls.Add(this.SoundCloudCredentialsButton);
@@ -225,6 +238,7 @@
         private System.Windows.Forms.Button SoundCloudCredentialsButton;
         private System.Windows.Forms.Button UploadAudiosButton;
         private System.Windows.Forms.Button FacebookCredentialsButton;
+        private System.Windows.Forms.Button PostSocialMediaButton;
     }
 }
 

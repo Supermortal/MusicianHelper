@@ -39,7 +39,7 @@ namespace MusicianHelper.WinForms
 
         private void WebBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
-            if (!WebBrowser.Url.AbsoluteUri.Contains(_sms.GetRedirectUrl())) return;
+            if (!WebBrowser.Url.AbsoluteUri.Contains("code")) return;
 
             var authToken = _sms.ExtractAuthToken(WebBrowser.Url.AbsoluteUri);
             var oauthResponse = _sms.GetRequestTokens(authToken);

@@ -165,6 +165,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                     returnedVideo = await WebHelper.Post<Video>(
                         uploadUrl.AbsoluteUri,
                         stream, headers);
+                    audio.YouTubeUrl = "https://www.youtube.com/watch?v=" + returnedVideo.Id;
                 }
 
                 if (videoUploaded == null) return;

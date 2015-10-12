@@ -20,7 +20,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
 
         private static readonly ILog Log = LogHelper.GetLogger(typeof (FacebookSocialMediaService));
 
-        private const string FACEBOOK_URL = "https://www.facebook.com/dialog/oauth?client_id={0}&redirect_uri={1}";
+        private const string FACEBOOK_URL = "https://www.facebook.com/dialog/oauth?client_id={0}&redirect_uri={1}&scope=publish_actions";
         private const string REDIRECT_URI = "https://www.facebook.com/connect/login_success.html";
         private const string OAUTH_URL =
             "https://graph.facebook.com/v2.3/oauth/access_token?client_id={0}&redirect_uri={1}&client_secret={2}&code={3}";
@@ -140,6 +140,19 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             {
                 Log.Error(ex.Message, ex);
                 return null;
+            }
+        }
+
+        public void MakePost(OauthTokenModel otm, AudioUoW audio)
+        {
+            try
+            {
+                var fc = new FacebookClient(otm.AccessToken);
+                dynamic response = fc.Post("/me/feed", new { message = audio.SocialMediaMessage, link = audio.SoundCloudUrl });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
             }
         }
 

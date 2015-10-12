@@ -15,5 +15,6 @@ namespace MusicianHelper.Infrastructure.Services.Abstract
         OauthTokenModel GetRequestTokens(string authToken);
         void SaveOauthResponse(OauthTokenModel otm);
         bool? HasCredentials();
+        void MakePost(OauthTokenModel otm, AudioUoW audio);
     }
 }

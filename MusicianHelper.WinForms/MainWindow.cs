@@ -21,6 +21,7 @@ namespace MusicianHelper.WinForms
         private readonly IMasterService _ms;
         private readonly IAudioNetworkService _ans;
         private readonly IAudioManagementService _ams;
+        private readonly ISocialMediaService _sms;
 
         private List<AudioUoW> _audios;
         private bool _videoCredentialsSet = false;
@@ -37,13 +38,14 @@ namespace MusicianHelper.WinForms
             IoCHelper.Instance.GetService<IStorageService>(),
             IoCHelper.Instance.GetService<IMasterService>(),
             IoCHelper.Instance.GetService<IAudioNetworkService>(),
-            IoCHelper.Instance.GetService<IAudioManagementService>()
+            IoCHelper.Instance.GetService<IAudioManagementService>(),
+            IoCHelper.Instance.GetService<ISocialMediaService>()
             )
         {
             
         }
 
-        public MainWindow(IVideoManagementService vms, IVideoNetworkService vns, IStorageService ss, IMasterService ms, IAudioNetworkService ans, IAudioManagementService ams)
+        public MainWindow(IVideoManagementService vms, IVideoNetworkService vns, IStorageService ss, IMasterService ms, IAudioNetworkService ans, IAudioManagementService ams, ISocialMediaService sms)
         {
             _vms = vms;
             _vns = vns;
@@ -51,6 +53,7 @@ namespace MusicianHelper.WinForms
             _ms = ms;
             _ans = ans;
             _ams = ams;
+            _sms = sms;
 
             InitializeComponent();
             SetFolderDefaults();
@@ -128,6 +131,25 @@ namespace MusicianHelper.WinForms
                 var otm = _ss.Load().ToSoundCloudOauthTokenModel();
                 AppendToLog("Beginning audio uploads (this will probably take a while)...");  
                 _ams.UploadAllAudios(_audios, otm, AllAudiosUploaded, AudioUploaded, AppendToLog);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void StartSocialMediaPost()
+        {
+            try
+            {
+                var otm = _ss.Load().ToFacebookOauthTokenModel();
+                AppendToLog("Beginning social media posts...");
+                foreach (var audio in _audios)
+                {
+                    AppendToLog("Posting "+ audio.Title + "...");
+                    _sms.MakePost(otm, audio);
+                }
+                AppendToLog("Social media posts complete!");
             }
             catch (Exception ex)
             {
@@ -299,7 +321,7 @@ namespace MusicianHelper.WinForms
             {
                 AppendToLog("Facebook credentials set!");
                 _socialMediaCredentialsSet = true;
-                //ConfigureAudioButton.Enabled = true;
+                //PostSocialMediaButton.Enabled = true;
 
                 //if (_audioMetadataSet)
                 //    UploadAudiosButton.Enabled = true;
@@ -355,6 +377,9 @@ namespace MusicianHelper.WinForms
                 _videosRendered = true;
                 UploadVideosButton.Invoke(new Action(() => UploadVideosButton.Enabled = true));
                 AppendToLog("Video rendering complete!");
+
+                if (_socialMediaCredentialsSet)
+                    PostSocialMediaButton.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -418,6 +443,9 @@ namespace MusicianHelper.WinForms
             {
                 _audiosUploaded = true;
                 AppendToLog("Audio uploads complete!");
+
+                if (_socialMediaCredentialsSet)
+                    PostSocialMediaButton.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -454,6 +482,18 @@ namespace MusicianHelper.WinForms
                 var scw = new FacebookWindow();
                 scw.Closed += FacebookWindow_Closed;
                 scw.Show(this);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void PostSocialMediaButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                StartSocialMediaPost();
             }
             catch (Exception ex)
             {
