@@ -439,5 +439,7 @@ settings.json
 Installer/InstallerData
 MusicianHelper.SinkWriterSandbox/MusicianHelper.SinkWriterSandbox/output.wmv
 TEST/Rendered/
+MusicianHelper.Common/Helpers/Security.cs
+
 
 

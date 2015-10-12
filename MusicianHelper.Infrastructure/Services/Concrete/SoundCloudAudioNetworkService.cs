@@ -43,7 +43,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
 
                 var dict = new Dictionary<string, object>()
                 {
-                    {"scope", "*"},
+                    {"scope", "non-expiring"},
                     {"client_id", akm.SoundCloudClientId},
                     {"redirect_uri", REDIRECT_URI},
                     {"response_type", "code"},                  
