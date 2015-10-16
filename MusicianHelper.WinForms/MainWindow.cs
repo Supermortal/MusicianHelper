@@ -161,6 +161,16 @@ namespace MusicianHelper.WinForms
         {
             try
             {
+                var sm = _ss.Load();
+
+                if (!string.IsNullOrEmpty(sm.FacebookClientId))
+                    FacebookCredentialsButton.Enabled = true;
+
+                if (!string.IsNullOrEmpty(sm.SoundCloudClientId))
+                    SoundCloudCredentialsButton.Enabled = true;
+
+                if (!string.IsNullOrEmpty(sm.YouTubeClientId))
+                    YouTubeCredentialsButton.Enabled = true;
 
                 if (_vns.HasCredentials() == true)
                 {
@@ -168,8 +178,7 @@ namespace MusicianHelper.WinForms
                     _videoCredentialsSet = true;
                     ConfigureAudioButton.Enabled = true;
                     AppendToLog("YouTube credentials already set!");
-
-                    var sm = _ss.Load();
+                 
                     var ytm = sm.ToYouTubeOauthTokenModel();
                     if (ytm.AccessTokenExpired == true)
                     {
@@ -218,146 +227,6 @@ namespace MusicianHelper.WinForms
         }
 
         #region Events
-        private void SetAudioDirectoryButton_Click(object sender, EventArgs e)
-        {
-            var result = FolderBrowserDialog.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                AudioDirectory.Text = FolderBrowserDialog.SelectedPath;
-                var sm = _ss.Load();
-                sm.LastAudioDirectory = FolderBrowserDialog.SelectedPath;
-                _ss.Save(sm);
-            }
-        }
-
-        private void SetVideoDirectoryButton_Click(object sender, EventArgs e)
-        {
-            var result = FolderBrowserDialog.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                VideoDirectory.Text = FolderBrowserDialog.SelectedPath;
-                var sm = _ss.Load();
-                sm.LastVideoDirectory = FolderBrowserDialog.SelectedPath;
-                _ss.Save(sm);
-            }
-        }
-
-        private void SetImagesDirectoryButton_Click(object sender, EventArgs e)
-        {
-            var result = FolderBrowserDialog.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                ImagesDirectory.Text = FolderBrowserDialog.SelectedPath;
-                var sm = _ss.Load();
-                sm.LastImagesDirectory = FolderBrowserDialog.SelectedPath;
-                _ss.Save(sm);
-            }
-        }
-
-        private void YouTubeCredentialsButton_Click(object sender, EventArgs e)
-        {
-            AppendToLog("Starting YouTube credentials set...");
-            var ytw = new YouTubeWindow();
-            ytw.Closed += YouTubeWindow_Closed;
-            ytw.Show(this);
-        }
-
-        private void AudioEditWindow_Closed(object sender, EventArgs e)
-        {
-            try
-            {
-                AppendToLog("Audio configuration complete!");
-                _audioMetadataSet = true;
-
-                if (_videoCredentialsSet)
-                    RenderVideosButton.Enabled = true;
-
-                if (_audioCredentialsSet)
-                    UploadAudiosButton.Enabled = true;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message, ex);
-            }
-        }
-
-        private void YouTubeWindow_Closed(object sender, EventArgs e)
-        {
-            try
-            {
-                AppendToLog("YouTube credentials set!");
-                _videoCredentialsSet = true;
-                ConfigureAudioButton.Enabled = true;
-
-                if (_audioMetadataSet)
-                    RenderVideosButton.Enabled = true;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message, ex);
-            }
-        }
-
-        private void SoundCloudWindow_Closed(object sender, EventArgs e)
-        {
-            try
-            {
-                AppendToLog("SoundCloud credentials set!");
-                _audioCredentialsSet = true;
-                ConfigureAudioButton.Enabled = true;
-
-                if (_audioMetadataSet)
-                    UploadAudiosButton.Enabled = true;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message, ex);
-            }
-        }
-
-        private void FacebookWindow_Closed(object sender, EventArgs e)
-        {
-            try
-            {
-                AppendToLog("Facebook credentials set!");
-                _socialMediaCredentialsSet = true;
-                //PostSocialMediaButton.Enabled = true;
-
-                //if (_audioMetadataSet)
-                //    UploadAudiosButton.Enabled = true;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message, ex);
-            }
-        }
-
-        private void ConfigureAudioButton_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(AudioDirectory.Text) || string.IsNullOrEmpty(VideoDirectory.Text) ||
-                string.IsNullOrEmpty(VideoDirectory.Text))
-            {
-                AppendToLog("Audio directory, images directory, and video directory must be set to configure audio!");
-                return;
-            }
-
-            StartAudioMetadataProcessing();
-        }
-
-        private void RenderVideosButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                RenderVideosButton.Enabled = false;
-                ConfigureAudioButton.Enabled = false;
-                StartVideoRendering(_audios);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message, ex);
-            }
-        }
-
         private void VideoRendered(object sender, VideoRenderedEventArgs e)
         {
             try
@@ -380,19 +249,6 @@ namespace MusicianHelper.WinForms
 
                 if (_socialMediaCredentialsSet)
                     PostSocialMediaButton.Enabled = true;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message, ex);
-            }
-        }
-
-        private void UploadVideosButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                UploadVideosButton.Enabled = false;
-                StartVideoUpload();
             }
             catch (Exception ex)
             {
@@ -451,6 +307,93 @@ namespace MusicianHelper.WinForms
             {
                 Log.Error(ex.Message, ex);
             }
+        }     
+        #endregion
+
+        #region Button Click
+        private void UploadVideosButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UploadVideosButton.Enabled = false;
+                StartVideoUpload();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void SetAudioDirectoryButton_Click(object sender, EventArgs e)
+        {
+            var result = FolderBrowserDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                AudioDirectory.Text = FolderBrowserDialog.SelectedPath;
+                var sm = _ss.Load();
+                sm.LastAudioDirectory = FolderBrowserDialog.SelectedPath;
+                _ss.Save(sm);
+            }
+        }
+
+        private void SetVideoDirectoryButton_Click(object sender, EventArgs e)
+        {
+            var result = FolderBrowserDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                VideoDirectory.Text = FolderBrowserDialog.SelectedPath;
+                var sm = _ss.Load();
+                sm.LastVideoDirectory = FolderBrowserDialog.SelectedPath;
+                _ss.Save(sm);
+            }
+        }
+
+        private void SetImagesDirectoryButton_Click(object sender, EventArgs e)
+        {
+            var result = FolderBrowserDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                ImagesDirectory.Text = FolderBrowserDialog.SelectedPath;
+                var sm = _ss.Load();
+                sm.LastImagesDirectory = FolderBrowserDialog.SelectedPath;
+                _ss.Save(sm);
+            }
+        }
+
+        private void YouTubeCredentialsButton_Click(object sender, EventArgs e)
+        {
+            AppendToLog("Starting YouTube credentials set...");
+            var ytw = new YouTubeWindow();
+            ytw.Closed += YouTubeWindow_Closed;
+            ytw.Show(this);
+        }
+
+
+
+        private void ConfigureAudioButton_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(AudioDirectory.Text) || string.IsNullOrEmpty(VideoDirectory.Text) ||
+                string.IsNullOrEmpty(VideoDirectory.Text))
+            {
+                AppendToLog("Audio directory, images directory, and video directory must be set to configure audio!");
+                return;
+            }
+
+            StartAudioMetadataProcessing();
+        }
+
+        private void RenderVideosButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                RenderVideosButton.Enabled = false;
+                ConfigureAudioButton.Enabled = false;
+                StartVideoRendering(_audios);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
         }
 
         private void SoundCloudCredentials_Click(object sender, EventArgs e)
@@ -494,6 +437,102 @@ namespace MusicianHelper.WinForms
             try
             {
                 StartSocialMediaPost();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+        #endregion
+
+        #region Window Closed
+        private void AudioEditWindow_Closed(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_ans.HasCredentials() != true)
+                {
+                    AppendToLog("Audio configuration failed...");
+                    return;
+                }
+
+                AppendToLog("Audio configuration complete!");
+                _audioMetadataSet = true;
+
+                if (_videoCredentialsSet)
+                    RenderVideosButton.Enabled = true;
+
+                if (_audioCredentialsSet)
+                    UploadAudiosButton.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void YouTubeWindow_Closed(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_vns.HasCredentials() != true)
+                {
+                    AppendToLog("YouTube credentials set failed...");
+                    return;
+                }
+
+                AppendToLog("YouTube credentials set!");
+                _videoCredentialsSet = true;
+                ConfigureAudioButton.Enabled = true;
+
+                if (_audioMetadataSet)
+                    RenderVideosButton.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void SoundCloudWindow_Closed(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_ans.HasCredentials() != true)
+                {
+                    AppendToLog("SoundCloud credentials set failed...");
+                    return;
+                }
+
+                AppendToLog("SoundCloud credentials set!");
+                _audioCredentialsSet = true;
+                ConfigureAudioButton.Enabled = true;
+
+                if (_audioMetadataSet)
+                    UploadAudiosButton.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void FacebookWindow_Closed(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_sms.HasCredentials() != true)
+                {
+                    AppendToLog("Facebook credentials set failed...");
+                    return;
+                }
+
+                AppendToLog("Facebook credentials set!");
+                _socialMediaCredentialsSet = true;
+                //PostSocialMediaButton.Enabled = true;
+
+                //if (_audioMetadataSet)
+                //    UploadAudiosButton.Enabled = true;
             }
             catch (Exception ex)
             {

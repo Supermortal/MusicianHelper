@@ -113,6 +113,7 @@
             // 
             // YouTubeCredentialsButton
             // 
+            this.YouTubeCredentialsButton.Enabled = false;
             this.YouTubeCredentialsButton.Location = new System.Drawing.Point(55, 671);
             this.YouTubeCredentialsButton.Name = "YouTubeCredentialsButton";
             this.YouTubeCredentialsButton.Size = new System.Drawing.Size(163, 23);
@@ -154,6 +155,7 @@
             // 
             // SoundCloudCredentialsButton
             // 
+            this.SoundCloudCredentialsButton.Enabled = false;
             this.SoundCloudCredentialsButton.Location = new System.Drawing.Point(55, 709);
             this.SoundCloudCredentialsButton.Name = "SoundCloudCredentialsButton";
             this.SoundCloudCredentialsButton.Size = new System.Drawing.Size(163, 23);
@@ -175,6 +177,7 @@
             // 
             // FacebookCredentialsButton
             // 
+            this.FacebookCredentialsButton.Enabled = false;
             this.FacebookCredentialsButton.Location = new System.Drawing.Point(55, 749);
             this.FacebookCredentialsButton.Name = "FacebookCredentialsButton";
             this.FacebookCredentialsButton.Size = new System.Drawing.Size(163, 23);
