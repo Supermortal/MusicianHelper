@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 using log4net;
 using MusicianHelper.Common.Helpers.Log;
 
@@ -9,41 +10,11 @@ namespace MusicianHelper.Common.Helpers
     public class Security
     {
 
-        private static readonly ILog Log = LogHelper.GetLogger(typeof (Security));
+        private static readonly ILog Log = LogHelper.GetLogger(typeof(Security));
 
-        private static byte[] _iv = new byte[] { 138,
-		68,
-		204,
-		7,
-		198,
-		219,
-		11,
-		133};
+        private static byte[] _iv = new byte[] { 46, 48, 182, 51, 145, 0, 105, 200 };
 
-        private static byte[] _key = new byte[] { 216,
-		12,
-		40,
-		118,
-		44,
-		49,
-		125,
-		149,
-		57,
-		69,
-		170,
-		118,
-		122,
-		178,
-		18,
-		62,
-		140,
-		2,
-		103,
-		59,
-		190,
-		39,
-		129,
-		135};
+        private static byte[] _key = new byte[] { 145, 206, 185, 51, 21, 224, 82, 188, 49, 189, 235, 72, 217, 42, 81, 217, 38, 88, 103, 122, 28, 15, 93, 227 };
 
         public static byte[] IV
         {
@@ -103,6 +74,56 @@ namespace MusicianHelper.Common.Helpers
         {
             IV = iv;
             Key = key;
+        }
+
+        public static void GenerateNewIVAndKey(string path)
+        {
+            try
+            {
+                var encrypt = new TripleDESCryptoServiceProvider();
+
+                encrypt.GenerateIV();
+                encrypt.GenerateKey();
+
+                var sb = new StringBuilder();
+                sb.Append("private static byte[] _iv = new byte[] {");
+                foreach (var b in encrypt.IV)
+                {
+                    sb.Append(b);
+                    sb.Append(',');
+                }
+
+                var ivFront = sb.ToString().TrimEnd(',');
+                sb = new StringBuilder();
+
+                sb.Append(ivFront);
+                sb.Append("};");
+
+                var ivStr = sb.ToString();
+
+                sb = new StringBuilder();
+                sb.Append("private static byte[] _key = new byte[] {");
+                foreach (var b in encrypt.Key)
+                {
+                    sb.Append(b);
+                    sb.Append(',');
+                }
+
+                var keyFront = sb.ToString().TrimEnd(',');
+                sb = new StringBuilder();
+
+                sb.Append(keyFront);
+                sb.Append("};");
+
+                var keyStr = sb.ToString();
+
+                var lines = new string[] { ivStr, "\n", keyStr };
+                File.WriteAllLines(path, lines);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
         }
 
     }

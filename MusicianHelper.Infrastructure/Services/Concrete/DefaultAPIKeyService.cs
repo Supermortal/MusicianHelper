@@ -43,6 +43,13 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                 _akm.YouTubeClientSecret = _akm.YouTubeClientSecret.Replace("\0", string.Empty);
                 _akm.YouTubeClientId = _akm.YouTubeClientId.Replace("\0", string.Empty);
 
+                _akm.SoundCloudClientSecret =
+                    Encoding.Default.GetString(Security.SymmetricDecrypt(_akm.SoundCloudClientSecret));
+                _akm.SoundCloudClientId = Encoding.Default.GetString(Security.SymmetricDecrypt(_akm.SoundCloudClientId));
+
+                _akm.SoundCloudClientSecret = _akm.SoundCloudClientSecret.Replace("\0", string.Empty);
+                _akm.SoundCloudClientId = _akm.SoundCloudClientId.Replace("\0", string.Empty);
+
                 return _akm;
             }
             catch (Exception ex)
@@ -58,6 +65,8 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             {
                 akm.YouTubeClientSecret = Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.YouTubeClientSecret));
                 akm.YouTubeClientId = Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.YouTubeClientId));
+                akm.SoundCloudClientId = Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.SoundCloudClientId));
+                akm.SoundCloudClientSecret = Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.SoundCloudClientSecret));
 
                 var sm = _ss.Load();
                 akm.UpdateStorageModel(sm);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows.Forms;
 using log4net;
 using MusicianHelper.Common.Helpers;
@@ -20,29 +19,37 @@ namespace MusicianHelper.WinForms
         private readonly IVideoNetworkService _vns;
         private readonly IStorageService _ss;
         private readonly IMasterService _ms;
+        private readonly IAudioNetworkService _ans;
+        private readonly IAudioManagementService _ams;
 
         private List<AudioUoW> _audios;
         private bool _videoCredentialsSet = false;
         private bool _audioMetadataSet = false;
         private bool _videosRendered = false;
         private bool _videosUploaded = false;
+        private bool _audioCredentialsSet = false;
+        private bool _audiosUploaded = false;
 
         public MainWindow() : this(
             IoCHelper.Instance.GetService<IVideoManagementService>(), 
             IoCHelper.Instance.GetService<IVideoNetworkService>(), 
             IoCHelper.Instance.GetService<IStorageService>(),
-            IoCHelper.Instance.GetService<IMasterService>()
+            IoCHelper.Instance.GetService<IMasterService>(),
+            IoCHelper.Instance.GetService<IAudioNetworkService>(),
+            IoCHelper.Instance.GetService<IAudioManagementService>()
             )
         {
             
         }
 
-        public MainWindow(IVideoManagementService vms, IVideoNetworkService vns, IStorageService ss, IMasterService ms)
+        public MainWindow(IVideoManagementService vms, IVideoNetworkService vns, IStorageService ss, IMasterService ms, IAudioNetworkService ans, IAudioManagementService ams)
         {
             _vms = vms;
             _vns = vns;
             _ss = ss;
             _ms = ms;
+            _ans = ans;
+            _ams = ams;
 
             InitializeComponent();
             SetFolderDefaults();
@@ -113,10 +120,25 @@ namespace MusicianHelper.WinForms
             }
         }
 
+        private void StartAudioUpload()
+        {
+            try
+            {
+                var otm = _ss.Load().ToSoundCloudOauthTokenModel();
+                AppendToLog("Beginning audio uploads (this will probably take a while)...");  
+                _ams.UploadAllAudios(_audios, otm, AllAudiosUploaded, AudioUploaded, AppendToLog);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
         private void CheckCredentials()
         {
             try
             {
+
                 if (_vns.HasCredentials() == true)
                 {
                     YouTubeCredentialsButton.Text = Resources.MainWindow_CheckCredentials_Reset_YouTube_Credentials;
@@ -130,11 +152,20 @@ namespace MusicianHelper.WinForms
                     {
                         AppendToLog("Starting YouTube credentials refresh...");
                         ytm = _vns.RefreshRequestTokens(ytm);
-                        ytm.UpdateStorageModel(sm);
+                        ytm.UpdateYouTubeStorage(sm);
                         _ss.Save(sm);
                         AppendToLog("YouTube credentials refresh complete!");
                     }
-                } 
+                }
+
+                if (_ans.HasCredentials() == true)
+                {
+                    SoundCloudCredentialsButton.Text = Resources.MainWindow_CheckCredentials_Reset_SoundCloud_Credentials;
+                    _audioCredentialsSet = true;
+                    ConfigureAudioButton.Enabled = true;
+                    AppendToLog("SoundCloud credentials already set!");
+                }
+
             }
             catch (Exception ex)
             {
@@ -214,7 +245,12 @@ namespace MusicianHelper.WinForms
             {
                 AppendToLog("Audio configuration complete!");
                 _audioMetadataSet = true;
-                RenderVideosButton.Enabled = true;
+
+                if (_videoCredentialsSet)
+                    RenderVideosButton.Enabled = true;
+
+                if (_audioCredentialsSet)
+                    UploadAudiosButton.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -229,6 +265,26 @@ namespace MusicianHelper.WinForms
                 AppendToLog("YouTube credentials set!");
                 _videoCredentialsSet = true;
                 ConfigureAudioButton.Enabled = true;
+
+                if (_audioMetadataSet)
+                    RenderVideosButton.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void SoundCloudWindow_Closed(object sender, EventArgs e)
+        {
+            try
+            {
+                AppendToLog("SoundCloud credentials set!");
+                _audioCredentialsSet = true;
+                ConfigureAudioButton.Enabled = true;
+
+                if (_audioMetadataSet)
+                    UploadAudiosButton.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -324,6 +380,52 @@ namespace MusicianHelper.WinForms
             {
                 Log.Error(ex.Message, ex);
             }
+        }
+
+        private void AudioUploaded(object sender, AudioUploadedEventArgs e)
+        {
+            try
+            {
+                AppendToLog("Upload complete! " + e.Audio.Title);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void AllAudiosUploaded(object sender, EventArgs e)
+        {
+            try
+            {
+                _audiosUploaded = true;
+                AppendToLog("Audio uploads complete!");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void SoundCloudCredentials_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                AppendToLog("Starting SoundCloud credentials set...");
+                var scw = new SoundCloudWindow();
+                scw.Closed += SoundCloudWindow_Closed;
+                scw.Show(this);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
+        private void UploadAudiosButton_Click(object sender, EventArgs e)
+        {
+            UploadAudiosButton.Enabled = false;
+            StartAudioUpload();
         }
         #endregion
 

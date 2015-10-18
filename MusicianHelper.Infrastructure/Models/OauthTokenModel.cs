@@ -20,12 +20,25 @@ namespace MusicianHelper.Infrastructure.Models
             }
         }
 
-        public void UpdateStorageModel(StorageModel sm)
+        public void UpdateYouTubeStorage(StorageModel sm)
         {
             sm.YouTubeAccessToken = AccessToken;
             sm.YouTubeTokenType = TokenType;
             sm.YouTubeRefreshToken = RefreshToken;
             sm.YouTubeAccessTokenExpiry = AccessTokenExpiry;
         }
+
+        public void UpdateSoundCloudStorage(StorageModel sm)
+        {
+            sm.SoundCloudAccessToken = AccessToken;
+            sm.SoundCloudTokenType = TokenType;
+            sm.SoundCloudRefreshToken = RefreshToken;
+            sm.SoundCloudAccessTokenExpiry = AccessTokenExpiry;
+        }
+
+        //public SCAccessToken ToSCAccessToken()
+        //{
+        //    return new SCAccessToken() { AccessToken = AccessToken, ExpiresIn = (DateTime)AccessTokenExpiry - DateTime.Now, RefreshToken = RefreshToken, Scope = SCScope.NonExpiring };
+        //}
     }
 }

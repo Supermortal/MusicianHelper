@@ -95,8 +95,13 @@
   <ItemGroup>
     <Compile Include="Models\APIKeysModel.cs" />
     <Compile Include="Models\AudioUoW.cs" />
+    <Compile Include="Models\AudioUploadedEventArgs.cs" />
+    <Compile Include="Models\AudioUploadSession.cs" />
     <Compile Include="Models\Enums\VideoQuality.cs" />
     <Compile Include="Models\OauthTokenModel.cs" />
+    <Compile Include="Models\soundcloud_oauth_response.cs" />
+    <Compile Include="Models\soundcloud_track.cs" />
+    <Compile Include="Models\soundcloud_user.cs" />
     <Compile Include="Models\SplicerWMVProfile.cs" />
     <Compile Include="Models\StorageModel.cs" />
     <Compile Include="Models\VideoManagmentSettings.cs" />
@@ -106,6 +111,8 @@
     <Compile Include="Models\youtube_oauth_response.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Abstract\IAPIKeyService.cs" />
+    <Compile Include="Services\Abstract\IAudioManagementService.cs" />
+    <Compile Include="Services\Abstract\IAudioNetworkService.cs" />
     <Compile Include="Services\Abstract\IMasterService.cs" />
     <Compile Include="Services\Abstract\IStorageService.cs" />
     <Compile Include="Services\Abstract\IVideoManagementService.cs" />
@@ -113,9 +120,11 @@
     <Compile Include="Services\Abstract\IVideoProcessingService.cs" />
     <Compile Include="Services\Concrete\BootstrapperStorageService.cs" />
     <Compile Include="Services\Concrete\DefaultAPIKeyService.cs" />
+    <Compile Include="Services\Concrete\DefaultAudioManagementService.cs" />
     <Compile Include="Services\Concrete\DefaultMasterService.cs" />
     <Compile Include="Services\Concrete\DefaultVideoManagementService.cs" />
     <Compile Include="Services\Concrete\JsonNetStorageService.cs" />
+    <Compile Include="Services\Concrete\SoundCloudAudioNetworkService.cs" />
     <Compile Include="Services\Concrete\SplicerWMVVideoProcessingService.cs" />
     <Compile Include="Services\Concrete\YouTubeVideoNetworkService.cs" />
   </ItemGroup>

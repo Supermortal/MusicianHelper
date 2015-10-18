@@ -117,4 +117,7 @@
   <data name="MainWindow_CheckCredentials_Reset_YouTube_Credentials" xml:space="preserve">
     <value>Reset YouTube Credentials</value>
   </data>
+    <data name="MainWindow_CheckCredentials_Reset_SoundCloud_Credentials" xml:space="preserve">
+    <value>Reset SoundCloud Credentials</value>
+  </data>
 </root>

@@ -47,6 +47,8 @@ namespace MusicianHelper.WinForms
             IoCHelper.Instance.BindService<IStorageService, JsonNetStorageService>(IoCBindingType.Singleton);
             IoCHelper.Instance.BindService<IAPIKeyService, DefaultAPIKeyService>(IoCBindingType.Singleton);
             IoCHelper.Instance.BindService<IMasterService, DefaultMasterService>();
+            IoCHelper.Instance.BindService<IAudioNetworkService, SoundCloudAudioNetworkService>(IoCBindingType.Normal, "SoundCloudNetwork");
+            IoCHelper.Instance.BindService<IAudioManagementService, DefaultAudioManagementService>();
         }
     }
 }

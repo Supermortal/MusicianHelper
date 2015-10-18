@@ -7,7 +7,7 @@ namespace MusicianHelper.Infrastructure.Services.Abstract
     {
         List<AudioUoW> CreateAudioUnitsOfWork(string audioDirectory);
         string GetAudioUnitOfWorkName(string audioPath);
-        string GenerateTagsString(List<string> tags);
+        string GenerateTagsString(List<string> tags, char delimiter = ',');
         List<string> GetTagsFromTagString(string tagsString);
     }
 }

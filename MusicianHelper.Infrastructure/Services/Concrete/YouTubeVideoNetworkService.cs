@@ -110,7 +110,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             try
             {
                 var sm = _ss.Load();
-                otm.UpdateStorageModel(sm);
+                otm.UpdateYouTubeStorage(sm);
                 _ss.Save(sm);
             }
             catch (Exception ex)
