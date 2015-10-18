@@ -56,8 +56,8 @@ namespace MusicianHelper.NativeVideoEncoderClient.Tests
 
             //const string imageFilePath = "C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Images\\paper-stained-3-texture.bmp";
             //const string audioFilePath = "C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\Audio\\sorry_dave.wav";
-            const string imageFilePath = "C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Images\\test2.bmp";
-            const string audioFilePath = "C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\Audio\\sorry_dave.wav";
+            const string imageFilePath = "C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\test.bmp";
+            const string audioFilePath = "C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\sorry_dave.wav";
             const string videoOutputPath = "output.wmv";
 
             if (File.Exists(videoOutputPath))

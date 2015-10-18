@@ -7,7 +7,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F057BB70-8A0F-4AC9-9B02-3BAB34E1D8BB}</ProjectGuid>
+    <ProjectGuid>{40146555-CDE3-456F-84FF-7EDA22EA0D6C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MusicianHelper.Infrastructure.Tests</RootNamespace>
@@ -82,6 +82,12 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MusicianHelper.Infrastructure\MusicianHelper.Infrastructure.csproj">
+      <Project>{c7a43af2-fe5b-4f71-8a73-56933e68f4bf}</Project>
+      <Name>MusicianHelper.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

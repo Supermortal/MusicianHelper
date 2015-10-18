@@ -17,11 +17,11 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
 
         private static readonly ILog Log = LogHelper.GetLogger(typeof(NativeMediaFoundationVideoProcessingService));
 
-        private readonly VideoEncoderWrapper _ve;
+        private readonly VideoEncoder _ve;
 
         public NativeMediaFoundationVideoProcessingService()
         {
-            _ve = new VideoEncoderWrapper();
+            _ve = new VideoEncoder();
         }
 
         public void CreateVideoFromImages(List<string> imagePaths, string audioPath, string outputPath, VideoQuality vq,

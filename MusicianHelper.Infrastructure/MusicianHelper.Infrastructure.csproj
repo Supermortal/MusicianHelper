@@ -124,6 +124,7 @@
     <Compile Include="Services\Concrete\DefaultMasterService.cs" />
     <Compile Include="Services\Concrete\DefaultVideoManagementService.cs" />
     <Compile Include="Services\Concrete\JsonNetStorageService.cs" />
+    <Compile Include="Services\Concrete\NativeMediaFoundationVideoProcessingService.cs" />
     <Compile Include="Services\Concrete\SoundCloudAudioNetworkService.cs" />
     <Compile Include="Services\Concrete\SplicerWMVVideoProcessingService.cs" />
     <Compile Include="Services\Concrete\YouTubeVideoNetworkService.cs" />
@@ -156,7 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="MusicianHelperNativeVideoEncoderLib">
-      <Guid>{62188D94-EE04-44A2-8AC6-5B7FA2DB44D2}</Guid>
+      <Guid>{CCD4ECB4-F945-4228-8AF4-4A486BBDF2BC}</Guid>
       <VersionMajor>1</VersionMajor>
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>
