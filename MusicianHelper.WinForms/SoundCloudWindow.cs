@@ -40,7 +40,7 @@ namespace MusicianHelper.WinForms
 
         private void WebBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
-            if (WebBrowser.DocumentText == "<HTML></HTML>\0" || WebBrowser.Url.AbsoluteUri.Contains("popup"))
+            if (WebBrowser.DocumentText == "<HTML></HTML>\0" || WebBrowser.Url.AbsoluteUri.Contains("popup_callback"))
             {
                 WebBrowser.Url = _ans.CreateRequestUri();
                 return;
