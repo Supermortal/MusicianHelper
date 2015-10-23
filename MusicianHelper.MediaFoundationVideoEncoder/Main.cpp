@@ -1,12 +1,9 @@
-// MusicianHelper.MediaFoundationVideoEncoder.cpp : Defines the entry point for the console application.
-//
-
-#include "stdafx.h"
+#include <iostream>
 #include "VideoEncoder.h"
 
+int main(int argc, char* argv[]) {
+    system("pause");
 
-int _tmain(int argc, _TCHAR* argv[])
-{
     HRESULT hr = S_OK;
 
     VideoSettings vs;
@@ -22,4 +19,3 @@ int _tmain(int argc, _TCHAR* argv[])
 
     return SUCCEEDED(hr) ? 0 : 1;
 }
-

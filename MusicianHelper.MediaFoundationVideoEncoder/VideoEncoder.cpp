@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #define _AFXDLL
 
 #include <afx.h>
