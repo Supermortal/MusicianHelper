@@ -14,11 +14,11 @@
 ULONG_PTR m_gdiplusToken;
 
 Gdiplus::Status imageToImage(
-    LPCWSTR fileIn, LPCWSTR fileOut, BSTR wszOutputMimeType)
+    LPCWSTR fileIn, LPCWSTR fileOut, LPCWSTR wszOutputMimeType)
 {
     namespace G = Gdiplus;
     G::Status status = G::Ok;
-    G::Image imageSrc(L"C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\paper-stained-3-texture.jpg");
+    G::Image imageSrc(fileIn);
     status = imageSrc.GetLastStatus();
     if (G::Ok != status) {
         return status;
@@ -49,7 +49,7 @@ Gdiplus::Status imageToImage(
     if (status != G::Ok) {
         return status;
     }
-    return imageSrc.Save(L"test.bmp", &clsidOut);
+    return imageSrc.Save(fileOut, &clsidOut);
 }
 
 LPCWSTR convertCharArrToLPCWSTR(char* charArr) {
@@ -64,41 +64,28 @@ LPCWSTR convertCharArrToLPCWSTR(char* charArr) {
 
 int main(int argc, char* argv[]) {
     //arguments
-    //C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\paper-stained-3-texture.jpg test_encode.bmp
-    //C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\paper-stained-3-texture.jpg test_encode.bmp
+    //C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\paper-stained-3-texture.jpg test_encode.bmp image/bmp
+    //C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\paper-stained-3-texture.jpg test_encode.bmp image/bmp
 
     // Initialize GDI+
     Gdiplus::GdiplusStartupInput gdiplusStartupInput;
     Gdiplus::GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, NULL);
 
-    /*const char *inCs = argv[1];
-    const char *outCs = argv[2];*/
-
-    /*const size_t newsize = 200;
-
-    size_t origsize = strlen(inCs) + 1;    
-    size_t convertedChars = 0;
-    wchar_t *inFilePath = new wchar_t[newsize];
-    mbstowcs_s(&convertedChars, inFilePath, newsize, inCs, _TRUNCATE);
-
-    origsize = strlen(outCs) + 1;
-    convertedChars = 0;
-    wchar_t *outFilePath = new wchar_t[newsize];
-    mbstowcs_s(&convertedChars, outFilePath, newsize, outCs, _TRUNCATE);
-*/
-
     LPCWSTR inFilePath = convertCharArrToLPCWSTR(argv[1]);
     LPCWSTR outFilePath = convertCharArrToLPCWSTR(argv[2]);
 
-    Gdiplus::Status s = imageToImage((LPCWSTR)inFilePath, (LPCWSTR)outFilePath, L"image/bmp");
+    LPCWSTR mimeType = L"image/bmp";
+    if (argc == 4) {
+        mimeType = convertCharArrToLPCWSTR(argv[3]);
+    }
+
+    Gdiplus::Status s = imageToImage(inFilePath, outFilePath, mimeType);
     if (Gdiplus::Ok == s) {
         std::cout << "Conversion successful" << std::endl;
     }
     else {
         std::cout << "Conversion failed" << std::endl;
     }
-
-    system("pause");
 
     Gdiplus::GdiplusShutdown(m_gdiplusToken);
 }
