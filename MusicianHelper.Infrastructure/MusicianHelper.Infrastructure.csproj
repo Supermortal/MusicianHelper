@@ -123,6 +123,7 @@
     <Compile Include="Services\Concrete\DefaultMasterService.cs" />
     <Compile Include="Services\Concrete\DefaultVideoManagementService.cs" />
     <Compile Include="Services\Concrete\JsonNetStorageService.cs" />
+    <Compile Include="Services\Concrete\NativeVideoEncoderProcessVideoProcessingService.cs" />
     <Compile Include="Services\Concrete\SoundCloudAudioNetworkService.cs" />
     <Compile Include="Services\Concrete\SplicerWMVVideoProcessingService.cs" />
     <Compile Include="Services\Concrete\YouTubeVideoNetworkService.cs" />
@@ -143,6 +144,10 @@
     <ProjectReference Include="..\MusicianHelper.Common\MusicianHelper.Common.csproj">
       <Project>{8b1f9093-89d4-4d97-be31-0afb2eda2031}</Project>
       <Name>MusicianHelper.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MusicianHelper.NativeVideoEncoderWrapper\MusicianHelper.NativeVideoEncoderWrapper.csproj">
+      <Project>{fdee3c99-7725-4568-b3aa-e67156c033c6}</Project>
+      <Name>MusicianHelper.NativeVideoEncoderWrapper</Name>
     </ProjectReference>
     <ProjectReference Include="..\splicer-99885\src\Splicer.Contrib\Splicer.Contrib.csproj">
       <Project>{4de8d46c-1974-4d80-b71d-0683e66ad9e2}</Project>
