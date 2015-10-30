@@ -48,9 +48,12 @@
     <Content Include="Encoder\Debug\MusicianHelper.MediaFoundationVideoEncoder.pdb" />
     <Content Include="Encoder\Release\MusicianHelper.MediaFoundationVideoEncoder.exe" />
     <Content Include="Encoder\Release\MusicianHelper.MediaFoundationVideoEncoder.pdb" />
+    <Content Include="ImageConverter\Debug\MusicianHelper.GDIPlusImageConverter.exe" />
+    <Content Include="ImageConverter\Debug\MusicianHelper.GDIPlusImageConverter.pdb" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Encoder\Debug\MusicianHelper.MediaFoundationVideoEncoder.ilk" />
+    <None Include="ImageConverter\Debug\MusicianHelper.GDIPlusImageConverter.ilk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
