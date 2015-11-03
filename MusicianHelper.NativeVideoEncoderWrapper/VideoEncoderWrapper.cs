@@ -82,6 +82,7 @@ namespace MusicianHelper.NativeVideoEncoderProcess
             pProcess.StartInfo.Arguments = sb.ToString();
 
             pProcess.StartInfo.UseShellExecute = false;
+            pProcess.StartInfo.RedirectStandardOutput = true;
 
             //Set output of program to be written to process output stream
             pProcess.StartInfo.RedirectStandardOutput = true;
@@ -157,6 +158,7 @@ namespace MusicianHelper.NativeVideoEncoderProcess
             pProcess.StartInfo.Arguments = sb.ToString();
 
             pProcess.StartInfo.UseShellExecute = false;
+            pProcess.StartInfo.RedirectStandardOutput = true;
 
             //Set output of program to be written to process output stream
             pProcess.StartInfo.RedirectStandardOutput = true;

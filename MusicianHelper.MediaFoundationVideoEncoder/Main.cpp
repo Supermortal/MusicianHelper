@@ -15,7 +15,7 @@ LPCWSTR convertCharArrToLPCWSTR(char* charArr) {
 int main(int argc, char* argv[]) {
 	//arguments
 	//C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\paper-stained-3-texture.bmp C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\sorry_dave.wav output.wmv
-    //C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\paper-stained-3-texture_converted.bmp C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\sorry_dave.wav output.wmv
+    //C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\paper-stained-3-texture.bmp C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\sorry_dave.wav output.wmv
 
 	HRESULT hr = S_OK;
 
@@ -36,7 +36,30 @@ int main(int argc, char* argv[]) {
 	VideoEncoder *ve = new VideoEncoder(argStrs[0], argStrs[1], argStrs[2], vs);
 	delete argStrs;
 
+	time_t t = time(0);   // get time now
+	struct tm *now = new tm();
+	localtime_s(now, &t);
+	std::cout << (now->tm_year + 1900) << '-'
+		<< (now->tm_mon + 1) << '-'
+		<< now->tm_mday
+		<< " "
+		<< now->tm_hour
+		<< " "
+		<< now->tm_min
+		<< std::endl;
 	ve->Encode();
+	t = time(0);   // get time now
+	now = new tm();
+	localtime_s(now, &t);
+	std::cout << (now->tm_year + 1900) << '-'
+		<< (now->tm_mon + 1) << '-'
+		<< now->tm_mday
+		<< " "
+		<< now->tm_hour
+		<< " "
+		<< now->tm_min
+		<< std::endl;
 
+	system("pause");
 	return SUCCEEDED(hr) ? 0 : 1;
 }

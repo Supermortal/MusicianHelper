@@ -632,7 +632,8 @@ void VideoEncoder::Encode() {
                 hr = pReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, NULL, &pStreamFlags, &timestamp, &sample);
                 if (sample)
                 {
-                    hr = sample->SetSampleTime(timestamp - rtStart);
+					hr = sample->SetSampleTime(timestamp);
+					hr = sample->SetSampleDuration(videoFrameDuration);
                     hr = pSinkWriter->WriteSample(audioStream, sample);
                 }
                 hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
@@ -641,6 +642,7 @@ void VideoEncoder::Encode() {
                     break;
                 }
                 rtStart += videoFrameDuration;
+				SafeRelease(&sample);
             }
         }
         if (SUCCEEDED(hr))
@@ -782,4 +784,34 @@ done:
     SafeRelease(&pType);
     return hr;
 }
+
+//HRESULT CreateMediaSample(DWORD cbData, IMFSample **ppSample)
+//{
+//	HRESULT hr = S_OK;
+//
+//	IMFSample *pSample = NULL;
+//	IMFMediaBuffer *pBuffer = NULL;
+//
+//	hr = MFCreateSample(&pSample);
+//
+//	if (SUCCEEDED(hr))
+//	{
+//		hr = MFCreateMemoryBuffer(cbData, &pBuffer);
+//	}
+//
+//	if (SUCCEEDED(hr))
+//	{
+//		hr = pSample->AddBuffer(pBuffer);
+//	}
+//
+//	if (SUCCEEDED(hr))
+//	{
+//		*ppSample = pSample;
+//		(*ppSample)->AddRef();
+//	}
+//
+//	SafeRelease(&pSample);
+//	SafeRelease(&pBuffer);
+//	return hr;
+//}
 
