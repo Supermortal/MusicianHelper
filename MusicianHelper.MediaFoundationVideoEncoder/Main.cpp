@@ -28,7 +28,6 @@ int main(int argc, char* argv[]) {
 	}
 
 	VideoSettings vs;
-	vs.videoFps = 60;
 	vs.videoBitRate = 800000;
 	vs.videoFps = 30;
 	vs.videoEncodingFormat = MFVideoFormat_WMV3;

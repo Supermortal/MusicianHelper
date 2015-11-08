@@ -8,6 +8,8 @@
 #include <mferror.h>
 #include <atlstr.h>
 #include <stack>
+#include <iostream>
+#include <math.h>
 
 #define WINVER _WIN32_WINNT_WIN7
 
@@ -625,6 +627,7 @@ void VideoEncoder::Encode() {
             DWORD pStreamFlags;
             LONGLONG timestamp = 0;
             IMFSample *sample = NULL;
+			LONGLONG audioSamples = 0;
 
             UINT64 baseTime = (UINT64)mft / videoFrameCount;
             for (DWORD i = 0; i < videoFrameCount; ++i)
@@ -632,17 +635,98 @@ void VideoEncoder::Encode() {
                 hr = pReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, NULL, &pStreamFlags, &timestamp, &sample);
                 if (sample)
                 {
-					hr = sample->SetSampleTime(timestamp);
-					hr = sample->SetSampleDuration(videoFrameDuration);
+					/*hr = sample->SetSampleTime(timestamp);
+					hr = sample->SetSampleDuration(videoFrameDuration);*/
+
+					LONGLONG *sDuration = new LONGLONG();
+					sample->GetSampleDuration(sDuration);
+
+					IMFMediaBuffer *pBuffer = NULL;
+
+					HRESULT hr = MFCreateMemoryBuffer(*sDuration, &pBuffer);
+
+					// Lock the buffer and copy the video frame to the buffer.
+					/*if (SUCCEEDED(hr))
+					{
+						hr = pBuffer->Lock(&pData, NULL, NULL);
+					}*/
+
+					sample->CopyToBuffer(pBuffer);
+
+					int count = floor(*sDuration / (double)videoFrameDuration);
+					for (int j = 0; j < count; j++) {
+						IMFMediaBuffer *tempBuffer = NULL;
+						HRESULT hr = MFCreateMemoryBuffer(videoFrameDuration, &tempBuffer);
+						LONGLONG offset = (j * videoFrameDuration) - 1;
+
+						hr = MFCreateMediaBufferWrapper(
+							pBuffer,
+							offset,
+							videoFrameDuration,
+							&tempBuffer
+							);
+
+						IMFSample *tempSample = NULL;
+						hr = MFCreateSample(&tempSample);
+
+						if (SUCCEEDED(hr))
+						{
+							hr = tempSample->AddBuffer(tempBuffer);
+						}
+
+						if (SUCCEEDED(hr))
+						{
+							hr = tempSample->SetSampleTime(rtStart);
+						}
+						if (SUCCEEDED(hr))
+						{
+							hr = tempSample->SetSampleDuration(videoFrameDuration);
+						}
+
+						std::cout << "Audio bytes written: " << (double)audioSamples / (double)mft << "%" << std::endl;
+						hr = pSinkWriter->WriteSample(audioStream, tempSample);
+
+						audioSamples += *sDuration;
+
+						hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
+						if (FAILED(hr))
+						{
+							break;
+						}
+						std::cout << "Video percentage done: " << ((double)i / (double)videoFrameCount) * 100 << "%" << std::endl;
+
+						rtStart += videoFrameDuration;
+						SafeRelease(&sample);
+
+						char* t = "t";
+					}
+
+					/*if (SUCCEEDED(hr))
+					{
+						hr = sample->SetSampleTime(rtStart);
+					}
+					if (SUCCEEDED(hr))
+					{
+						hr = sample->SetSampleDuration(mVideoFrameDuration);
+					}*/
+
+					
+					/*std::cout << "Audio bytes written: " << (double)audioSamples / (double)mft << "%" << std::endl;				
                     hr = pSinkWriter->WriteSample(audioStream, sample);
+
+					audioSamples += *sDuration;*/
+					delete sDuration;
                 }
-                hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
+
+                /*hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
                 if (FAILED(hr))
                 {
                     break;
                 }
-                rtStart += videoFrameDuration;
-				SafeRelease(&sample);
+				std::cout << "Video percentage done: " << ((double)i / (double)videoFrameCount) * 100 << "%" << std::endl;*/
+
+                /*rtStart += videoFrameDuration;
+				SafeRelease(&sample);*/
             }
         }
         if (SUCCEEDED(hr))
