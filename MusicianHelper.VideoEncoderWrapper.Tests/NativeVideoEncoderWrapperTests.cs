@@ -51,7 +51,10 @@ namespace MusicianHelper.VideoEncoderWrapper.Tests
             Assert.True(File.Exists(outputPath));
 
             var fi = new FileInfo(outputPath);
-            Assert.True(fi.Length > 1000000);
+            if (fi.Exists)
+            {
+                Assert.True(fi.Length > 1000000);
+            }
         }
 
         [Fact]
