@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C7A43AF2-FE5B-4F71-8A73-56933E68F4BF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MusicianHelper.Infrastructure</RootNamespace>
+    <AssemblyName>MusicianHelper.Infrastructure</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>80824497</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DirectShowLib-2005, Version=2.0.0.0, Culture=neutral, PublicKeyToken=67e7b740cdfc2d3f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\splicer-99885\src\Libs\DirectShowLib-2005.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis">
+      <HintPath>..\packages\Google.Apis.1.9.3\lib\net40\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth">
+      <HintPath>..\packages\Google.Apis.Auth.1.9.2\lib\net40\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices">
+      <HintPath>..\packages\Google.Apis.Auth.1.9.2\lib\net40\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core">
+      <HintPath>..\packages\Google.Apis.Core.1.9.3\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices">
+      <HintPath>..\packages\Google.Apis.1.9.3\lib\net40\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.YouTube.v3">
+      <HintPath>..\packages\Google.Apis.YouTube.v3.1.9.2.1450\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.YouTube.v3.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\packages\Zlib.Portable.Signed.1.11.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\APIKeysModel.cs" />
+    <Compile Include="Models\AudioUoW.cs" />
+    <Compile Include="Models\AudioUploadedEventArgs.cs" />
+    <Compile Include="Models\AudioUploadSession.cs" />
+    <Compile Include="Models\Enums\VideoQuality.cs" />
+    <Compile Include="Models\OauthTokenModel.cs" />
+    <Compile Include="Models\soundcloud_oauth_response.cs" />
+    <Compile Include="Models\soundcloud_track.cs" />
+    <Compile Include="Models\soundcloud_user.cs" />
+    <Compile Include="Models\SplicerWMVProfile.cs" />
+    <Compile Include="Models\StorageModel.cs" />
+    <Compile Include="Models\VideoManagmentSettings.cs" />
+    <Compile Include="Models\VideoRenderedEventArgs.cs" />
+    <Compile Include="Models\VideoRenderingSession.cs" />
+    <Compile Include="Models\VideoUploadedEventArgs.cs" />
+    <Compile Include="Models\youtube_oauth_response.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Abstract\IAPIKeyService.cs" />
+    <Compile Include="Services\Abstract\IAudioManagementService.cs" />
+    <Compile Include="Services\Abstract\IAudioNetworkService.cs" />
+    <Compile Include="Services\Abstract\IMasterService.cs" />
+    <Compile Include="Services\Abstract\IStorageService.cs" />
+    <Compile Include="Services\Abstract\IVideoManagementService.cs" />
+    <Compile Include="Services\Abstract\IVideoNetworkService.cs" />
+    <Compile Include="Services\Abstract\IVideoProcessingService.cs" />
+    <Compile Include="Services\Concrete\BootstrapperStorageService.cs" />
+    <Compile Include="Services\Concrete\DefaultAPIKeyService.cs" />
+    <Compile Include="Services\Concrete\DefaultAudioManagementService.cs" />
+    <Compile Include="Services\Concrete\DefaultMasterService.cs" />
+    <Compile Include="Services\Concrete\DefaultVideoManagementService.cs" />
+    <Compile Include="Services\Concrete\JsonNetStorageService.cs" />
+<<<<<<< HEAD
+    <Compile Include="Services\Concrete\NativeMediaFoundationVideoProcessingService.cs" />
+=======
+    <Compile Include="Services\Concrete\NativeVideoEncoderProcessVideoProcessingService.cs" />
+>>>>>>> master
+    <Compile Include="Services\Concrete\SoundCloudAudioNetworkService.cs" />
+    <Compile Include="Services\Concrete\SplicerWMVVideoProcessingService.cs" />
+    <Compile Include="Services\Concrete\YouTubeVideoNetworkService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Splicer\ASL - Apache Software Foundation License.txt" />
+    <Content Include="Splicer\Utilities\Audio\Formats.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Repositories\Abstract\" />
+    <Folder Include="Repositories\Concrete\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MusicianHelper.Common\MusicianHelper.Common.csproj">
+      <Project>{8b1f9093-89d4-4d97-be31-0afb2eda2031}</Project>
+      <Name>MusicianHelper.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MusicianHelper.NativeVideoEncoderWrapper\MusicianHelper.NativeVideoEncoderWrapper.csproj">
+      <Project>{fdee3c99-7725-4568-b3aa-e67156c033c6}</Project>
+      <Name>MusicianHelper.NativeVideoEncoderWrapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\splicer-99885\src\Splicer.Contrib\Splicer.Contrib.csproj">
+      <Project>{4de8d46c-1974-4d80-b71d-0683e66ad9e2}</Project>
+      <Name>Splicer.Contrib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\splicer-99885\src\Splicer\Splicer.csproj">
+      <Project>{77c46d9d-1bc1-4caf-87cf-9242721066ef}</Project>
+      <Name>Splicer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="MusicianHelperNativeVideoEncoderLib">
+      <Guid>{CCD4ECB4-F945-4228-8AF4-4A486BBDF2BC}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
