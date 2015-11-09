@@ -38,26 +38,26 @@ int main(int argc, char* argv[]) {
 	time_t t = time(0);   // get time now
 	struct tm *now = new tm();
 	localtime_s(now, &t);
-	std::cout << "Start time: " << (now->tm_year + 1900) << '-'
+	/*std::cout << "Start time: " << (now->tm_year + 1900) << '-'
 		<< (now->tm_mon + 1) << '-'
 		<< now->tm_mday
 		<< " "
 		<< now->tm_hour
 		<< " "
 		<< now->tm_min
-		<< std::endl;
+		<< std::endl;*/
 	ve->Encode();
 	t = time(0);   // get time now
 	now = new tm();
 	localtime_s(now, &t);
-	std::cout << "End time: " << (now->tm_year + 1900) << '-'
+	/*std::cout << "End time: " << (now->tm_year + 1900) << '-'
 		<< (now->tm_mon + 1) << '-'
 		<< now->tm_mday
 		<< " "
 		<< now->tm_hour
 		<< " "
 		<< now->tm_min
-		<< std::endl;
+		<< std::endl;*/
 
 	/*system("pause");*/
 	return SUCCEEDED(hr) ? 0 : 1;
