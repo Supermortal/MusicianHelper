@@ -10,6 +10,7 @@
 #include <stack>
 #include <iostream>
 #include <math.h>
+#include <iomanip>
 
 #define WINVER _WIN32_WINNT_WIN7
 
@@ -665,7 +666,28 @@ void VideoEncoder::Encode() {
 		}
 
 		int count = *sampleDuration / (double)videoFrameDuration;
-		int tempLength = *sampleLength / count;
+		int tempLength = (count == 0) ? *sampleLength : *sampleLength / count;
+
+		if (count == 0) 
+		{
+			//write audio frame
+			hr = pSinkWriter->WriteSample(audioStream, audioSample);
+			if (FAILED(hr))
+			{
+				break;
+			}
+
+			//write video frame
+			hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
+			if (FAILED(hr))
+			{
+				break;
+			}
+			std::cout << "100%" << std::endl;
+
+			rtStart += videoFrameDuration;
+		}
+
 		for (int i = 0; i < count; i++) {
 
 			IMFMediaBuffer *tempBuffer = NULL;
@@ -715,7 +737,7 @@ void VideoEncoder::Encode() {
 			{
 				break;
 			}
-			std::cout << ((double)rtStart / (double)mft) * 100 << "%" << std::endl;
+			std::cout << std::setw(2) << (int)(((double)rtStart / (double)mft) * 100) << "%" << "\r" << std::flush;
 
 			rtStart += videoFrameDuration;
 			SafeRelease(&tempBuffer);
@@ -737,7 +759,6 @@ void VideoEncoder::Encode() {
 			break;
 		}
 	}
-	while (audioSample);
 
 	if (SUCCEEDED(hr))
 	{
