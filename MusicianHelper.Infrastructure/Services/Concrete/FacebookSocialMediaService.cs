@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using Facebook;
 using log4net;
 using MusicianHelper.Common.Helpers;
