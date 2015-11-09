@@ -41,7 +41,8 @@ namespace MusicianHelper.WinForms
 
         private static void AddBindings()
         {
-            IoCHelper.Instance.BindService<IVideoProcessingService, SplicerWMVVideoProcessingService>();
+            //IoCHelper.Instance.BindService<IVideoProcessingService, SplicerWMVVideoProcessingService>();
+            IoCHelper.Instance.BindService<IVideoProcessingService, NativeVideoEncoderProcessVideoProcessingService>();
             IoCHelper.Instance.BindService<IVideoManagementService, DefaultVideoManagementService>();
             IoCHelper.Instance.BindService<IVideoNetworkService, YouTubeVideoNetworkService>(IoCBindingType.Normal, "YouTubeNetwork");
             IoCHelper.Instance.BindService<IStorageService, JsonNetStorageService>(IoCBindingType.Singleton);
