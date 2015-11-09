@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MusicianHelper.NativeVideoEncoderProcess
 {
@@ -13,10 +14,13 @@ namespace MusicianHelper.NativeVideoEncoderProcess
 
     public delegate void EncodingPercentageUpdated(object sender, EncodingPercentageUpdatedEventArgs e);
 
+    public delegate void EncodingCompleted(object sender, EventArgs e);
+
     public class VideoEncoderWrapper
     {
 
         public event EncodingPercentageUpdated EncodingPercentageUpdated;
+        public event EncodingCompleted EncodingCompleted;
 
         private string _basePath = null;
         private string GetBaseDirectory()
@@ -71,9 +75,13 @@ namespace MusicianHelper.NativeVideoEncoderProcess
             return _workingDirectory;
         }
 
-        public void EncodeAsync()
+        public Task EncodeAsync(string imageFilePath, string audioFilePath, string videoOutputPath)
         {
-            
+            var t = new TaskFactory().StartNew(() =>
+            {
+                Encode(imageFilePath, audioFilePath, videoOutputPath);
+            });
+            return t;
         }
 
         public void Encode(string imageFilePath, string audioFilePath, string videoOutputPath)
@@ -151,6 +159,9 @@ namespace MusicianHelper.NativeVideoEncoderProcess
 
             foreach (var file in di.GetFiles("*.bmp"))
                 file.Delete();
+
+            if (EncodingCompleted != null)
+                EncodingCompleted(this, EventArgs.Empty);
         }
 
         public string CheckConvertImage(string imageFilePath)
