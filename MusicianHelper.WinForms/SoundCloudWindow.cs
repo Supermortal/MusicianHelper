@@ -32,6 +32,12 @@ namespace MusicianHelper.WinForms
 
         private void WebBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
+            if (WebBrowser.DocumentText == "<HTML></HTML>\0" || WebBrowser.Url.AbsoluteUri.Contains("popup_callback"))
+            {
+                WebBrowser.Url = _ans.CreateRequestUri();
+                return;
+            }
+
             if (!WebBrowser.Url.AbsoluteUri.Contains(_ans.GetRedirectUrl())) return;
 
             var authToken = _ans.ExtractAuthToken(WebBrowser.Url.AbsoluteUri);

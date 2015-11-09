@@ -181,6 +181,7 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                 var fileData = new Dictionary<string, byte[]> {{"track[asset_data]", buffer}};
 
                 var track = await WebHelper.PostFile<soundcloud_track>(API_URL + "/tracks.json?oauth_token=" + otm.AccessToken, dict, fileData);
+                audio.SoundCloudUrl = track.permalink_url;
 
                 if (audioUploaded == null) return;
 

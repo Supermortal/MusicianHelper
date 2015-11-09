@@ -54,6 +54,12 @@
     <Compile Include="AudioEditWindow.Designer.cs">
       <DependentUpon>AudioEditWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="FacebookWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FacebookWindow.Designer.cs">
+      <DependentUpon>FacebookWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,6 +82,9 @@
     </Compile>
     <EmbeddedResource Include="AudioEditWindow.resx">
       <DependentUpon>AudioEditWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FacebookWindow.resx">
+      <DependentUpon>FacebookWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>

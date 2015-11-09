@@ -50,6 +50,13 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
                 _akm.SoundCloudClientSecret = _akm.SoundCloudClientSecret.Replace("\0", string.Empty);
                 _akm.SoundCloudClientId = _akm.SoundCloudClientId.Replace("\0", string.Empty);
 
+                _akm.FacebookClientSecret =
+                    Encoding.Default.GetString(Security.SymmetricDecrypt(_akm.FacebookClientSecret));
+                _akm.FacebookClientId = Encoding.Default.GetString(Security.SymmetricDecrypt(_akm.FacebookClientId));
+
+                _akm.FacebookClientSecret = _akm.FacebookClientSecret.Replace("\0", string.Empty);
+                _akm.FacebookClientId = _akm.FacebookClientId.Replace("\0", string.Empty);
+
                 return _akm;
             }
             catch (Exception ex)
@@ -63,10 +70,26 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
         {
             try
             {
-                akm.YouTubeClientSecret = Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.YouTubeClientSecret));
-                akm.YouTubeClientId = Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.YouTubeClientId));
-                akm.SoundCloudClientId = Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.SoundCloudClientId));
-                akm.SoundCloudClientSecret = Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.SoundCloudClientSecret));
+                if (!string.IsNullOrEmpty(akm.YouTubeClientId) && !string.IsNullOrEmpty(akm.YouTubeClientSecret))
+                {
+                    akm.YouTubeClientSecret =
+                        Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.YouTubeClientSecret));
+                    akm.YouTubeClientId = Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.YouTubeClientId));
+                }
+
+                if (!string.IsNullOrEmpty(akm.SoundCloudClientId) && !string.IsNullOrEmpty(akm.SoundCloudClientSecret))
+                {
+                    akm.SoundCloudClientId = Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.SoundCloudClientId));
+                    akm.SoundCloudClientSecret =
+                        Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.SoundCloudClientSecret));
+                }
+
+                if (!string.IsNullOrEmpty(akm.FacebookClientId) && !string.IsNullOrEmpty(akm.FacebookClientSecret))
+                {
+                    akm.FacebookClientId = Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.FacebookClientId));
+                    akm.FacebookClientSecret =
+                        Security.SymmetricEncypt(Encoding.Default.GetBytes(akm.FacebookClientSecret));
+                }
 
                 var sm = _ss.Load();
                 akm.UpdateStorageModel(sm);

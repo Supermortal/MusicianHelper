@@ -10,6 +10,9 @@ namespace MusicianHelper.Infrastructure.Models
         public string AudioPath { get; set; }
         public string VideoPath { get; set; }
         public string SessionId { get; set; }
+        public string SocialMediaMessage { get; set; }
+        public string YouTubeUrl { get; set; }
+        public string SoundCloudUrl { get; set; }
 
         public AudioUoW()
         {

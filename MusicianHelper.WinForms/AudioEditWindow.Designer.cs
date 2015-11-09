@@ -37,6 +37,8 @@
             this.NextButton = new System.Windows.Forms.Button();
             this.DoneButton = new System.Windows.Forms.Button();
             this.PreviousButton = new System.Windows.Forms.Button();
+            this.SocialMediaMessageTextBox = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -117,11 +119,29 @@
             this.PreviousButton.UseVisualStyleBackColor = true;
             this.PreviousButton.Click += new System.EventHandler(this.PreviousButton_Click);
             // 
+            // SocialMediaMessageTextBox
+            // 
+            this.SocialMediaMessageTextBox.Location = new System.Drawing.Point(154, 344);
+            this.SocialMediaMessageTextBox.Name = "SocialMediaMessageTextBox";
+            this.SocialMediaMessageTextBox.Size = new System.Drawing.Size(368, 20);
+            this.SocialMediaMessageTextBox.TabIndex = 9;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(279, 308);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(114, 13);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Social Media Message";
+            // 
             // AudioEditWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(680, 604);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.SocialMediaMessageTextBox);
             this.Controls.Add(this.PreviousButton);
             this.Controls.Add(this.DoneButton);
             this.Controls.Add(this.NextButton);
@@ -149,5 +169,7 @@
         private System.Windows.Forms.Button NextButton;
         private System.Windows.Forms.Button DoneButton;
         private System.Windows.Forms.Button PreviousButton;
+        private System.Windows.Forms.TextBox SocialMediaMessageTextBox;
+        private System.Windows.Forms.Label label4;
     }
 }
