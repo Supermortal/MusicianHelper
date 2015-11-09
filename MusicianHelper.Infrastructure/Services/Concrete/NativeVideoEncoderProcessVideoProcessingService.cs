@@ -53,15 +53,31 @@ namespace MusicianHelper.Infrastructure.Services.Concrete
             try
             {
                 var vew = new VideoEncoderWrapper();
-                vew.Encode(imagePaths[0], audio.AudioPath, outputPath);
 
-                var t = "t";
+                vew.EncodingCompleted += (sender, args) =>
+                {
+                    EncodingCompleted(this, EventArgs.Empty);
+                    if (renderCompleted != null)
+                    {
+                        foreach (var rc in renderCompleted)
+                        {
+                            rc(this, new VideoRenderedEventArgs() { Audio = audio });
+                        }                       
+                    }
+                };
+
+                vew.EncodeAsync(imagePaths[0], audio.AudioPath, outputPath);
             }
             catch (Exception ex)
             {
                 Log.Error(ex.Message, ex);
                 throw;
             }
+        }
+
+        public void EncodingCompleted(object sender, EventArgs e)
+        {
+            
         }
 
     }
