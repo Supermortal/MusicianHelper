@@ -1,0 +1,50 @@
+// MusicianHelperNativeVideoEncoder.idl : IDL source for MusicianHelper.NativeVideoEncoder
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (MusicianHelperNativeVideoEncoder.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(561AE6DC-54F2-4978-BC61-E104318BE692),
+	dual,
+	nonextensible,
+	pointer_default(unique)
+]
+interface IVideoEncoder : IDispatch{
+    [propget, id(1)] HRESULT ImageFilePath([out, retval] BSTR* pVal);
+    [propput, id(1)] HRESULT ImageFilePath([in] BSTR newVal);
+    [propget, id(2)] HRESULT VideoOutputPath([out, retval] BSTR* pVal);
+    [propput, id(2)] HRESULT VideoOutputPath([in] BSTR newVal);
+    [propget, id(3)] HRESULT AudioFilePath([out, retval] BSTR* pVal);
+    [propput, id(3)] HRESULT AudioFilePath([in] BSTR newVal);
+    [id(4)] HRESULT Encode();
+};
+[
+	uuid(CCD4ECB4-F945-4228-8AF4-4A486BBDF2BC),
+	version(1.0),
+]
+library MusicianHelperNativeVideoEncoderLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(485FD9A3-A3C1-4E59-8F28-02457F99EFEB)		
+	]
+	dispinterface _IVideoEncoderEvents
+	{
+		properties:
+		methods:
+	};
+	[
+		uuid(6D7C82B0-0623-4055-B630-D2477A811501)		
+	]
+	coclass VideoEncoder
+	{
+		[default] interface IVideoEncoder;
+		[default, source] dispinterface _IVideoEncoderEvents;
+	};
+};
+

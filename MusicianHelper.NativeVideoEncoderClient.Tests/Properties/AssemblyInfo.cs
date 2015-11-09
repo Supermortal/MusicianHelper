@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MusicianHelper.Infrastructure.Tests")]
+[assembly: AssemblyTitle("MusicianHelper.NativeVideoEncoderClient.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MusicianHelper.Infrastructure.Tests")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCompany("Towers Watson")]
+[assembly: AssemblyProduct("MusicianHelper.NativeVideoEncoderClient.Tests")]
+[assembly: AssemblyCopyright("Copyright © Towers Watson 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("77c66f12-6787-40ed-b7d3-a29ce62fa644")]
+[assembly: Guid("5f989112-e0e1-4620-828b-eb14e1a012f4")]
 
 // Version information for an assembly consists of the following four values:
 //

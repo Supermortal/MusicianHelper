@@ -1,16 +1,14 @@
+#include "stdafx.h"
+
 #define _AFXDLL
 
 #include <afx.h>
-#include <Windows.h>
 #include <mfapi.h>
 #include <mfidl.h>
 #include <Mfreadwrite.h>
 #include <mferror.h>
 #include <atlstr.h>
 #include <stack>
-#include <iostream>
-#include <math.h>
-#include <iomanip>
 
 #define WINVER _WIN32_WINNT_WIN7
 
@@ -23,6 +21,8 @@
 
 #include "VideoEncoder.h"
 
+#using <System.dll>
+
 template <int a, int b, int c, int d>
 struct FOURCC
 {
@@ -30,6 +30,29 @@ struct FOURCC
 };
 
 unsigned int id(FOURCC<'a', 'b', 'c', 'd'>::value);
+
+VideoEncoder::VideoEncoder() {
+	VideoSettings vs;
+
+	vs.videoBitRate = 800000;
+	vs.videoFps = 60;
+	vs.videoEncodingFormat = MFVideoFormat_WMV3;
+
+	SetVideoSettings(vs);
+}
+
+VideoEncoder::VideoEncoder(LPCWSTR imageFilePath, LPCWSTR audioFilePath, LPCWSTR videoOutputPath) {
+	mImageFilePath = imageFilePath;
+	mVideoOutputPath = videoOutputPath;
+	mAudioFilePath = audioFilePath;
+
+	VideoSettings vs;
+	vs.videoBitRate = 800000;
+	vs.videoFps = 60;
+	vs.videoEncodingFormat = MFVideoFormat_WMV3;
+
+	SetVideoSettings(vs);
+}
 
 VideoEncoder::VideoEncoder(LPCWSTR imageFilePath, LPCWSTR audioFilePath, LPCWSTR videoOutputPath, VideoSettings vs)
 {
@@ -340,7 +363,7 @@ HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStr
 		hr = pSinkWriter->SetInputMediaType(streamIndex, videoTypeIn, NULL);
 	}
 
-	//set audio type out
+	//set audio type in
 	if (SUCCEEDED(hr))
 	{
 		hr = MFCreateMediaType(&audioTypeOut);
@@ -544,8 +567,8 @@ HRESULT VideoEncoder::WriteFrame(
 	}
 
 	/*if (SUCCEEDED(hr)) {
-	hr = WriteWaveData(pWriter, *pReader, cbMaxAudioData, pcbDataWritten);
-	}*/
+			hr = WriteWaveData(pWriter, *pReader, cbMaxAudioData, pcbDataWritten);
+			}*/
 
 	SafeRelease(&pSample);
 	SafeRelease(&pBuffer);
@@ -587,189 +610,74 @@ void VideoEncoder::Encode() {
 	SetVideoHeightAndWidth(b);
 
 	HRESULT hr = StartMediaFoundation();
-	if (FAILED(hr))
-	{
-		return;
-	}
 
-	MFTIME mft;
-	IMFMediaSource *ms = NULL;
+	if (SUCCEEDED(hr)) {
 
-	CreateMediaSource(
-		mAudioFilePath,
-		NULL,    // Optional, can be NULL
-		&ms
-		);
+		MFTIME mft = 1000;
+		//if (SUCCEEDED(hr)) {
+		//	IMFMediaSource *ms = NULL;
 
-	hr = GetSourceDuration(ms, &mft);
-	if (FAILED(hr))
-	{
-		return;
-	}
-	mDuration = mft / 10 / 1000 / 1000;
+		//	CreateMediaSource(
+		//		mAudioFilePath,
+		//		NULL,    // Optional, can be NULL
+		//		&ms
+		//		);
 
-	SafeRelease(&ms);
+		//	hr = GetSourceDuration(ms, &mft);
+		//	mDuration = mft / 10 / 1000 / 1000;
 
-	IMFSourceReader *pReader = NULL;
-	hr = MFCreateSourceReaderFromURL(mAudioFilePath, NULL, &pReader);
-	if (FAILED(hr))
-	{
-		return;
-	}
+		//	SafeRelease(&ms);
+		//}
 
-	IMFSinkWriter *pSinkWriter = NULL;
-	DWORD stream;
-	DWORD audioStream;
-
-	UINT64 videoFrameDuration = GetVideoFrameDuration();
-	UINT64 videoFrameCount = GetVideoFrameCount();
-
-	hr = InitializeSinkWriter(&pSinkWriter, &stream, &audioStream, mVideoOutputPath, pReader);
-	if (FAILED(hr))
-	{
-		return;
-	}
-
-	LONGLONG rtStart = 0;
-	DWORD pStreamFlags;
-	LONGLONG timestamp = 0;
-	IMFSample *audioSample = NULL;
-
-	std::cout << "Starting encoding..." << std::endl;
-
-	hr = pReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, NULL, &pStreamFlags, &timestamp, &audioSample);
-	if (FAILED(hr))
-	{
-		return;
-	}
-
-	while (audioSample) {
-		LONGLONG *sampleDuration = new LONGLONG();
-		hr = audioSample->GetSampleDuration(sampleDuration);
-		if (FAILED(hr))
+		IMFSourceReader *pReader = NULL;
+		if (SUCCEEDED(hr))
 		{
-			break;
+			hr = MFCreateSourceReaderFromURL(mAudioFilePath, NULL, &pReader);
 		}
 
-		DWORD *sampleLength = new DWORD();
-		hr = audioSample->GetTotalLength(sampleLength);
-		if (FAILED(hr))
+		IMFSinkWriter *pSinkWriter = NULL;
+		DWORD stream;
+		DWORD audioStream;
+
+		UINT64 videoFrameDuration = GetVideoFrameDuration();
+		UINT64 videoFrameCount = GetVideoFrameCount();
+
+		hr = InitializeSinkWriter(&pSinkWriter, &stream, &audioStream, mVideoOutputPath, pReader);
+		if (SUCCEEDED(hr))
 		{
-			break;
-		}
+			// Send frames to the sink writer.
+			LONGLONG rtStart = 0;
+			DWORD cbAudioData = 0;
+			DWORD pStreamFlags;
+			LONGLONG timestamp = 0;
+			IMFSample *sample = NULL;
 
-		IMFMediaBuffer *pBuffer = NULL;
-		hr = audioSample->GetBufferByIndex(0, &pBuffer);
-		if (FAILED(hr))
+			UINT64 baseTime = (UINT64)mft / videoFrameCount;
+			for (DWORD i = 0; i < videoFrameCount; ++i)
+			{
+				hr = pReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, NULL, &pStreamFlags, &timestamp, &sample);
+				if (sample)
+				{
+					hr = sample->SetSampleTime(timestamp - rtStart);
+					hr = pSinkWriter->WriteSample(audioStream, sample);
+				}
+				hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
+				if (FAILED(hr))
+				{
+					break;
+				}
+				rtStart += videoFrameDuration;
+			}
+		}
+		if (SUCCEEDED(hr))
 		{
-			break;
+			hr = pSinkWriter->Finalize();
 		}
-
-		int count = *sampleDuration / (double)videoFrameDuration;
-		int tempLength = (count == 0) ? *sampleLength : *sampleLength / count;
-
-		if (count == 0) 
-		{
-			//write audio frame
-			hr = pSinkWriter->WriteSample(audioStream, audioSample);
-			if (FAILED(hr))
-			{
-				break;
-			}
-
-			//write video frame
-			hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
-			if (FAILED(hr))
-			{
-				break;
-			}
-			std::cout << "100%" << std::endl;
-
-			rtStart += videoFrameDuration;
-		}
-
-		for (int i = 0; i < count; i++) {
-
-			IMFMediaBuffer *tempBuffer = NULL;
-			hr = MFCreateMemoryBuffer(tempLength, &tempBuffer);
-			if (FAILED(hr))
-			{
-				break;
-			}
-			LONGLONG offset = i * tempLength;
-
-			//write audio frame
-			hr = MFCreateMediaBufferWrapper(
-				pBuffer,
-				offset,
-				tempLength,
-				&tempBuffer
-				);
-			if (FAILED(hr))
-			{
-				break;
-			}
-
-			IMFSample *tempSample = NULL;
-			hr = MFCreateSample(&tempSample);
-			if (SUCCEEDED(hr))
-			{
-				hr = tempSample->AddBuffer(tempBuffer);
-			}
-			if (SUCCEEDED(hr))
-			{
-				hr = tempSample->SetSampleTime(rtStart);
-			}
-			if (SUCCEEDED(hr))
-			{
-				hr = tempSample->SetSampleDuration(videoFrameDuration);
-			}
-
-			hr = pSinkWriter->WriteSample(audioStream, tempSample);
-			if (FAILED(hr))
-			{
-				break;
-			}
-
-			//write video frame
-			hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
-			if (FAILED(hr))
-			{
-				break;
-			}
-			std::cout << std::setw(2) << (int)(((double)rtStart / (double)mft) * 100) << "%" << "\r" << std::flush;
-
-			rtStart += videoFrameDuration;
-			SafeRelease(&tempBuffer);
-
-		}
-
-		delete sampleDuration;
-		delete sampleLength;
-		SafeRelease(&pBuffer);
-
-		if (FAILED(hr))
-		{
-			break;
-		}
-
-		hr = pReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, NULL, &pStreamFlags, &timestamp, &audioSample);
-		if (FAILED(hr))
-		{
-			break;
-		}
+		SafeRelease(&pSinkWriter);
+		MFShutdown();
 	}
 
-	if (SUCCEEDED(hr))
-	{
-		hr = pSinkWriter->Finalize();
-	}
-	SafeRelease(&pSinkWriter);
-
-	MFShutdown();
 	CoUninitialize();
-
-	std::cout << "Encoding complete!" << std::endl;
 }
 
 void VideoEncoder::SetVideoHeightAndWidth(BITMAP bitmap) {
@@ -901,33 +809,18 @@ done:
 	return hr;
 }
 
-//HRESULT CreateMediaSample(DWORD cbData, IMFSample **ppSample)
-//{
-//	HRESULT hr = S_OK;
-//
-//	IMFSample *pSample = NULL;
-//	IMFMediaBuffer *pBuffer = NULL;
-//
-//	hr = MFCreateSample(&pSample);
-//
-//	if (SUCCEEDED(hr))
-//	{
-//		hr = MFCreateMemoryBuffer(cbData, &pBuffer);
-//	}
-//
-//	if (SUCCEEDED(hr))
-//	{
-//		hr = pSample->AddBuffer(pBuffer);
-//	}
-//
-//	if (SUCCEEDED(hr))
-//	{
-//		*ppSample = pSample;
-//		(*ppSample)->AddRef();
-//	}
-//
-//	SafeRelease(&pSample);
-//	SafeRelease(&pBuffer);
-//	return hr;
-//}
+void VideoEncoder::SetImageFilePath(System::String ^ imageFilePath) {
+	pin_ptr<const wchar_t> wname = PtrToStringChars(imageFilePath);
+	mImageFilePath = wname;
+}
+
+void VideoEncoder::SetVideoOutputPath(System::String ^ videoOutputPath){
+	pin_ptr<const wchar_t> wname = PtrToStringChars(videoOutputPath);
+	mVideoOutputPath = wname;
+}
+
+void VideoEncoder::SetAudioFilePath(System::String ^ audioFilePath){
+	pin_ptr<const wchar_t> wname = PtrToStringChars(audioFilePath);
+	mAudioFilePath = wname;
+}
 
