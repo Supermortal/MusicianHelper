@@ -1,8 +1,4 @@
-﻿using MusicianHelper.Infrastructure.Services.Concrete;
-using MusicianHelper.Infrastructure.Tests.Concrete;
-using Xunit;
-
-namespace MusicianHelper.Infrastructure.Tests
+﻿namespace MusicianHelper.Infrastructure.Tests
 {
     public class SoundCloudAudioNetworkTests
     {

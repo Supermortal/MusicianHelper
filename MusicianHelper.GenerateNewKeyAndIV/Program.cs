@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Permissions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using MusicianHelper.Common;
 using MusicianHelper.Common.Concrete;
 using MusicianHelper.Common.Helpers;
