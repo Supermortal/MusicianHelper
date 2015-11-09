@@ -97,6 +97,12 @@ namespace MusicianHelper.NativeVideoEncoderProcess
 
             //Wait for process to finish
             pProcess.WaitForExit();
+
+            var convertedImagesPath = GetWorkingDirectory("ImageConverter");
+            var di = new DirectoryInfo(convertedImagesPath);
+
+            foreach (var file in di.GetFiles("*.bmp"))
+                file.Delete();
         }
 
         public string CheckConvertImage(string imageFilePath)
