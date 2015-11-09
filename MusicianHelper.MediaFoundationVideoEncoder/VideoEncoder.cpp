@@ -658,7 +658,7 @@ void VideoEncoder::Encode() {
 	LONGLONG timestamp = 0;
 	IMFSample *audioSample = NULL;
 
-	std::cout << "Starting encoding..." << std::endl;
+	/*std::cout << "Starting encoding..." << std::endl;*/
 
     //read the initial audio sample
 	hr = pReader->ReadSample((DWORD)MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, NULL, &pStreamFlags, &timestamp, &audioSample);
@@ -717,7 +717,7 @@ void VideoEncoder::Encode() {
 			{
 				break;
 			}
-			std::cout << "100%" << std::endl;
+			std::cout << "100" << std::endl;
 
             //rtStart keeps track of how much of the duration has been written so far
 			rtStart += videoFrameDuration;
@@ -778,7 +778,7 @@ void VideoEncoder::Encode() {
 			{
 				break;
 			}
-			std::cout << std::setw(2) << (int)(((double)rtStart / (double)mft) * 100) << "%" << "\r" << std::flush;
+			std::cout << std::setw(2) << (int)(((double)rtStart / (double)mft) * 100) << "\r" << std::flush;
 
             //rtStart keeps track of how much of the duration has been written so far
 			rtStart += videoFrameDuration;
@@ -816,7 +816,7 @@ void VideoEncoder::Encode() {
     //Microsoft application shutdown
 	CoUninitialize();
 
-	std::cout << "Encoding complete!" << std::endl;
+	/*std::cout << "Encoding complete!" << std::endl;*/
 }
 
 void VideoEncoder::SetVideoHeightAndWidth(BITMAP bitmap) {

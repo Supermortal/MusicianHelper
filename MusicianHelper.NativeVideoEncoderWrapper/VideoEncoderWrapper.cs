@@ -1,11 +1,25 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MusicianHelper.NativeVideoEncoderProcess
 {
+
+    public class EncodingPercentageUpdatedEventArgs : EventArgs
+    {
+        public int EncodingPercentage { get; set; }
+    }
+
+    public delegate void EncodingPercentageUpdated(object sender, EncodingPercentageUpdatedEventArgs e);
+
+    public delegate void EncodingCompleted(object sender, EventArgs e);
+
     public class VideoEncoderWrapper
     {
+
+        public event EncodingPercentageUpdated EncodingPercentageUpdated;
+        public event EncodingCompleted EncodingCompleted;
 
         private string _basePath = null;
         private string GetBaseDirectory()
@@ -60,6 +74,15 @@ namespace MusicianHelper.NativeVideoEncoderProcess
             return _workingDirectory;
         }
 
+        public Task EncodeAsync(string imageFilePath, string audioFilePath, string videoOutputPath)
+        {
+            var t = new TaskFactory().StartNew(() =>
+            {
+                Encode(imageFilePath, audioFilePath, videoOutputPath);
+            });
+            return t;
+        }
+
         public void Encode(string imageFilePath, string audioFilePath, string videoOutputPath)
         {
             imageFilePath = CheckConvertImage(imageFilePath);
@@ -84,7 +107,7 @@ namespace MusicianHelper.NativeVideoEncoderProcess
             pProcess.StartInfo.UseShellExecute = false;
 
             //Set output of program to be written to process output stream
-            pProcess.StartInfo.RedirectStandardOutput = false;
+            pProcess.StartInfo.RedirectStandardOutput = true;
 
             //Optional
             pProcess.StartInfo.WorkingDirectory = encoderPath;
@@ -94,6 +117,38 @@ namespace MusicianHelper.NativeVideoEncoderProcess
 
             //Get program output
             //string strOutput = pProcess.StandardOutput.ReadToEnd();
+            var number = string.Empty;
+            var endOfLine = false;
+            var lastNumber = -1;
+            var intNumber = -1;
+            while (!pProcess.StandardOutput.EndOfStream)
+            {                
+                char c = (char)pProcess.StandardOutput.Read();
+                int i;
+                if (int.TryParse(c.ToString(), out i))
+                {
+                    endOfLine = false;
+                    number += i.ToString();
+                }
+                else if (c == '\r')
+                {
+                    if (!string.IsNullOrEmpty(number))
+                    {
+                        lastNumber = intNumber;
+                        intNumber = int.Parse(number);
+
+                        if (intNumber != lastNumber)
+                        {
+                            if (EncodingPercentageUpdated != null)
+                            EncodingPercentageUpdated(this,
+                                new EncodingPercentageUpdatedEventArgs() {EncodingPercentage = intNumber});
+                        }
+                        //do stuff with number
+                    }
+                    number = string.Empty;
+                    endOfLine = true;
+                }
+            }
 
             //Wait for process to finish
             pProcess.WaitForExit();
@@ -103,6 +158,9 @@ namespace MusicianHelper.NativeVideoEncoderProcess
 
             foreach (var file in di.GetFiles("*.bmp"))
                 file.Delete();
+
+            if (EncodingCompleted != null)
+                EncodingCompleted(this, EventArgs.Empty);
         }
 
         public string CheckConvertImage(string imageFilePath)
