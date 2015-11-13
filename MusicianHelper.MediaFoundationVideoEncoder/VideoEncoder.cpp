@@ -257,6 +257,8 @@ void VideoEncoder::SetVideoSettings(VideoSettings vs) {
 	mVideoBitRate = vs.videoBitRate;
 	mVideoEncodingFormat = vs.videoEncodingFormat;
 	mVideoFps = vs.videoFps;
+    mVideoHeight = vs.height;
+    mVideoWidth = vs.width;
 }
 
 HRESULT VideoEncoder::InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD *pAudioStreamIndex, LPCWSTR videoOutputFilePath, IMFSourceReader *pReader)
@@ -494,14 +496,16 @@ HRESULT VideoEncoder::WriteFrame(
 	IMFSinkWriter *pWriter,
 	DWORD streamIndex,
 	const LONGLONG& rtStart,        // Time stamp.
-	byte* vfb       // Receives the amount of data written.
+	byte* vfb,       // Receives the amount of data written.
+    UINT64 imageWidth,
+    UINT64 imageHeight
 	)
 {
 	IMFSample *pSample = NULL;
 	IMFMediaBuffer *pBuffer = NULL;
 
-	const LONG cbWidth = 4 * mVideoWidth;
-	const DWORD cbBuffer = cbWidth * mVideoHeight;
+    const LONG cbWidth = 4 * imageWidth;
+    const DWORD cbBuffer = cbWidth * imageHeight;
 
 	BYTE *pData = NULL;
 
@@ -522,7 +526,7 @@ HRESULT VideoEncoder::WriteFrame(
 			vfb,    // First row in source image.
 			cbWidth,                    // Source stride.
 			cbWidth,                    // Image width in bytes.
-			mVideoHeight                // Image height in pixels.
+			imageHeight                // Image height in pixels.
 			);
 	}
 	if (pBuffer)
@@ -597,17 +601,26 @@ UINT64 VideoEncoder::GetVideoFrameDuration(){
 	return 10 * 1000 * 1000 / mVideoFps;
 }
 
+void VideoEncoder::GetBitmapFromUrl(LPCWSTR filePath, BITMAP *b) {
+    HBITMAP h = LoadImageFromFilePath(filePath);
+    GetDIBFromHandle(h, b);
+}
+
 void VideoEncoder::Encode() {
-    //get handle to the image from URL (is not the image data itself, but just a file handle)
-	HBITMAP h = LoadImageFromFilePath(mImageFilePath);
+    UINT32 imageIndex = 0;
 
     //this method calls ConvertToDIB; ConvertToDIB modifies the pointer directly to gather the byte array data
     //the method finishes up with a call to GetObject, which modifies the bitmap handle pointer to point to an actual bitmap object
 	BITMAP b;
-	GetDIBFromHandle(h, &b);
+    GetBitmapFromUrl(*mImageFilePaths, &b);
+
+    if (mImageFilePathsCount > 1) {
+        mImageFilePaths++;
+        imageIndex++;
+    }
 
     //sets the video's width and height from the bitmap object
-	SetVideoHeightAndWidth(b);
+	//SetVideoHeightAndWidth(b);
 
     //starts media foundation (media foundation/gdi+/etc. are required to be started [and stopped when finished] before you can use them
 	HRESULT hr = StartMediaFoundation();
@@ -632,6 +645,7 @@ void VideoEncoder::Encode() {
 		return;
 	}
 	mDuration = mft / 10 / 1000 / 1000;
+    mSectionDuration = (double)mft / (double)mImageFilePathsCount;
 
     //SafeRelease is a method Microsoft suggests using; it's merely a "safe" way to nullify and release the pointer
 	SafeRelease(&ms);
@@ -719,7 +733,7 @@ void VideoEncoder::Encode() {
 
 			//write video frame
             //bmBits comes from the DIB bitmap object created above
-			hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
+			hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits, b.bmWidth, b.bmHeight);
 			if (FAILED(hr))
 			{
 				break;
@@ -780,7 +794,7 @@ void VideoEncoder::Encode() {
 			}
 
 			//write video frame
-			hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits);
+			hr = WriteFrame(pSinkWriter, stream, rtStart, (byte*)b.bmBits, b.bmWidth, b.bmHeight);
 			if (FAILED(hr))
 			{
 				break;

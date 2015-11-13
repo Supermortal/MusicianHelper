@@ -20,12 +20,21 @@ int main(int argc, char* argv[]) {
 
 	HRESULT hr = S_OK;
 
+    LPCWSTR *imagePaths = new LPCWSTR[argc - 3];
 	LPCWSTR *argStrs = new LPCWSTR[argc - 1];
 	int index = 0;
+    int imagePathIndex = 0;
 	for (int i = 1; i < argc; i++) {
 		char * cs = argv[i];
-        argStrs[index] = convertCharArrToLPCWSTR(cs);
-		index++;
+        
+        if (i > 2) {
+            imagePaths[imagePathIndex] = convertCharArrToLPCWSTR(cs);
+            imagePathIndex++;
+        }
+        else {
+            argStrs[index] = convertCharArrToLPCWSTR(cs);
+            index++;
+        }
 	}
 
 	VideoSettings vs;
@@ -33,7 +42,7 @@ int main(int argc, char* argv[]) {
 	vs.videoFps = 30;
 	vs.videoEncodingFormat = MFVideoFormat_WMV3;
 
-	VideoEncoder *ve = new VideoEncoder(argStrs[0], argStrs[1], argStrs[2], vs);
+	VideoEncoder *ve = new VideoEncoder(imagePaths, argc - 3, argStrs[0], argStrs[1], vs);
 	delete argStrs;
 
 	time_t t = time(0);   // get time now

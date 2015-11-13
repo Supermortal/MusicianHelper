@@ -17,6 +17,8 @@ struct VideoSettings {
     UINT32 videoFps = 30;
     UINT32 videoBitRate = 800000;
     GUID   videoEncodingFormat = MFVideoFormat_H264;
+    UINT64 height = 1080;
+    UINT64 width = 1920;
 };
 
 #pragma once
@@ -45,7 +47,9 @@ public:
         IMFSinkWriter *pWriter,
         DWORD streamIndex,
         const LONGLONG& rtStart,        // Time stamp.
-        byte* vfb
+        byte* vfb,
+        UINT64 imageWidth,
+        UINT64 imageHeight
         );
     void SetDuration(UINT64 duration);
     HRESULT StartMediaFoundation();
@@ -60,6 +64,7 @@ public:
         );
     HRESULT GetSourceDuration(IMFMediaSource *pSource, MFTIME *pDuration);
     HRESULT ConfigureDecoder(IMFSourceReader *pReader, DWORD dwStreamIndex);
+    void GetBitmapFromUrl(LPCWSTR filePath, BITMAP *b);
 private:
     LPCWSTR mImageFilePath;
     LPCWSTR mVideoOutputPath;
@@ -80,5 +85,6 @@ private:
     UINT32 mVideoHeight = 0;
     LPCWSTR *mImageFilePaths;
     UINT32 mImageFilePathsCount;
+    UINT64 mSectionDuration = 5;
 };
 
