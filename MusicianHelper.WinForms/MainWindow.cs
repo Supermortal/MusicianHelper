@@ -32,6 +32,9 @@ namespace MusicianHelper.WinForms
         private bool _audiosUploaded = false;
         private bool _socialMediaCredentialsSet = false;
 
+        private SoundCloudWindow _scw;
+        private FacebookWindow _fbw;
+
         public MainWindow() : this(
             IoCHelper.Instance.GetService<IVideoManagementService>(), 
             IoCHelper.Instance.GetService<IVideoNetworkService>(), 
@@ -226,6 +229,28 @@ namespace MusicianHelper.WinForms
             }
         }
 
+        private void CheckCloseWindows()
+        {
+            try
+            {
+                if (_fbw != null)
+                {
+                    _fbw.Close();
+                    _fbw = null;
+                }
+
+                if (_scw != null)
+                {
+                    _scw.Close();
+                    _scw = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, ex);
+            }
+        }
+
         #region Events
         private void VideoRendered(object sender, VideoRenderedEventArgs e)
         {
@@ -315,6 +340,7 @@ namespace MusicianHelper.WinForms
         {
             try
             {
+                CheckCloseWindows();
                 UploadVideosButton.Enabled = false;
                 StartVideoUpload();
             }
@@ -326,6 +352,7 @@ namespace MusicianHelper.WinForms
 
         private void SetAudioDirectoryButton_Click(object sender, EventArgs e)
         {
+            CheckCloseWindows();
             var result = FolderBrowserDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -338,6 +365,7 @@ namespace MusicianHelper.WinForms
 
         private void SetVideoDirectoryButton_Click(object sender, EventArgs e)
         {
+            CheckCloseWindows();
             var result = FolderBrowserDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -350,6 +378,7 @@ namespace MusicianHelper.WinForms
 
         private void SetImagesDirectoryButton_Click(object sender, EventArgs e)
         {
+            CheckCloseWindows();
             var result = FolderBrowserDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -362,16 +391,16 @@ namespace MusicianHelper.WinForms
 
         private void YouTubeCredentialsButton_Click(object sender, EventArgs e)
         {
+            CheckCloseWindows();
             AppendToLog("Starting YouTube credentials set...");
             var ytw = new YouTubeWindow();
             ytw.Closed += YouTubeWindow_Closed;
             ytw.Show(this);
         }
 
-
-
         private void ConfigureAudioButton_Click(object sender, EventArgs e)
         {
+            CheckCloseWindows();
             if (string.IsNullOrEmpty(AudioDirectory.Text) || string.IsNullOrEmpty(VideoDirectory.Text) ||
                 string.IsNullOrEmpty(VideoDirectory.Text))
             {
@@ -386,6 +415,7 @@ namespace MusicianHelper.WinForms
         {
             try
             {
+                CheckCloseWindows();
                 RenderVideosButton.Enabled = false;
                 ConfigureAudioButton.Enabled = false;
                 StartVideoRendering(_audios);
@@ -400,10 +430,12 @@ namespace MusicianHelper.WinForms
         {
             try
             {
+                CheckCloseWindows();
                 AppendToLog("Starting SoundCloud credentials set...");
-                var scw = new SoundCloudWindow();
-                scw.Closed += SoundCloudWindow_Closed;
-                scw.Show(this);
+                _scw = new SoundCloudWindow();
+                //scw.Closed += SoundCloudWindow_CredentialsSet;
+                _scw.CredentialsSet += SoundCloudWindow_CredentialsSet;
+                _scw.Show(this);
             }
             catch (Exception ex)
             {
@@ -413,6 +445,7 @@ namespace MusicianHelper.WinForms
 
         private void UploadAudiosButton_Click(object sender, EventArgs e)
         {
+            CheckCloseWindows();
             UploadAudiosButton.Enabled = false;
             StartAudioUpload();
         }
@@ -421,10 +454,12 @@ namespace MusicianHelper.WinForms
         {
             try
             {
+                CheckCloseWindows();
                 AppendToLog("Starting Facebook credentials set...");
-                var scw = new FacebookWindow();
-                scw.Closed += FacebookWindow_Closed;
-                scw.Show(this);
+                _fbw = new FacebookWindow();
+                //scw.Closed += FacebookWindow_CredentialsSet;
+                _fbw.CredentialsSet += FacebookWindow_CredentialsSet;
+                _fbw.Show(this);
             }
             catch (Exception ex)
             {
@@ -436,6 +471,7 @@ namespace MusicianHelper.WinForms
         {
             try
             {
+                CheckCloseWindows();
                 StartSocialMediaPost();
             }
             catch (Exception ex)
@@ -494,7 +530,7 @@ namespace MusicianHelper.WinForms
             }
         }
 
-        private void SoundCloudWindow_Closed(object sender, EventArgs e)
+        private void SoundCloudWindow_CredentialsSet(object sender, EventArgs e)
         {
             try
             {
@@ -517,7 +553,7 @@ namespace MusicianHelper.WinForms
             }
         }
 
-        private void FacebookWindow_Closed(object sender, EventArgs e)
+        private void FacebookWindow_CredentialsSet(object sender, EventArgs e)
         {
             try
             {
@@ -529,6 +565,7 @@ namespace MusicianHelper.WinForms
 
                 AppendToLog("Facebook credentials set!");
                 _socialMediaCredentialsSet = true;
+                FacebookCredentialsButton.Text = Resources.MainWindow_FacebookWindow_CredentialsSet_Reset_Facebook_Credentials;
                 //PostSocialMediaButton.Enabled = true;
 
                 //if (_audioMetadataSet)

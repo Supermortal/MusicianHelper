@@ -120,4 +120,7 @@
     <data name="MainWindow_CheckCredentials_Reset_SoundCloud_Credentials" xml:space="preserve">
     <value>Reset SoundCloud Credentials</value>
   </data>
+  <data name="MainWindow_FacebookWindow_CredentialsSet_Reset_Facebook_Credentials" xml:space="preserve">
+    <value>Reset Facebook Credentials</value>
+  </data>
 </root>

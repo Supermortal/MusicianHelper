@@ -646,7 +646,6 @@ void VideoEncoder::Encode() {
 	UINT64 videoFrameCount = GetVideoFrameCount();
 
     //this method initializes the SinkWriter; it creates streams, sets up media types, and calls BeginWriting
-    //TODO comment this method as well
 	hr = InitializeSinkWriter(&pSinkWriter, &stream, &audioStream, mVideoOutputPath, pReader);
 	if (FAILED(hr))
 	{

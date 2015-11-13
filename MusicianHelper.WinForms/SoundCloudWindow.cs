@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using log4net;
 using MusicianHelper.Common.Helpers;
 using MusicianHelper.Common.Helpers.Log;
@@ -6,10 +7,15 @@ using MusicianHelper.Infrastructure.Services.Abstract;
 
 namespace MusicianHelper.WinForms
 {
+
+    public delegate void CredentialsSet(object sender, EventArgs e);
+
     public partial class SoundCloudWindow : Form
     {
 
         private static readonly ILog Log = LogHelper.GetLogger(typeof (SoundCloudWindow));
+
+        public event CredentialsSet CredentialsSet;
 
         private readonly IAudioNetworkService _ans;
 
@@ -32,7 +38,7 @@ namespace MusicianHelper.WinForms
 
         private void WebBrowser_Navigated(object sender, WebBrowserNavigatedEventArgs e)
         {
-            if (WebBrowser.DocumentText == "<HTML></HTML>\0" || WebBrowser.Url.AbsoluteUri.Contains("popup_callback"))
+            if (WebBrowser.DocumentText == "<HTML></HTML>\0" || WebBrowser.Url.AbsoluteUri.Contains("popup_callback") || WebBrowser.Url.AbsoluteUri.Contains("popup=1"))
             {
                 WebBrowser.Url = _ans.CreateRequestUri();
                 return;
@@ -43,7 +49,12 @@ namespace MusicianHelper.WinForms
             var authToken = _ans.ExtractAuthToken(WebBrowser.Url.AbsoluteUri);
             var oauthResponse = _ans.GetRequestTokens(authToken);
             _ans.SaveOauthResponse(oauthResponse);
-            Close();
+            //Close();
+            Hide();   
+    
+            if (CredentialsSet != null)
+                CredentialsSet(this, EventArgs.Empty);
         }
+
     }
 }
