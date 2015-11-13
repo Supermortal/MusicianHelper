@@ -24,6 +24,7 @@ class VideoEncoder
 {
 public:
     VideoEncoder(LPCWSTR imageFilePath, LPCWSTR audioFilePath, LPCWSTR videoOutputPath, VideoSettings vs);
+    VideoEncoder(LPCWSTR *imageFilePaths, UINT32 pathsCount, LPCWSTR audioFilePath, LPCWSTR videoOutputPath, VideoSettings vs);
     ~VideoEncoder();
     // This function converts the given bitmap to a DIB.
     // Returns true if the conversion took place,
@@ -77,5 +78,7 @@ private:
     UINT64 mDuration = 5;
     UINT32 mVideoWidth = 0;
     UINT32 mVideoHeight = 0;
+    LPCWSTR *mImageFilePaths;
+    UINT32 mImageFilePathsCount;
 };
 

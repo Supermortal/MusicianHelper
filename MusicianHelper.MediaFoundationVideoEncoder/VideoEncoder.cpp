@@ -39,6 +39,14 @@ VideoEncoder::VideoEncoder(LPCWSTR imageFilePath, LPCWSTR audioFilePath, LPCWSTR
 	SetVideoSettings(vs);
 }
 
+VideoEncoder::VideoEncoder(LPCWSTR *imageFilePaths, UINT32 pathsCount, LPCWSTR audioFilePath, LPCWSTR videoOutputPath, VideoSettings vs) {
+    mImageFilePaths = imageFilePaths;
+    mImageFilePathsCount = pathsCount;
+    mAudioFilePath = audioFilePath;
+    mVideoOutputPath = videoOutputPath;
+    SetVideoSettings(vs);
+}
+
 VideoEncoder::~VideoEncoder()
 {
 
