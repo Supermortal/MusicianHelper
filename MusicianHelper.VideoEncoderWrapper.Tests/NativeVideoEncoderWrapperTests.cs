@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -6,6 +8,37 @@ namespace MusicianHelper.VideoEncoderWrapper.Tests
 {
     public class NativeVideoEncoderWrapperTests
     {
+
+        private string _basePath = null;
+        private string GetBaseDirectory()
+        {
+#if DEBUG
+            if (_basePath == null)
+            {
+                var currentDir = Environment.CurrentDirectory;
+                var parts = currentDir.Split('\\');
+                var sb = new StringBuilder();
+                for (int i = 0; i < parts.Length; i++)
+                {
+                    var part = parts[i];
+
+                    sb.Append(part);
+                    sb.Append('\\');
+                    if (part == "MusicianHelper")
+                    {
+                        break;
+                    }
+                }
+
+                _basePath = sb.ToString().TrimEnd('\\');
+            }
+
+            return _basePath;
+#endif
+
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Musician Helper");
+        }
+
         [Fact]
         public void encoder_works_correctly()
         {
@@ -21,8 +54,7 @@ namespace MusicianHelper.VideoEncoderWrapper.Tests
                 System.Diagnostics.Debug.WriteLine("Encoding complete: " + args.EncodingPercentage);
             };
 
-            vew.Encode("C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\paper-stained-3-texture.bmp", "C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\sorry_dave.wav", outputPath);
-            //vew.Encode("C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\test.bmp", "C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\untitled.wav", outputPath);
+            vew.Encode(GetBaseDirectory() + "\\TEST\\test.bmp", GetBaseDirectory() + "\\TEST\\untitled.wav", outputPath);
 
             Assert.True(File.Exists(outputPath));
 
@@ -45,8 +77,7 @@ namespace MusicianHelper.VideoEncoderWrapper.Tests
                 System.Diagnostics.Debug.WriteLine("Encoding complete: " + args.EncodingPercentage);
             };
 
-            vew.Encode("C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\paper-stained-3-texture.bmp", "C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\sorry_dave.mp3", outputPath);
-            //vew.Encode("C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\paper-stained-3-texture.bmp", "C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\sorry_dave.mp3", outputPath);
+            vew.Encode(GetBaseDirectory() + "\\TEST\\paper-stained-3-texture.bmp", GetBaseDirectory() + "\\TEST\\sorry_dave.mp3", outputPath);
 
             Assert.True(File.Exists(outputPath));
 
@@ -72,8 +103,7 @@ namespace MusicianHelper.VideoEncoderWrapper.Tests
                 System.Diagnostics.Debug.WriteLine("Encoding complete: " + args.EncodingPercentage);
             };
 
-            vew.Encode("C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\test.jpg", "C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\sorry_dave.wav", outputPath);
-            //vew.Encode("C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\test.jpg", "C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\sorry_dave.wav", outputPath);
+            vew.Encode(GetBaseDirectory() + "\\TEST\\test.jpg", GetBaseDirectory() + "\\TEST\\sorry_dave.wav", outputPath);
 
             Assert.True(File.Exists(outputPath));
 
@@ -96,8 +126,7 @@ namespace MusicianHelper.VideoEncoderWrapper.Tests
                 System.Diagnostics.Debug.WriteLine("Encoding complete: " + args.EncodingPercentage);
             };
 
-            vew.Encode("C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\test.png", "C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\sorry_dave.wav", outputPath);
-            //vew.Encode("C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\test.png", "C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\sorry_dave.wav", outputPath);
+            vew.Encode(GetBaseDirectory() + "\\TEST\\test.png", GetBaseDirectory() + "\\TEST\\sorry_dave.wav", outputPath);
 
             Assert.True(File.Exists(outputPath));
 
@@ -129,8 +158,10 @@ namespace MusicianHelper.VideoEncoderWrapper.Tests
                 Assert.True(fi.Length > 1000000);
             };
 
-            await vew.EncodeAsync("C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\paper-stained-3-texture.bmp", "C:\\Users\\chpink\\Home\\sandbox\\MusicianHelper\\TEST\\sorry_dave.wav", outputPath);
-            //vew.Encode("C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\test.bmp", "C:\\Users\\user\\Dropbox\\Cloud\\GitHub\\MusicianHelper\\TEST\\untitled.wav", outputPath);
+            await vew.EncodeAsync(
+                GetBaseDirectory() + "\\TEST\\paper-stained-3-texture.bmp",
+                GetBaseDirectory() + "\\TEST\\sorry_dave.wav", 
+                outputPath);          
         }
     }
 }
